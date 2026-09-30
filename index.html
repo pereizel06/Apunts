@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ca" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Índex d'activitats — SMX</title>
+<meta name="description" content="Repositori d'activitats de Sistemes Microinformàtics i Xarxes.">
+<!-- Aplica el tema abans de pintar per evitar parpelleig -->
+<script>
+  (function () {
+    var t = null;
+    try { t = localStorage.getItem('smx-tema'); } catch (e) {}
+    if (!t) t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+
+<!-- =====================================================================
+     CSS
+     ===================================================================== -->
+<style>
+  :root {
+    --bg: #f3f4f6; --panel: #ffffff; --panel-2: #f8f9fb; --side: #eef0f4;
+    --text: #1b1f27; --muted: #5d6675; --border: #dde1e8;
+    --hover: #e8eefb; --sel: #d6e4fc; --accent: #0a64d8; --accent-2: #0b4fa8;
+    --folder: #f4b93a; --folder-d: #d99a14; --pdf: #d9382e; --ok: #1f9d55;
+    --shadow: 0 8px 30px rgba(20, 30, 60, .08);
+    --mono: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace;
+  }
+  [data-theme="dark"] {
+    --bg: #101216; --panel: #1a1d23; --panel-2: #161920; --side: #14171c;
+    --text: #e8ebf0; --muted: #9099a8; --border: #2b303a;
+    --hover: #242a36; --sel: #26395c; --accent: #5aa2ff; --accent-2: #86bbff;
+    --folder: #e9b03a; --folder-d: #c48f1c; --pdf: #ef5a4f; --ok: #45c47c;
+    --shadow: 0 8px 30px rgba(0, 0, 0, .45);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.4;
+    transition: background .3s, color .3s;
+    display: flex; flex-direction: column; align-items: center; padding: 28px 16px;
+    background-image: radial-gradient(circle at 15% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 40%);
+    background-attachment: fixed;
+  }
+  .icon { width: 1.2em; height: 1.2em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+  button { font: inherit; color: inherit; cursor: pointer; background: none; border: 0; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+
+  /* ---------- Capçalera ---------- */
+  header.hero { width: 100%; max-width: 1100px; margin-bottom: 18px; animation: rise .5s ease both; }
+  .hero h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 600; letter-spacing: -.02em; }
+  .hero p { color: var(--muted); margin-top: 4px; }
+  .hero .tag { font-family: var(--mono); font-size: .75rem; color: var(--accent); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 6px; display: block; }
+
+  /* ---------- Finestra de l'explorador ---------- */
+  .window {
+    width: 100%; max-width: 1100px; background: var(--panel); border: 1px solid var(--border);
+    border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column;
+    min-height: 480px; transition: background .3s, border-color .3s; animation: rise .55s .05s ease both;
+  }
+  .titlebar { display: flex; align-items: center; gap: 8px; padding: 8px 14px; background: var(--panel-2); border-bottom: 1px solid var(--border); font-size: .82rem; color: var(--muted); }
+  .dots { display: flex; gap: 6px; margin-right: 6px; }
+  .dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--border); }
+  .titlebar .path-title { font-family: var(--mono); }
+  .titlebar .spacer { flex: 1; }
+
+  .toolbar { display: flex; align-items: center; gap: 6px; padding: 10px 12px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  .tbtn { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 8px; transition: background .15s, transform .15s; }
+  .tbtn:hover:not(:disabled) { background: var(--hover); }
+  .tbtn:active:not(:disabled) { transform: scale(.92); }
+  .tbtn:disabled { opacity: .35; cursor: default; }
+  .tbtn.spin .icon { animation: spin .6s ease; }
+  .address {
+    flex: 1 1 260px; min-width: 0; display: flex; align-items: center; gap: 2px; height: 34px; padding: 0 8px;
+    background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; overflow-x: auto; white-space: nowrap; scrollbar-width: none;
+  }
+  .address::-webkit-scrollbar { display: none; }
+  .crumb { padding: 3px 8px; border-radius: 6px; font-size: .9rem; display: inline-flex; align-items: center; gap: 6px; transition: background .15s; }
+  button.crumb:hover { background: var(--hover); }
+  .crumb[aria-current="page"] { font-weight: 600; }
+  .sep { color: var(--muted); font-size: .85rem; }
+  .search { position: relative; flex: 0 1 260px; }
+  .search .icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+  .search input {
+    width: 100%; height: 34px; padding: 0 30px 0 34px; font: inherit; font-size: .9rem; color: var(--text);
+    background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; transition: border-color .2s, box-shadow .2s;
+  }
+  .search input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); }
+  .search .clear { position: absolute; right: 4px; top: 4px; width: 26px; height: 26px; border-radius: 6px; color: var(--muted); display: none; }
+  .search .clear:hover { background: var(--hover); }
+  .search.has-text .clear { display: block; }
+  .theme .sun { display: none; }
+  [data-theme="dark"] .theme .sun { display: block; }
+  [data-theme="dark"] .theme .moon { display: none; }
+
+  /* ---------- Cos: panell lateral + contingut ---------- */
+  .body { display: flex; flex: 1; min-height: 0; }
+  nav.side { width: 210px; flex: none; background: var(--side); border-right: 1px solid var(--border); padding: 12px 8px; transition: background .3s; }
+  nav.side h2 { font-size: .7rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); padding: 6px 10px; font-weight: 600; }
+  .nav-item { width: 100%; display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; text-align: left; font-size: .92rem; transition: background .15s; }
+  .nav-item:hover { background: var(--hover); }
+  .nav-item.active { background: var(--sel); font-weight: 600; }
+  .nav-item .n { margin-left: auto; font-size: .75rem; color: var(--muted); font-family: var(--mono); }
+  .nav-item .icon.folder-i { color: var(--folder); fill: color-mix(in srgb, var(--folder) 35%, transparent); }
+
+  main { flex: 1; min-width: 0; padding: 18px; }
+  .view { animation: open .32s ease both; }
+
+  /* Carpetes (vista principal) */
+  .folders { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+  .folder {
+    display: flex; align-items: center; gap: 16px; padding: 18px; text-align: left; border-radius: 12px;
+    border: 1px solid transparent; transition: background .18s, border-color .18s, transform .18s;
+    animation: rise .45s ease both;
+  }
+  .folder:hover { background: var(--hover); border-color: var(--border); transform: translateY(-2px); }
+  .folder:active { transform: translateY(0) scale(.98); }
+  .folder .big { width: 64px; height: 64px; color: var(--folder); fill: color-mix(in srgb, var(--folder) 40%, transparent); stroke-width: 1.4; transition: transform .25s; }
+  .folder:hover .big { transform: rotate(-4deg) scale(1.06); }
+  .folder strong { display: block; font-size: 1.05rem; font-weight: 600; }
+  .folder small { color: var(--muted); font-size: .82rem; }
+
+  /* Llistat de fitxers */
+  .list-head, .row { display: grid; grid-template-columns: minmax(0, 1fr) 170px 80px 160px; align-items: center; gap: 12px; padding: 0 14px; }
+  .list-head { height: 34px; font-size: .78rem; color: var(--muted); border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: .06em; }
+  ul.files { list-style: none; }
+  .row {
+    min-height: 48px; border-bottom: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+    color: inherit; text-decoration: none; border-radius: 8px; transition: background .15s;
+    animation: rise .4s ease both; animation-delay: calc(var(--i, 0) * 35ms);
+  }
+  .row:hover, .row:focus-visible { background: var(--hover); }
+  .row .name { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .row .name span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .row .name .icon { width: 1.6em; height: 1.6em; color: var(--pdf); }
+  .row .cat, .row .type { color: var(--muted); font-size: .88rem; }
+  .row .type { font-family: var(--mono); }
+  .dl {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 32px; padding: 0 12px;
+    border-radius: 8px; border: 1px solid var(--border); font-size: .85rem; background: var(--panel-2);
+    transition: background .2s, color .2s, border-color .2s;
+  }
+  .row:hover .dl { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .row.done .dl { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .row.done .dl .icon { animation: pop .4s ease; }
+
+  .empty { text-align: center; padding: 60px 16px; color: var(--muted); animation: rise .4s ease both; }
+  .empty .icon { width: 3rem; height: 3rem; opacity: .5; margin-bottom: 10px; }
+  .empty p { font-size: 1.05rem; color: var(--text); }
+
+  .status { display: flex; justify-content: space-between; gap: 12px; padding: 7px 14px; font-size: .78rem; color: var(--muted); border-top: 1px solid var(--border); background: var(--panel-2); font-family: var(--mono); }
+  footer.note { margin-top: 14px; font-size: .78rem; color: var(--muted); text-align: center; }
+
+  /* ---------- Animacions ---------- */
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes open { from { opacity: 0; transform: scale(.985) translateY(6px); } to { opacity: 1; transform: none; } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes pop { 50% { transform: scale(1.35); } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 860px) {
+    nav.side { display: none; }
+    .list-head, .row { grid-template-columns: minmax(0, 1fr) 80px 130px; }
+    .list-head .c-cat, .row .cat { display: none; }
+  }
+  @media (max-width: 560px) {
+    body { padding: 12px 8px; }
+    main { padding: 10px; }
+    .titlebar .path-title { display: none; }
+    .search { flex: 1 1 100%; order: 5; }
+    .list-head { display: none; }
+    .row { grid-template-columns: minmax(0, 1fr) auto; padding: 8px 10px; }
+    .row .type { display: none; }
+    .dl span { display: none; }
+    .dl { width: 36px; padding: 0; }
+    .folders { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+
+<!-- =====================================================================
+     HTML
+     ===================================================================== -->
+<body>
+
+<!-- Icones SVG (sprite intern, sense recursos externs) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.2a1.5 1.5 0 0 1 1.1.5L11.2 7H19.5A1.5 1.5 0 0 1 21 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5z"/></symbol>
+  <symbol id="i-pdf" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M8.5 16.5h1.6a1.2 1.2 0 0 0 0-2.4H8.5v3.4M13 17.5v-3.4h.9a1.7 1.7 0 0 1 0 3.4zM17.5 14.1h-2v3.4M15.5 15.8h1.6" stroke-width="1.2"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+  <symbol id="i-fwd" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.6-5.9M20 4v5h-5"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7M5.5 9.5V20h13V9.5M10 20v-5h4v5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-server" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></symbol>
+</svg>
+
+<header class="hero">
+  <span class="tag">// smx · repositori</span>
+  <h1>Índex d'activitats</h1>
+  <p>Activitats de Sistemes Microinformàtics i Xarxes</p>
+</header>
+
+<div class="window" role="application" aria-label="Explorador d'activitats">
+  <div class="titlebar" aria-hidden="true">
+    <span class="dots"><i></i><i></i><i></i></span>
+    <svg class="icon"><use href="#i-server"/></svg>
+    <span class="path-title" id="titlePath">smx://activitats</span>
+    <span class="spacer"></span>
+  </div>
+
+  <div class="toolbar">
+    <button class="tbtn" id="btnBack" aria-label="Enrere" title="Enrere (Alt+←)"><svg class="icon"><use href="#i-back"/></svg></button>
+    <button class="tbtn" id="btnFwd" aria-label="Endavant" title="Endavant (Alt+→)"><svg class="icon"><use href="#i-fwd"/></svg></button>
+    <button class="tbtn" id="btnRefresh" aria-label="Actualitzar" title="Actualitzar"><svg class="icon"><use href="#i-refresh"/></svg></button>
+    <nav class="address" id="breadcrumb" aria-label="Ruta actual"></nav>
+    <div class="search" id="searchBox" role="search">
+      <svg class="icon"><use href="#i-search"/></svg>
+      <input type="search" id="q" placeholder="Cerca activitats…" aria-label="Cerca activitats" autocomplete="off">
+      <button class="clear" id="btnClear" aria-label="Esborra la cerca"><svg class="icon"><use href="#i-x"/></svg></button>
+    </div>
+    <button class="tbtn theme" id="btnTheme" aria-label="Canvia entre mode clar i fosc" title="Mode clar / fosc">
+      <svg class="icon moon"><use href="#i-moon"/></svg><svg class="icon sun"><use href="#i-sun"/></svg>
+    </button>
+  </div>
+
+  <div class="body">
+    <nav class="side" id="side" aria-label="Carpetes"></nav>
+    <main id="view" tabindex="-1" aria-live="polite"></main>
+  </div>
+
+  <div class="status"><span id="statusLeft">0 elements</span><span id="statusRight">PDF · descàrrega directa</span></div>
+</div>
+
+<footer class="note">Repositori d'activitats · Sistemes Microinformàtics i Xarxes</footer>
+
+<!-- =====================================================================
+     JAVASCRIPT
+     ===================================================================== -->
+<script>
+/* ---------------------------------------------------------------------
+   CONFIGURACIÓ — AQUÍ ÉS ON AFEGEIXES O ELIMINES ACTIVITATS
+   ---------------------------------------------------------------------
+   Cada activitat té:
+     nom    → text que es mostra a la llista
+     fitxer → nom EXACTE del PDF (al mateix directori que index.html)
+
+   Per afegir una activitat: copia una línia { nom: "...", fitxer: "..." },
+   i enganxa-la dins de la categoria que vulguis (separades per comes).
+   --------------------------------------------------------------------- */
+const activitats = {
+  xarxes: [
+    { nom: "DHCP A1", fitxer: "DHCP_A1.pdf" },   // ← EXEMPLE
+    { nom: "DHCP A2", fitxer: "DHCP_A2.pdf" },   // ← EXEMPLE
+    { nom: "DNS A1",  fitxer: "DNS_A1.pdf"  },   // ← EXEMPLE
+    { nom: "FTP A1",  fitxer: "FTP_A1.pdf"  }    // ← EXEMPLE (l'última línia sense coma)
+  ],
+  seguretat: [
+    { nom: "Firewall A1", fitxer: "Firewall_A1.pdf" },  // ← EXEMPLE
+    { nom: "Firewall A2", fitxer: "Firewall_A2.pdf" },  // ← EXEMPLE
+    { nom: "VPN A1",      fitxer: "VPN_A1.pdf"      }   // ← EXEMPLE
+  ]
+};
+
+/* Categories (carpetes virtuals): clau de "activitats" → nom visible */
+const categories = [
+  { clau: "xarxes",    nom: "Serveis en xarxes" },
+  { clau: "seguretat", nom: "Seguretat" }
+];
+
+/* ---------------------------------------------------------------------
+   LÒGICA (no cal tocar res d'aquí avall)
+   --------------------------------------------------------------------- */
+const $ = (s) => document.querySelector(s);
+const view = $('#view'), crumbEl = $('#breadcrumb'), sideEl = $('#side');
+const qInput = $('#q'), searchBox = $('#searchBox');
+const ico = (id, cls = '') => `<svg class="icon ${cls}" aria-hidden="true"><use href="#i-${id}"/></svg>`;
+const esc = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm = (s) => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+const catNom = (k) => (categories.find(c => c.clau === k) || {}).nom || k;
+const plural = (n) => n === 1 ? '1 activitat' : n + ' activitats';
+
+/* Estat i historial de navegació (sense recarregar la pàgina) */
+let hist = [null], idx = 0;      // null = Inici; altrament clau de categoria
+let current = null, query = '';
+
+function navigate(path, push = true) {
+  if (push) { hist = hist.slice(0, idx + 1); hist.push(path); idx = hist.length - 1; }
+  current = path;
+  if (push || query) { query = ''; qInput.value = ''; searchBox.classList.remove('has-text'); }
+  render(true);
+}
+function go(delta) {
+  const n = idx + delta;
+  if (n < 0 || n >= hist.length) return;
+  idx = n; current = hist[idx]; query = ''; qInput.value = ''; searchBox.classList.remove('has-text');
+  render(true);
+}
+
+/* Render principal */
+function render(animate) {
+  renderCrumb(); renderSide();
+  $('#btnBack').disabled = idx === 0;
+  $('#btnFwd').disabled = idx >= hist.length - 1;
+  $('#titlePath').textContent = 'smx://activitats' + (current ? '/' + current : '');
+
+  let html, count;
+  if (query) {
+    const q = norm(query);
+    const res = [];
+    categories.forEach(c => (activitats[c.clau] || []).forEach(a => {
+      if (norm(a.nom).includes(q) || norm(a.fitxer).includes(q) || norm(c.nom).includes(q) || norm(c.clau).includes(q))
+        res.push({ ...a, cat: c.nom });
+    }));
+    count = res.length;
+    html = res.length ? listHTML(res, true) : emptyHTML();
+  } else if (current) {
+    const items = (activitats[current] || []).map(a => ({ ...a, cat: catNom(current) }));
+    count = items.length;
+    html = items.length ? listHTML(items, false) : emptyHTML('Aquesta carpeta és buida.');
+  } else {
+    count = categories.length;
+    html = `<div class="folders">` + categories.map((c, i) => `
+      <button class="folder" style="animation-delay:${i * 70}ms" data-open="${esc(c.clau)}" aria-label="Obre la carpeta ${esc(c.nom)}">
+        ${ico('folder', 'big')}
+        <span><strong>${esc(c.nom)}</strong><small>${plural((activitats[c.clau] || []).length)}</small></span>
+      </button>`).join('') + `</div>`;
+  }
+  view.innerHTML = `<div class="view" ${animate ? '' : 'style="animation:none"'}>${html}</div>`;
+  $('#statusLeft').textContent = count + (count === 1 ? ' element' : ' elements');
+}
+
+function listHTML(items, withCat) {
+  return `<div class="list-head" aria-hidden="true"><span>Nom</span><span class="c-cat">Categoria</span><span>Tipus</span><span>Acció</span></div>
+  <ul class="files">` + items.map((a, i) => `
+    <li><a class="row" style="--i:${i}" href="${esc(a.fitxer)}" download="${esc(a.fitxer)}" aria-label="Descarrega ${esc(a.nom)} en PDF">
+      <span class="name">${ico('pdf')}<span>${esc(a.nom)}</span></span>
+      <span class="cat">${esc(a.cat)}</span>
+      <span class="type">PDF</span>
+      <span class="dl">${ico('down')}<span>Descarregar</span></span>
+    </a></li>`).join('') + `</ul>`;
+}
+function emptyHTML(msg) {
+  return `<div class="empty">${ico('search')}<p>${msg || "No s'han trobat activitats."}</p></div>`;
+}
+
+function renderCrumb() {
+  const parts = [`<button class="crumb" data-home aria-label="Inici">${ico('home')}Inici</button>`];
+  if (query) {
+    parts.push(`<span class="sep">/</span><span class="crumb" aria-current="page">Resultats de la cerca</span>`);
+  } else if (current) {
+    parts.push(`<span class="sep">/</span><span class="crumb" aria-current="page">${ico('folder')}${esc(catNom(current))}</span>`);
+  } else {
+    parts[0] = `<span class="crumb" aria-current="page">${ico('home')}Índex d'activitats</span>`;
+  }
+  crumbEl.innerHTML = parts.join('');
+}
+
+function renderSide() {
+  sideEl.innerHTML = `<h2>Ubicacions</h2>
+    <button class="nav-item ${!current ? 'active' : ''}" data-home>${ico('home')}Inici</button>` +
+    categories.map(c => `<button class="nav-item ${current === c.clau ? 'active' : ''}" data-open="${esc(c.clau)}">
+      ${ico('folder', 'folder-i')}${esc(c.nom)}<span class="n">${(activitats[c.clau] || []).length}</span></button>`).join('');
+}
+
+/* Esdeveniments (delegació) */
+document.addEventListener('click', (e) => {
+  const open = e.target.closest('[data-open]');
+  if (open) return navigate(open.dataset.open);
+  if (e.target.closest('[data-home]')) return navigate(null);
+  const row = e.target.closest('a.row');           // feedback visual de descàrrega
+  if (row) {
+    const lbl = row.querySelector('.dl span');
+    row.classList.add('done'); lbl.textContent = 'Descarregant…';
+    setTimeout(() => { row.classList.remove('done'); lbl.textContent = 'Descarregar'; }, 1600);
+  }
+});
+$('#btnBack').addEventListener('click', () => go(-1));
+$('#btnFwd').addEventListener('click', () => go(1));
+$('#btnRefresh').addEventListener('click', (e) => {
+  const b = e.currentTarget; b.classList.remove('spin'); void b.offsetWidth; b.classList.add('spin');
+  render(true);
+});
+qInput.addEventListener('input', () => {
+  query = qInput.value.trim();
+  searchBox.classList.toggle('has-text', qInput.value.length > 0);
+  render(false);
+});
+$('#btnClear').addEventListener('click', () => { qInput.value = ''; query = ''; searchBox.classList.remove('has-text'); render(true); qInput.focus(); });
+document.addEventListener('keydown', (e) => {
+  if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+  else if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+  else if (e.key === '/' && document.activeElement !== qInput) { e.preventDefault(); qInput.focus(); }
+  else if (e.key === 'Escape' && document.activeElement === qInput) { qInput.blur(); }
+});
+
+/* Mode clar / fosc amb localStorage */
+$('#btnTheme').addEventListener('click', () => {
+  const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  try { localStorage.setItem('smx-tema', next); } catch (e) {}
+});
+
+render(true);
+</script>
+</body>
+</html>
