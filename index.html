@@ -23,7 +23,7 @@
     --bg: #f3f4f6; --panel: #ffffff; --panel-2: #f8f9fb; --side: #eef0f4;
     --text: #1b1f27; --muted: #5d6675; --border: #dde1e8;
     --hover: #e8eefb; --sel: #d6e4fc; --accent: #0a64d8; --accent-2: #0b4fa8;
-    --folder: #f4b93a; --folder-d: #d99a14; --pdf: #d9382e; --ok: #1f9d55;
+    --folder: #f4b93a; --folder-d: #d99a14; --pdf: #d9382e; --ok: #1f9d55; --danger: #c62828;
     --shadow: 0 8px 30px rgba(20, 30, 60, .08);
     --mono: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace;
   }
@@ -31,7 +31,7 @@
     --bg: #101216; --panel: #1a1d23; --panel-2: #161920; --side: #14171c;
     --text: #e8ebf0; --muted: #9099a8; --border: #2b303a;
     --hover: #242a36; --sel: #26395c; --accent: #5aa2ff; --accent-2: #86bbff;
-    --folder: #e9b03a; --folder-d: #c48f1c; --pdf: #ef5a4f; --ok: #45c47c;
+    --folder: #e9b03a; --folder-d: #c48f1c; --pdf: #ef5a4f; --ok: #45c47c; --danger: #ef6b6b;
     --shadow: 0 8px 30px rgba(0, 0, 0, .45);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -44,9 +44,40 @@
     background-image: radial-gradient(circle at 15% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 40%);
     background-attachment: fixed;
   }
+  body.locked { overflow: hidden; }
+  #app { width: 100%; display: flex; flex-direction: column; align-items: center; }
+  #app[hidden] { display: none; }
   .icon { width: 1.2em; height: 1.2em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
   button { font: inherit; color: inherit; cursor: pointer; background: none; border: 0; }
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+
+  /* ---------- Avís legal (pantalla d'accés obligatòria) ---------- */
+  .gate { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 16px; background: color-mix(in srgb, var(--bg) 92%, #000); backdrop-filter: blur(6px); animation: fade .3s ease both; }
+  .gate[hidden] { display: none; }
+  .gate-card { width: 100%; max-width: 680px; max-height: 92vh; display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; animation: open .35s ease both; }
+  .gate-head { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--border); background: var(--panel-2); }
+  .gate-head .icon { width: 1.6em; height: 1.6em; color: var(--accent); }
+  .gate-head h2 { font-size: 1.15rem; font-weight: 600; }
+  .gate-head small { display: block; color: var(--muted); font-size: .78rem; font-family: var(--mono); }
+  .gate-text { padding: 16px 20px; overflow-y: auto; font-size: .9rem; color: var(--text); }
+  .gate-text h3 { font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); margin: 14px 0 4px; }
+  .gate-text h3:first-child { margin-top: 0; }
+  .gate-text p { margin-bottom: 6px; text-align: justify; hyphens: auto; }
+  .gate-text .law { font-family: var(--mono); font-size: .8rem; color: var(--muted); }
+  .gate-foot { padding: 14px 20px; border-top: 1px solid var(--border); background: var(--panel-2); display: flex; flex-direction: column; gap: 12px; }
+  .check { display: flex; gap: 10px; align-items: flex-start; font-size: .88rem; cursor: pointer; }
+  .check input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--accent); flex: none; }
+  .gate-actions { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
+  .btn { height: 38px; padding: 0 18px; border-radius: 8px; border: 1px solid var(--border); font-size: .9rem; transition: background .2s, opacity .2s, transform .15s; }
+  .btn:hover:not(:disabled) { background: var(--hover); }
+  .btn:active:not(:disabled) { transform: scale(.97); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  .btn.primary:hover:not(:disabled) { background: var(--accent-2); }
+  .btn:disabled { opacity: .4; cursor: not-allowed; }
+  .gate-denied { padding: 36px 24px; text-align: center; }
+  .gate-denied .icon { width: 3rem; height: 3rem; color: var(--danger); margin-bottom: 10px; }
+  .gate-denied h2 { margin-bottom: 8px; }
+  .gate-denied p { color: var(--muted); margin-bottom: 18px; }
 
   /* ---------- Capçalera ---------- */
   header.hero { width: 100%; max-width: 1100px; margin-bottom: 18px; animation: rise .5s ease both; }
@@ -156,6 +187,7 @@
   /* ---------- Animacions ---------- */
   @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
   @keyframes open { from { opacity: 0; transform: scale(.985) translateY(6px); } to { opacity: 1; transform: none; } }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
   @keyframes spin { to { transform: rotate(360deg); } }
   @keyframes pop { 50% { transform: scale(1.35); } }
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
@@ -177,6 +209,7 @@
     .dl span { display: none; }
     .dl { width: 36px; padding: 0; }
     .folders { grid-template-columns: 1fr; }
+    .gate-actions .btn { flex: 1; }
   }
 </style>
 </head>
@@ -184,7 +217,7 @@
 <!-- =====================================================================
      HTML
      ===================================================================== -->
-<body>
+<body class="locked">
 
 <!-- Icones SVG (sprite intern, sense recursos externs) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -200,7 +233,47 @@
   <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7M5.5 9.5V20h13V9.5M10 20v-5h4v5"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
   <symbol id="i-server" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
 </svg>
+
+<!-- ===== AVÍS LEGAL: cal acceptar-lo per accedir a la web ===== -->
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle" aria-describedby="gateText">
+  <div class="gate-card" id="gateCard">
+    <div class="gate-head">
+      <svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>
+      <div><h2 id="gateTitle">Avís legal i condicions d'accés</h2><small>smx://avis-legal</small></div>
+    </div>
+    <div class="gate-text" id="gateText" tabindex="0">
+      <h3>1. Propietat intel·lectual</h3>
+      <p>Els continguts d'aquest lloc web (activitats, documents en format PDF, textos, estructura, disseny i codi font) són obra de l'autor i estan protegits per la normativa de propietat intel·lectual. D'acord amb el Reial decret legislatiu 1/1996, de 12 d'abril, pel qual s'aprova el text refós de la Llei de propietat intel·lectual, l'autor és titular dels drets morals sobre l'obra (art. 14) i dels drets d'explotació en exclusiva, que comprenen la reproducció (art. 18), la distribució (art. 19), la comunicació pública (art. 20) i la transformació (art. 21).</p>
+      <p class="law">TRLPI, RDL 1/1996 · arts. 14, 17, 18, 19, 20 i 21</p>
+
+      <h3>2. Ús permès i ús prohibit</h3>
+      <p>La descàrrega dels documents s'autoritza exclusivament per a ús personal i formatiu. Queda prohibit reproduir, copiar, distribuir, publicar, comunicar públicament, transformar, plagiar o comercialitzar total o parcialment els continguts sense l'autorització prèvia, expressa i per escrit de l'autor.</p>
+
+      <h3>3. Accions legals per infracció</h3>
+      <p>La utilització no autoritzada dels continguts pot donar lloc a accions civils de cessació de l'activitat il·lícita i d'indemnització per danys i perjudicis (art. 138 del TRLPI) i, si escau, a responsabilitat penal per delictes contra la propietat intel·lectual (art. 270 del Codi Penal, Llei orgànica 10/1995, de 23 de novembre).</p>
+      <p class="law">TRLPI art. 138 · Codi Penal art. 270</p>
+
+      <h3>4. Exempció de responsabilitat</h3>
+      <p>L'usuari és l'únic responsable de l'ús que faci dels continguts descarregats. L'autor i creador d'aquest lloc web no assumeix, en cap cas, responsabilitat per l'ús que en facin els usuaris ni pels actes d'aquests. En particular, si un usuari copia, reprodueix o difon els continguts sense autorització i és descobert, l'autor no serà responsable de les seves accions ni de les conseqüències que se'n derivin (reclamacions, sancions o procediments civils, administratius o penals), tot això en la mesura màxima permesa per la llei.</p>
+
+      <h3>5. Acceptació</h3>
+      <p>L'accés al lloc web està condicionat a l'acceptació íntegra d'aquest avís. Si no l'accepteu, no podeu accedir als continguts.</p>
+    </div>
+    <div class="gate-foot">
+      <label class="check"><input type="checkbox" id="chkAccept"><span>He llegit aquest avís legal i n'accepto íntegrament les condicions.</span></label>
+      <div class="gate-actions">
+        <button class="btn" id="btnDeny">No accepto</button>
+        <button class="btn primary" id="btnAccept" disabled>Accepto i vull entrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== APLICACIÓ (oculta i inactiva fins que s'accepta l'avís) ===== -->
+<div id="app" hidden inert>
 
 <header class="hero">
   <span class="tag">// smx · repositori</span>
@@ -239,7 +312,9 @@
   <div class="status"><span id="statusLeft">0 elements</span><span id="statusRight">PDF · descàrrega directa</span></div>
 </div>
 
-<footer class="note">Repositori d'activitats · Sistemes Microinformàtics i Xarxes</footer>
+<footer class="note">Repositori d'activitats · Sistemes Microinformàtics i Xarxes · Continguts protegits per drets d'autor</footer>
+
+</div><!-- /#app -->
 
 <!-- =====================================================================
      JAVASCRIPT
@@ -274,6 +349,13 @@ const categories = [
   { clau: "xarxes",    nom: "Serveis en xarxes" },
   { clau: "seguretat", nom: "Seguretat" }
 ];
+
+/* Avís legal: quan es torna a demanar l'acceptació
+     "sessio" → cada vegada que s'obre la web en una pestanya nova (per defecte)
+     "sempre" → es recorda al navegador (només es demana una vegada)
+     "cada-cop" → es demana a cada càrrega de pàgina                            */
+const RECORDAR_ACCEPTACIO = "sessio";
+const CLAU_AVIS = "smx-avis-acceptat-v1";   // canvia el "v1" per forçar que tothom l'accepti de nou
 
 /* ---------------------------------------------------------------------
    LÒGICA (no cal tocar res d'aquí avall)
@@ -395,6 +477,7 @@ qInput.addEventListener('input', () => {
 });
 $('#btnClear').addEventListener('click', () => { qInput.value = ''; query = ''; searchBox.classList.remove('has-text'); render(true); qInput.focus(); });
 document.addEventListener('keydown', (e) => {
+  if (document.body.classList.contains('locked')) return;   // amb l'avís actiu no hi ha dreceres
   if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
   else if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); go(1); }
   else if (e.key === '/' && document.activeElement !== qInput) { e.preventDefault(); qInput.focus(); }
@@ -408,7 +491,63 @@ $('#btnTheme').addEventListener('click', () => {
   try { localStorage.setItem('smx-tema', next); } catch (e) {}
 });
 
-render(true);
+/* ---------------------------------------------------------------------
+   AVÍS LEGAL: control d'accés
+   L'aplicació (llistat i enllaços als PDF) no es dibuixa fins que
+   l'usuari accepta. Si no accepta, no hi ha accés.
+   --------------------------------------------------------------------- */
+const gate = $('#gate'), app = $('#app');
+const chk = $('#chkAccept'), btnAccept = $('#btnAccept');
+
+function acceptatPrevi() {
+  try {
+    if (RECORDAR_ACCEPTACIO === 'sempre') return localStorage.getItem(CLAU_AVIS) === '1';
+    if (RECORDAR_ACCEPTACIO === 'sessio') return sessionStorage.getItem(CLAU_AVIS) === '1';
+  } catch (e) {}
+  return false;
+}
+function recordarAcceptacio() {
+  try {
+    if (RECORDAR_ACCEPTACIO === 'sempre') localStorage.setItem(CLAU_AVIS, '1');
+    else if (RECORDAR_ACCEPTACIO === 'sessio') sessionStorage.setItem(CLAU_AVIS, '1');
+  } catch (e) {}
+}
+function entrar() {
+  gate.hidden = true;
+  document.body.classList.remove('locked');
+  app.hidden = false; app.inert = false;
+  render(true);                                   // només ara es genera el llistat
+}
+function mostrarAvis() {
+  gate.hidden = false;
+  document.body.classList.add('locked');
+  chk.focus();
+}
+function denegar() {
+  $('#gateCard').innerHTML = `<div class="gate-denied">
+      ${ico('lock')}
+      <h2>Accés denegat</h2>
+      <p>Per accedir als continguts cal acceptar l'avís legal. Sense l'acceptació no és possible entrar al lloc web.</p>
+      <button class="btn primary" id="btnRetry">Tornar a llegir l'avís</button>
+    </div>`;
+  $('#btnRetry').addEventListener('click', () => location.reload());
+  $('#btnRetry').focus();
+}
+
+chk.addEventListener('change', () => { btnAccept.disabled = !chk.checked; });
+btnAccept.addEventListener('click', () => { if (!chk.checked) return; recordarAcceptacio(); entrar(); });
+$('#btnDeny').addEventListener('click', denegar);
+/* Manté el focus dins del diàleg mentre és visible */
+gate.addEventListener('keydown', (e) => {
+  if (e.key !== 'Tab') return;
+  const f = [...gate.querySelectorAll('button:not(:disabled), input, [tabindex="0"]')];
+  if (!f.length) return;
+  const first = f[0], last = f[f.length - 1];
+  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+});
+
+if (acceptatPrevi()) entrar(); else mostrarAvis();
 </script>
 </body>
 </html>
