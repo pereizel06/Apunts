@@ -325,22 +325,30 @@
    ---------------------------------------------------------------------
    Cada activitat té:
      nom    → text que es mostra a la llista
-     fitxer → nom EXACTE del PDF (al mateix directori que index.html)
+     fitxer → nom que tindrà el PDF en descarregar-se (p. ex. "DHCP_A1.pdf")
+     url    → (OPCIONAL) adreça completa si el PDF és en un ALTRE domini.
+              Si no la poses, el PDF s'agafa del mateix directori que index.html.
 
-   Per afegir una activitat: copia una línia { nom: "...", fitxer: "..." },
-   i enganxa-la dins de la categoria que vulguis (separades per comes).
+   Per afegir una activitat: copia una línia, enganxa-la dins de la categoria
+   que vulguis (separades per comes; l'última sense coma) i canvia els textos.
+
+   NOTA per a PDF d'un altre domini: aquell servidor ha d'enviar la capçalera
+   "Access-Control-Allow-Origin" (CORS). Si no ho fa, el PDF s'obrirà en una
+   pestanya nova en lloc de descarregar-se directament.
    --------------------------------------------------------------------- */
 const activitats = {
   xarxes: [
-    { nom: "DHCP A1", fitxer: "DHCP_A1_IzquierdoPere-pdf" },   // ← EXEMPLE
-    { nom: "DHCP A2", fitxer: "DHCP_A2.pdf" },   // ← EXEMPLE
-    { nom: "DNS A1",  fitxer: "DNS_A1.pdf"  },   // ← EXEMPLE
-    { nom: "FTP A1",  fitxer: "FTP_A1.pdf"  }    // ← EXEMPLE (l'última línia sense coma)
+    { nom: "DHCP A1", fitxer: "DHCP_A1_IzquierdoPere.pdf" },   // ← EXEMPLE (mateix domini)
+    { nom: "DHCP A2", fitxer: "DHCP_A2.pdf" },   // ← EXEMPLE (mateix domini)
+    { nom: "DNS A1",  fitxer: "DNS_A1.pdf" },    // ← EXEMPLE (mateix domini)
+    { nom: "FTP A1",  fitxer: "FTP_A1.pdf",
+      url: "https://altredomini.com/pdf/FTP_A1.pdf" }   // ← EXEMPLE (ALTRE domini)
   ],
   seguretat: [
-    { nom: "Firewall A1", fitxer: "Firewall_A1.pdf" },  // ← EXEMPLE
-    { nom: "Firewall A2", fitxer: "Firewall_A2.pdf" },  // ← EXEMPLE
-    { nom: "VPN A1",      fitxer: "VPN_A1.pdf"      }   // ← EXEMPLE
+    { nom: "Firewall A1", fitxer: "Firewall_A1.pdf" },  // ← EXEMPLE (mateix domini)
+    { nom: "Firewall A2", fitxer: "Firewall_A2.pdf" },  // ← EXEMPLE (mateix domini)
+    { nom: "VPN A1",      fitxer: "VPN_A1.pdf",
+      url: "https://altredomini.com/pdf/VPN_A1.pdf" }   // ← EXEMPLE (ALTRE domini)
   ]
 };
 
@@ -419,10 +427,11 @@ function render(animate) {
   $('#statusLeft').textContent = count + (count === 1 ? ' element' : ' elements');
 }
 
+/* Llistat: l'enllaç usa "url" (altre domini) si existeix; si no, el fitxer local */
 function listHTML(items, withCat) {
   return `<div class="list-head" aria-hidden="true"><span>Nom</span><span class="c-cat">Categoria</span><span>Tipus</span><span>Acció</span></div>
   <ul class="files">` + items.map((a, i) => `
-    <li><a class="row" style="--i:${i}" href="${esc(a.fitxer)}" download="${esc(a.fitxer)}" aria-label="Descarrega ${esc(a.nom)} en PDF">
+    <li><a class="row" style="--i:${i}" href="${esc(a.url || a.fitxer)}" download="${esc(a.fitxer)}" aria-label="Descarrega ${esc(a.nom)} en PDF">
       <span class="name">${ico('pdf')}<span>${esc(a.nom)}</span></span>
       <span class="cat">${esc(a.cat)}</span>
       <span class="type">PDF</span>
@@ -457,13 +466,33 @@ document.addEventListener('click', (e) => {
   const open = e.target.closest('[data-open]');
   if (open) return navigate(open.dataset.open);
   if (e.target.closest('[data-home]')) return navigate(null);
-  const row = e.target.closest('a.row');           // feedback visual de descàrrega
-  if (row) {
-    const lbl = row.querySelector('.dl span');
-    row.classList.add('done'); lbl.textContent = 'Descarregant…';
-    setTimeout(() => { row.classList.remove('done'); lbl.textContent = 'Descarregar'; }, 1600);
-  }
+  const row = e.target.closest('a.row');
+  if (row) { e.preventDefault(); descarregar(row); }
 });
+
+/* Descàrrega directa: funciona també entre dominis si el servidor permet CORS.
+   Si no ho permet, com a alternativa s'obre el PDF en una pestanya nova. */
+async function descarregar(row) {
+  if (row.classList.contains('done')) return;          // evita doble clic
+  const lbl = row.querySelector('.dl span');
+  const url = row.href;
+  const nom = row.getAttribute('download') || 'activitat.pdf';
+  row.classList.add('done'); lbl.textContent = 'Descarregant…';
+  try {
+    const r = await fetch(url, { mode: 'cors' });
+    if (!r.ok) throw new Error(r.status);
+    const blob = new Blob([await r.blob()], { type: 'application/pdf' });
+    const obj = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = obj; a.download = nom;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(obj), 4000);
+  } catch (err) {
+    window.open(url, '_blank', 'noopener');            // alternativa si el servidor no permet CORS
+  }
+  setTimeout(() => { row.classList.remove('done'); lbl.textContent = 'Descarregar'; }, 1600);
+}
+
 $('#btnBack').addEventListener('click', () => go(-1));
 $('#btnFwd').addEventListener('click', () => go(1));
 $('#btnRefresh').addEventListener('click', (e) => {
