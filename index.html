@@ -3,580 +3,541 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Índex d'activitats — SMX</title>
-<meta name="description" content="Repositori d'activitats de Sistemes Microinformàtics i Xarxes.">
-<!-- Aplica el tema abans de pintar per evitar parpelleig -->
+<title>Blog i tutorials de xarxes SMX: DHCP, DNS, FTP, tallafocs i VPN | pereizel.com</title>
+<meta name="description" content="Tutorials pas a pas de Sistemes Microinformàtics i Xarxes: DHCP, DNS, FTP, ufw, WireGuard, subxarxes i diagnòstic. A més, activitats en PDF.">
+<link rel="canonical" href="https://pereizel.com/">
+<!-- ADSENSE: enganxa aquí el teu script quan Google aprovi el lloc:
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
 <script>
-  (function () {
-    var t = null;
-    try { t = localStorage.getItem('smx-tema'); } catch (e) {}
-    if (!t) t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-theme', t);
-  })();
+(function(){var t=null;try{t=localStorage.getItem('smx-tema')}catch(e){}
+if(!t)t=matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+document.documentElement.setAttribute('data-theme',t)})();
 </script>
-
-<!-- =====================================================================
-     CSS
-     ===================================================================== -->
 <style>
-  :root {
-    --bg: #f3f4f6; --panel: #ffffff; --panel-2: #f8f9fb; --side: #eef0f4;
-    --text: #1b1f27; --muted: #5d6675; --border: #dde1e8;
-    --hover: #e8eefb; --sel: #d6e4fc; --accent: #0a64d8; --accent-2: #0b4fa8;
-    --folder: #f4b93a; --folder-d: #d99a14; --pdf: #d9382e; --ok: #1f9d55; --danger: #c62828;
-    --shadow: 0 8px 30px rgba(20, 30, 60, .08);
-    --mono: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace;
-  }
-  [data-theme="dark"] {
-    --bg: #101216; --panel: #1a1d23; --panel-2: #161920; --side: #14171c;
-    --text: #e8ebf0; --muted: #9099a8; --border: #2b303a;
-    --hover: #242a36; --sel: #26395c; --accent: #5aa2ff; --accent-2: #86bbff;
-    --folder: #e9b03a; --folder-d: #c48f1c; --pdf: #ef5a4f; --ok: #45c47c; --danger: #ef6b6b;
-    --shadow: 0 8px 30px rgba(0, 0, 0, .45);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; }
-  body {
-    font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
-    background: var(--bg); color: var(--text); line-height: 1.4;
-    transition: background .3s, color .3s;
-    display: flex; flex-direction: column; align-items: center; padding: 28px 16px;
-    background-image: radial-gradient(circle at 15% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 40%);
-    background-attachment: fixed;
-  }
-  body.locked { overflow: hidden; }
-  #app { width: 100%; display: flex; flex-direction: column; align-items: center; }
-  #app[hidden] { display: none; }
-  .icon { width: 1.2em; height: 1.2em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
-  button { font: inherit; color: inherit; cursor: pointer; background: none; border: 0; }
-  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
-
-  /* ---------- Avís legal (pantalla d'accés obligatòria) ---------- */
-  .gate { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 16px; background: color-mix(in srgb, var(--bg) 92%, #000); backdrop-filter: blur(6px); animation: fade .3s ease both; }
-  .gate[hidden] { display: none; }
-  .gate-card { width: 100%; max-width: 680px; max-height: 92vh; display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; animation: open .35s ease both; }
-  .gate-head { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--border); background: var(--panel-2); }
-  .gate-head .icon { width: 1.6em; height: 1.6em; color: var(--accent); }
-  .gate-head h2 { font-size: 1.15rem; font-weight: 600; }
-  .gate-head small { display: block; color: var(--muted); font-size: .78rem; font-family: var(--mono); }
-  .gate-text { padding: 16px 20px; overflow-y: auto; font-size: .9rem; color: var(--text); }
-  .gate-text h3 { font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); margin: 14px 0 4px; }
-  .gate-text h3:first-child { margin-top: 0; }
-  .gate-text p { margin-bottom: 6px; text-align: justify; hyphens: auto; }
-  .gate-text .law { font-family: var(--mono); font-size: .8rem; color: var(--muted); }
-  .gate-foot { padding: 14px 20px; border-top: 1px solid var(--border); background: var(--panel-2); display: flex; flex-direction: column; gap: 12px; }
-  .check { display: flex; gap: 10px; align-items: flex-start; font-size: .88rem; cursor: pointer; }
-  .check input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--accent); flex: none; }
-  .gate-actions { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
-  .btn { height: 38px; padding: 0 18px; border-radius: 8px; border: 1px solid var(--border); font-size: .9rem; transition: background .2s, opacity .2s, transform .15s; }
-  .btn:hover:not(:disabled) { background: var(--hover); }
-  .btn:active:not(:disabled) { transform: scale(.97); }
-  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
-  .btn.primary:hover:not(:disabled) { background: var(--accent-2); }
-  .btn:disabled { opacity: .4; cursor: not-allowed; }
-  .gate-denied { padding: 36px 24px; text-align: center; }
-  .gate-denied .icon { width: 3rem; height: 3rem; color: var(--danger); margin-bottom: 10px; }
-  .gate-denied h2 { margin-bottom: 8px; }
-  .gate-denied p { color: var(--muted); margin-bottom: 18px; }
-
-  /* ---------- Capçalera ---------- */
-  header.hero { width: 100%; max-width: 1100px; margin-bottom: 18px; animation: rise .5s ease both; }
-  .hero h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 600; letter-spacing: -.02em; }
-  .hero p { color: var(--muted); margin-top: 4px; }
-  .hero .tag { font-family: var(--mono); font-size: .75rem; color: var(--accent); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 6px; display: block; }
-
-  /* ---------- Finestra de l'explorador ---------- */
-  .window {
-    width: 100%; max-width: 1100px; background: var(--panel); border: 1px solid var(--border);
-    border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column;
-    min-height: 480px; transition: background .3s, border-color .3s; animation: rise .55s .05s ease both;
-  }
-  .titlebar { display: flex; align-items: center; gap: 8px; padding: 8px 14px; background: var(--panel-2); border-bottom: 1px solid var(--border); font-size: .82rem; color: var(--muted); }
-  .dots { display: flex; gap: 6px; margin-right: 6px; }
-  .dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--border); }
-  .titlebar .path-title { font-family: var(--mono); }
-  .titlebar .spacer { flex: 1; }
-
-  .toolbar { display: flex; align-items: center; gap: 6px; padding: 10px 12px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
-  .tbtn { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 8px; transition: background .15s, transform .15s; }
-  .tbtn:hover:not(:disabled) { background: var(--hover); }
-  .tbtn:active:not(:disabled) { transform: scale(.92); }
-  .tbtn:disabled { opacity: .35; cursor: default; }
-  .tbtn.spin .icon { animation: spin .6s ease; }
-  .address {
-    flex: 1 1 260px; min-width: 0; display: flex; align-items: center; gap: 2px; height: 34px; padding: 0 8px;
-    background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; overflow-x: auto; white-space: nowrap; scrollbar-width: none;
-  }
-  .address::-webkit-scrollbar { display: none; }
-  .crumb { padding: 3px 8px; border-radius: 6px; font-size: .9rem; display: inline-flex; align-items: center; gap: 6px; transition: background .15s; }
-  button.crumb:hover { background: var(--hover); }
-  .crumb[aria-current="page"] { font-weight: 600; }
-  .sep { color: var(--muted); font-size: .85rem; }
-  .search { position: relative; flex: 0 1 260px; }
-  .search .icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
-  .search input {
-    width: 100%; height: 34px; padding: 0 30px 0 34px; font: inherit; font-size: .9rem; color: var(--text);
-    background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; transition: border-color .2s, box-shadow .2s;
-  }
-  .search input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); }
-  .search .clear { position: absolute; right: 4px; top: 4px; width: 26px; height: 26px; border-radius: 6px; color: var(--muted); display: none; }
-  .search .clear:hover { background: var(--hover); }
-  .search.has-text .clear { display: block; }
-  .theme .sun { display: none; }
-  [data-theme="dark"] .theme .sun { display: block; }
-  [data-theme="dark"] .theme .moon { display: none; }
-
-  /* ---------- Cos: panell lateral + contingut ---------- */
-  .body { display: flex; flex: 1; min-height: 0; }
-  nav.side { width: 210px; flex: none; background: var(--side); border-right: 1px solid var(--border); padding: 12px 8px; transition: background .3s; }
-  nav.side h2 { font-size: .7rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); padding: 6px 10px; font-weight: 600; }
-  .nav-item { width: 100%; display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; text-align: left; font-size: .92rem; transition: background .15s; }
-  .nav-item:hover { background: var(--hover); }
-  .nav-item.active { background: var(--sel); font-weight: 600; }
-  .nav-item .n { margin-left: auto; font-size: .75rem; color: var(--muted); font-family: var(--mono); }
-  .nav-item .icon.folder-i { color: var(--folder); fill: color-mix(in srgb, var(--folder) 35%, transparent); }
-
-  main { flex: 1; min-width: 0; padding: 18px; }
-  .view { animation: open .32s ease both; }
-
-  /* Carpetes (vista principal) */
-  .folders { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
-  .folder {
-    display: flex; align-items: center; gap: 16px; padding: 18px; text-align: left; border-radius: 12px;
-    border: 1px solid transparent; transition: background .18s, border-color .18s, transform .18s;
-    animation: rise .45s ease both;
-  }
-  .folder:hover { background: var(--hover); border-color: var(--border); transform: translateY(-2px); }
-  .folder:active { transform: translateY(0) scale(.98); }
-  .folder .big { width: 64px; height: 64px; color: var(--folder); fill: color-mix(in srgb, var(--folder) 40%, transparent); stroke-width: 1.4; transition: transform .25s; }
-  .folder:hover .big { transform: rotate(-4deg) scale(1.06); }
-  .folder strong { display: block; font-size: 1.05rem; font-weight: 600; }
-  .folder small { color: var(--muted); font-size: .82rem; }
-
-  /* Llistat de fitxers */
-  .list-head, .row { display: grid; grid-template-columns: minmax(0, 1fr) 170px 80px 160px; align-items: center; gap: 12px; padding: 0 14px; }
-  .list-head { height: 34px; font-size: .78rem; color: var(--muted); border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: .06em; }
-  ul.files { list-style: none; }
-  .row {
-    min-height: 48px; border-bottom: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
-    color: inherit; text-decoration: none; border-radius: 8px; transition: background .15s;
-    animation: rise .4s ease both; animation-delay: calc(var(--i, 0) * 35ms);
-  }
-  .row:hover, .row:focus-visible { background: var(--hover); }
-  .row .name { display: flex; align-items: center; gap: 12px; min-width: 0; }
-  .row .name span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .row .name .icon { width: 1.6em; height: 1.6em; color: var(--pdf); }
-  .row .cat, .row .type { color: var(--muted); font-size: .88rem; }
-  .row .type { font-family: var(--mono); }
-  .dl {
-    display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 32px; padding: 0 12px;
-    border-radius: 8px; border: 1px solid var(--border); font-size: .85rem; background: var(--panel-2);
-    transition: background .2s, color .2s, border-color .2s;
-  }
-  .row:hover .dl { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .row.done .dl { background: var(--ok); border-color: var(--ok); color: #fff; }
-  .row.done .dl .icon { animation: pop .4s ease; }
-
-  .empty { text-align: center; padding: 60px 16px; color: var(--muted); animation: rise .4s ease both; }
-  .empty .icon { width: 3rem; height: 3rem; opacity: .5; margin-bottom: 10px; }
-  .empty p { font-size: 1.05rem; color: var(--text); }
-
-  .status { display: flex; justify-content: space-between; gap: 12px; padding: 7px 14px; font-size: .78rem; color: var(--muted); border-top: 1px solid var(--border); background: var(--panel-2); font-family: var(--mono); }
-  footer.note { margin-top: 14px; font-size: .78rem; color: var(--muted); text-align: center; }
-
-  /* ---------- Animacions ---------- */
-  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-  @keyframes open { from { opacity: 0; transform: scale(.985) translateY(6px); } to { opacity: 1; transform: none; } }
-  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @keyframes pop { 50% { transform: scale(1.35); } }
-  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
-
-  /* ---------- Responsive ---------- */
-  @media (max-width: 860px) {
-    nav.side { display: none; }
-    .list-head, .row { grid-template-columns: minmax(0, 1fr) 80px 130px; }
-    .list-head .c-cat, .row .cat { display: none; }
-  }
-  @media (max-width: 560px) {
-    body { padding: 12px 8px; }
-    main { padding: 10px; }
-    .titlebar .path-title { display: none; }
-    .search { flex: 1 1 100%; order: 5; }
-    .list-head { display: none; }
-    .row { grid-template-columns: minmax(0, 1fr) auto; padding: 8px 10px; }
-    .row .type { display: none; }
-    .dl span { display: none; }
-    .dl { width: 36px; padding: 0; }
-    .folders { grid-template-columns: 1fr; }
-    .gate-actions .btn { flex: 1; }
-  }
+:root{--bg:#f4f3ff;--panel:rgba(255,255,255,.72);--text:#17142b;--muted:#5b5877;--border:rgba(124,92,255,.25);--hover:rgba(124,92,255,.1);--a1:#7c5cff;--a2:#00b8e6;--a3:#ff3fb4;--accent:#6a45ff;--code:#14112b}
+[data-theme=dark]{--bg:#0a0816;--panel:rgba(26,22,52,.62);--text:#eeeaff;--muted:#a49fc8;--border:rgba(140,120,255,.3);--hover:rgba(140,120,255,.15);--accent:#9d86ff;--code:#06050e}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.65;overflow-x:hidden}
+body:before,body:after{content:"";position:fixed;width:60vmax;height:60vmax;border-radius:50%;filter:blur(90px);opacity:.35;z-index:-1;animation:float 18s ease-in-out infinite alternate}
+body:before{background:var(--a1);top:-25vmax;left:-15vmax}
+body:after{background:var(--a3);bottom:-30vmax;right:-20vmax;animation-delay:-9s}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--a2);outline-offset:2px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+#bar{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--a1),var(--a2),var(--a3));z-index:20;box-shadow:0 0 12px var(--a2)}
+#glow{position:fixed;top:0;left:0;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(124,92,255,.22),transparent 65%);pointer-events:none;z-index:-1;transition:transform .15s ease-out}
+header.top{background:var(--panel);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+header.top .wrap{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-top:10px;padding-bottom:10px}
+.logo{font-weight:800;text-decoration:none;color:var(--text)}
+nav.menu{display:flex;gap:16px;flex:1;flex-wrap:wrap;font-size:.92rem}
+nav.menu a{text-decoration:none;color:var(--muted);position:relative;transition:color .2s}
+nav.menu a:after{content:"";position:absolute;left:0;bottom:-3px;height:2px;width:0;background:linear-gradient(90deg,var(--a1),var(--a3));transition:width .3s}
+nav.menu a:hover{color:var(--text)}nav.menu a:hover:after{width:100%}
+button{font:inherit;color:inherit;cursor:pointer;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:6px 12px;transition:transform .15s,background .2s}
+button:hover{background:var(--hover);transform:translateY(-1px)}
+.gt{background:linear-gradient(90deg,var(--a1),var(--a2),var(--a3),var(--a1));background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite}
+.hero{padding:56px 0 24px;text-align:center}
+.badge{display:inline-block;padding:5px 14px;border:1px solid var(--border);border-radius:99px;background:var(--panel);font-size:.82rem;margin-bottom:16px;animation:pulse 2.4s infinite}
+.hero h1{font-size:clamp(2.1rem,6vw,3.8rem);line-height:1.1;margin-bottom:14px;letter-spacing:-.02em}
+#rot{display:inline-block;transition:opacity .3s,transform .3s}
+.hero p{color:var(--muted);max-width:720px;margin:0 auto}
+.cta{display:flex;gap:12px;margin-top:22px;flex-wrap:wrap;justify-content:center}
+.btn{position:relative;overflow:hidden;display:inline-block;text-decoration:none;padding:11px 22px;border-radius:12px;border:1px solid var(--accent);color:var(--accent);font-weight:700;transition:transform .2s,box-shadow .2s}
+.btn.p{background:linear-gradient(135deg,var(--a1),var(--a3));border-color:transparent;color:#fff;box-shadow:0 8px 24px rgba(124,92,255,.4)}
+.btn:hover{transform:translateY(-3px) scale(1.03)}
+.btn.p:after,.dl:after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);transition:left .6s}
+.btn.p:hover:after,.dl:hover:after{left:130%}
+.stats{display:flex;gap:14px;justify-content:center;margin-top:30px;flex-wrap:wrap}
+.stats div{background:var(--panel);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:16px;padding:12px 24px;min-width:130px}
+.stats b{display:block;font-size:2rem;line-height:1.1}
+.stats span{font-size:.8rem;color:var(--muted)}
+.mq{overflow:hidden;margin:26px 0;mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.mq div{display:flex;gap:12px;width:max-content;animation:mq 28s linear infinite}
+.mq span{padding:6px 16px;border:1px solid var(--border);border-radius:99px;background:var(--panel);font-size:.9rem;white-space:nowrap}
+section{padding:30px 0}
+h2{font-size:clamp(1.6rem,3.5vw,2.2rem);margin-bottom:6px;letter-spacing:-.01em}
+.lead{color:var(--muted);margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.act{position:relative;background:var(--panel);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:20px;padding:22px;transform:perspective(700px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .15s,box-shadow .3s}
+.act:hover{box-shadow:0 18px 50px rgba(124,92,255,.35)}
+.act:before{content:"";position:absolute;inset:-1px;border-radius:21px;padding:2px;background:linear-gradient(135deg,var(--a1),var(--a2),var(--a3));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .3s;pointer-events:none}
+.act:hover:before{opacity:1}
+.ic{font-size:2.4rem;width:64px;height:64px;display:grid;place-items:center;border-radius:18px;background:linear-gradient(135deg,rgba(124,92,255,.25),rgba(255,63,180,.25));margin-bottom:12px;animation:bob 3s ease-in-out infinite}
+.act h3{font-size:1.3rem;margin:4px 0}
+.act p{color:var(--muted);margin-bottom:14px;font-size:.93rem}
+.dl{position:relative;overflow:hidden;display:inline-block;background:linear-gradient(135deg,var(--a1),var(--a2));color:#fff;text-decoration:none;padding:9px 16px;border-radius:10px;font-weight:700;font-size:.9rem;transition:transform .2s}
+.dl:hover{transform:scale(1.06)}
+.meta{font-size:.74rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.tools input{flex:1 1 220px;padding:10px 14px;border:1px solid var(--border);border-radius:10px;background:var(--panel);color:var(--text);font:inherit}
+.chip[aria-pressed=true]{background:linear-gradient(135deg,var(--a1),var(--a3));color:#fff;border-color:transparent}
+.post{background:var(--panel);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:16px;margin-bottom:12px;transition:transform .2s,box-shadow .3s}
+.post:hover{transform:translateX(6px);box-shadow:-6px 0 0 var(--a1),0 10px 30px rgba(124,92,255,.2)}
+.post summary{padding:16px 18px;cursor:pointer;list-style:none;display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.post summary::-webkit-details-marker{display:none}
+.post summary h3{font-size:1.12rem;flex:1 1 300px}
+.post[open] summary h3{color:var(--accent)}
+.body{padding:0 20px 20px;border-top:1px solid var(--border);animation:drop .35s ease}
+.body h4{margin:16px 0 4px;font-size:1rem;color:var(--accent)}
+.body p,.body li{margin-top:6px}
+.body ul,.body ol{padding-left:22px}
+pre{background:var(--code);color:#e6edf3;padding:14px;border-radius:12px;overflow-x:auto;font-size:.85rem;margin:8px 0;line-height:1.5;border:1px solid var(--border)}
+code{font-family:ui-monospace,Consolas,Menlo,monospace}
+#buit{color:var(--muted);display:none}
+footer{border-top:1px solid var(--border);background:var(--panel);backdrop-filter:blur(10px);margin-top:20px;padding:10px 0 30px;font-size:.9rem}
+footer h2{font-size:1.15rem;margin-top:14px}
+footer p{color:var(--muted);margin-bottom:6px}
+.small{font-size:.8rem}
+.js .rv{opacity:0;transform:translateY(28px);transition:opacity .7s,transform .7s;transition-delay:var(--d,0ms)}
+.js .rv.in{opacity:1;transform:none}
+.cf{position:fixed;width:9px;height:9px;border-radius:2px;pointer-events:none;z-index:99;animation:cf .9s ease-out forwards}
+@keyframes cf{to{transform:translate(var(--x),var(--y)) rotate(540deg);opacity:0}}
+@keyframes float{to{transform:translate(8vmax,6vmax) scale(1.15)}}
+@keyframes shine{to{background-position:300% 0}}
+@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(124,92,255,.12)}}
+@keyframes mq{to{transform:translateX(-50%)}}
+@keyframes bob{50%{transform:translateY(-6px) rotate(-4deg)}}
+@keyframes drop{from{opacity:0;transform:translateY(-8px)}}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}.js .rv{opacity:1;transform:none}}
 </style>
 </head>
+<body>
+<div id="bar"></div><div id="glow"></div>
 
-<!-- =====================================================================
-     HTML
-     ===================================================================== -->
-<body class="locked">
+<header class="top"><div class="wrap">
+  <a class="logo" href="#">pereizel.com · SMX</a>
+  <nav class="menu" aria-label="Menú principal">
+    <a href="#activitats">Activitats</a><a href="#blog">Blog i tutorials</a><a href="#sobre">Sobre el lloc</a><a href="#contacte">Contacte</a><a href="#privadesa">Privadesa</a>
+  </nav>
+  <button id="btnTheme" aria-label="Canvia entre mode clar i fosc">Mode clar / fosc</button>
+</div></header>
 
-<!-- Icones SVG (sprite intern, sense recursos externs) -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.2a1.5 1.5 0 0 1 1.1.5L11.2 7H19.5A1.5 1.5 0 0 1 21 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5z"/></symbol>
-  <symbol id="i-pdf" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M8.5 16.5h1.6a1.2 1.2 0 0 0 0-2.4H8.5v3.4M13 17.5v-3.4h.9a1.7 1.7 0 0 1 0 3.4zM17.5 14.1h-2v3.4M15.5 15.8h1.6" stroke-width="1.2"/></symbol>
-  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></symbol>
-  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></symbol>
-  <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
-  <symbol id="i-fwd" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
-  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.6-5.9M20 4v5h-5"/></symbol>
-  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
-  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></symbol>
-  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7M5.5 9.5V20h13V9.5M10 20v-5h4v5"/></symbol>
-  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
-  <symbol id="i-server" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></symbol>
-  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
-  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
-</svg>
+<main class="wrap">
 
-<!-- ===== AVÍS LEGAL: cal acceptar-lo per accedir a la web ===== -->
-<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle" aria-describedby="gateText">
-  <div class="gate-card" id="gateCard">
-    <div class="gate-head">
-      <svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>
-      <div><h2 id="gateTitle">Avís legal i condicions d'accés</h2><small>smx://avis-legal</small></div>
-    </div>
-    <div class="gate-text" id="gateText" tabindex="0">
-      <h3>1. Propietat intel·lectual</h3>
-      <p>Els continguts d'aquest lloc web (activitats, documents en format PDF, textos, estructura, disseny i codi font) són obra de l'autor i estan protegits per la normativa de propietat intel·lectual. D'acord amb el Reial decret legislatiu 1/1996, de 12 d'abril, pel qual s'aprova el text refós de la Llei de propietat intel·lectual, l'autor és titular dels drets morals sobre l'obra (art. 14) i dels drets d'explotació en exclusiva, que comprenen la reproducció (art. 18), la distribució (art. 19), la comunicació pública (art. 20) i la transformació (art. 21).</p>
-      <p class="law">TRLPI, RDL 1/1996 · arts. 14, 17, 18, 19, 20 i 21</p>
-
-      <h3>2. Ús permès i ús prohibit</h3>
-      <p>La descàrrega dels documents s'autoritza exclusivament per a ús personal i formatiu. Queda prohibit reproduir, copiar, distribuir, publicar, comunicar públicament, transformar, plagiar o comercialitzar total o parcialment els continguts sense l'autorització prèvia, expressa i per escrit de l'autor.</p>
-
-      <h3>3. Accions legals per infracció</h3>
-      <p>La utilització no autoritzada dels continguts pot donar lloc a accions civils de cessació de l'activitat il·lícita i d'indemnització per danys i perjudicis (art. 138 del TRLPI) i, si escau, a responsabilitat penal per delictes contra la propietat intel·lectual (art. 270 del Codi Penal, Llei orgànica 10/1995, de 23 de novembre).</p>
-      <p class="law">TRLPI art. 138 · Codi Penal art. 270</p>
-
-      <h3>4. Exempció de responsabilitat</h3>
-      <p>L'usuari és l'únic responsable de l'ús que faci dels continguts descarregats. L'autor i creador d'aquest lloc web no assumeix, en cap cas, responsabilitat per l'ús que en facin els usuaris ni pels actes d'aquests. En particular, si un usuari copia, reprodueix o difon els continguts sense autorització i és descobert, l'autor no serà responsable de les seves accions ni de les conseqüències que se'n derivin (reclamacions, sancions o procediments civils, administratius o penals), tot això en la mesura màxima permesa per la llei.</p>
-
-      <h3>5. Acceptació</h3>
-      <p>L'accés al lloc web està condicionat a l'acceptació íntegra d'aquest avís. Si no l'accepteu, no podeu accedir als continguts.</p>
-    </div>
-    <div class="gate-foot">
-      <label class="check"><input type="checkbox" id="chkAccept"><span>He llegit aquest avís legal i n'accepto íntegrament les condicions.</span></label>
-      <div class="gate-actions">
-        <button class="btn" id="btnDeny">No accepto</button>
-        <button class="btn primary" id="btnAccept" disabled>Accepto i vull entrar</button>
-      </div>
-    </div>
-  </div>
+<div class="hero">
+  <span class="badge">⚡ Tutorials de xarxes · 100% gratuïts · en català</span>
+  <h1>Domina <span id="rot" class="gt">DHCP</span><br>des de zero</h1>
+  <p>Tutorials pràctics amb ordres reals per provar en una màquina virtual: serveis de xarxa, seguretat, Linux i diagnòstic. I, a més, totes les activitats del cicle SMX en PDF, a un clic.</p>
+  <div class="cta"><a class="btn p" href="#activitats">📥 Descarregar activitats</a><a class="btn" href="#blog">🚀 Anar als tutorials</a></div>
+  <div class="stats"><div><b class="gt" id="nT">0</b><span>tutorials</span></div><div><b class="gt" id="nA">0</b><span>activitats PDF</span></div><div><b class="gt" data-n="100">0</b><span>% gratuït</span></div></div>
 </div>
+<div class="mq" aria-hidden="true"><div><span>🌐 DHCP</span><span>🧭 DNS</span><span>📁 FTP</span><span>🔥 Firewall</span><span>🔐 VPN</span><span>🧮 Subxarxes</span><span>🔑 SSH</span><span>💾 Backups</span><span>🕸️ Apache</span><span>🗂️ Samba</span><span>🔍 tcpdump</span><span>🌐 DHCP</span><span>🧭 DNS</span><span>📁 FTP</span><span>🔥 Firewall</span><span>🔐 VPN</span><span>🧮 Subxarxes</span><span>🔑 SSH</span><span>💾 Backups</span><span>🕸️ Apache</span><span>🗂️ Samba</span><span>🔍 tcpdump</span></div></div>
 
-<!-- ===== APLICACIÓ (oculta i inactiva fins que s'accepta l'avís) ===== -->
-<div id="app" hidden inert>
+<section id="activitats" class="rv" aria-labelledby="h-act">
+  <h2 id="h-act">📥 <span class="gt">Activitats</span> en PDF</h2>
+  <p class="lead">Pràctiques resoltes del cicle SMX. Descàrrega directa, per a ús personal i formatiu.</p>
+  <div class="grid" id="llista"></div>
+  <noscript><p><a href="DHCP_A1_IzquierdoPere.pdf" download>DHCP A1 (PDF)</a> · <a href="DHCP_A2_IzquierdoPere.pdf" download>DHCP A2 (PDF)</a></p></noscript>
+</section>
 
-<header class="hero">
-  <span class="tag">// smx · repositori</span>
-  <h1>Índex d'activitats</h1>
-  <p>Activitats de Sistemes Microinformàtics i Xarxes</p>
-</header>
-
-<div class="window" role="application" aria-label="Explorador d'activitats">
-  <div class="titlebar" aria-hidden="true">
-    <span class="dots"><i></i><i></i><i></i></span>
-    <svg class="icon"><use href="#i-server"/></svg>
-    <span class="path-title" id="titlePath">smx://activitats</span>
-    <span class="spacer"></span>
+<!-- ===================== BLOG I TUTORIALS ===================== -->
+<section id="blog" aria-labelledby="h-blog">
+  <h2 id="h-blog">📚 Blog i <span class="gt">tutorials</span></h2>
+  <p class="lead">Fes clic en un tutorial per desplegar-lo. Cerca per tema o filtra per categoria.</p>
+  <div class="tools">
+    <input type="search" id="q" placeholder="Cerca (dhcp, ufw, wireguard…)" aria-label="Cerca tutorials">
+    <button class="chip" data-tag="" aria-pressed="true">Tots</button>
+    <button class="chip" data-tag="xarxes" aria-pressed="false">Serveis en xarxes</button>
+    <button class="chip" data-tag="seguretat" aria-pressed="false">Seguretat</button>
+    <button class="chip" data-tag="basics" aria-pressed="false">Fonaments</button>
   </div>
 
-  <div class="toolbar">
-    <button class="tbtn" id="btnBack" aria-label="Enrere" title="Enrere (Alt+←)"><svg class="icon"><use href="#i-back"/></svg></button>
-    <button class="tbtn" id="btnFwd" aria-label="Endavant" title="Endavant (Alt+→)"><svg class="icon"><use href="#i-fwd"/></svg></button>
-    <button class="tbtn" id="btnRefresh" aria-label="Actualitzar" title="Actualitzar"><svg class="icon"><use href="#i-refresh"/></svg></button>
-    <nav class="address" id="breadcrumb" aria-label="Ruta actual"></nav>
-    <div class="search" id="searchBox" role="search">
-      <svg class="icon"><use href="#i-search"/></svg>
-      <input type="search" id="q" placeholder="Cerca activitats…" aria-label="Cerca activitats" autocomplete="off">
-      <button class="clear" id="btnClear" aria-label="Esborra la cerca"><svg class="icon"><use href="#i-x"/></svg></button>
+  <details class="post" data-tag="xarxes" open>
+    <summary><h3>Com instal·lar i configurar un servidor DHCP a Ubuntu Server</h3><span class="meta">Serveis en xarxes · 6 min</span></summary>
+    <div class="body">
+      <p>DHCP assigna adreces IP automàticament. Amb el paquet <code>isc-dhcp-server</code> pots muntar-ne un en pocs minuts. Abans cal una IP fixa al servidor, per exemple 192.168.10.1/24.</p>
+      <h4>1. Instal·lació</h4>
+      <pre><code>sudo apt update
+sudo apt install isc-dhcp-server</code></pre>
+      <h4>2. Interfície d'escolta</h4>
+      <p>Edita <code>/etc/default/isc-dhcp-server</code> i indica la targeta de xarxa interna:</p>
+      <pre><code>INTERFACESv4="enp0s8"</code></pre>
+      <h4>3. Àmbit d'adreces</h4>
+      <p>A <code>/etc/dhcp/dhcpd.conf</code> defineix la xarxa, el rang, la passarel·la i el DNS:</p>
+      <pre><code>subnet 192.168.10.0 netmask 255.255.255.0 {
+  range 192.168.10.100 192.168.10.200;
+  option routers 192.168.10.1;
+  option domain-name-servers 192.168.10.1, 8.8.8.8;
+  default-lease-time 600;
+  max-lease-time 7200;
+}
+host impressora {
+  hardware ethernet 08:00:27:aa:bb:cc;
+  fixed-address 192.168.10.50;
+}</code></pre>
+      <p>El bloc <code>host</code> és una reserva: aquella MAC rebrà sempre la mateixa IP.</p>
+      <h4>4. Reiniciar i comprovar</h4>
+      <pre><code>sudo systemctl restart isc-dhcp-server
+sudo systemctl status isc-dhcp-server
+cat /var/lib/dhcp/dhcpd.leases</code></pre>
+      <p>Al client, executa <code>sudo dhclient -v</code> (Linux) o <code>ipconfig /renew</code> (Windows). Si falla, revisa que el rang pertanyi a la mateixa subxarxa que la interfície del servidor i que no hi hagi un altre DHCP a la xarxa.</p>
     </div>
-    <button class="tbtn theme" id="btnTheme" aria-label="Canvia entre mode clar i fosc" title="Mode clar / fosc">
-      <svg class="icon moon"><use href="#i-moon"/></svg><svg class="icon sun"><use href="#i-sun"/></svg>
-    </button>
-  </div>
+  </details>
 
-  <div class="body">
-    <nav class="side" id="side" aria-label="Carpetes"></nav>
-    <main id="view" tabindex="-1" aria-live="polite"></main>
-  </div>
+  <details class="post" data-tag="xarxes">
+    <summary><h3>Servidor DNS amb BIND9: creem una zona directa</h3><span class="meta">Serveis en xarxes · 7 min</span></summary>
+    <div class="body">
+      <p>Un servidor DNS autoritatiu respon amb les adreces d'un domini que ell mateix gestiona. Farem la zona <code>smx.local</code>.</p>
+      <h4>1. Instal·lació</h4>
+      <pre><code>sudo apt install bind9 bind9utils dnsutils</code></pre>
+      <h4>2. Declarar la zona</h4>
+      <p>A <code>/etc/bind/named.conf.local</code>:</p>
+      <pre><code>zone "smx.local" {
+  type master;
+  file "/etc/bind/db.smx.local";
+};</code></pre>
+      <h4>3. Fitxer de zona</h4>
+      <pre><code>$TTL 86400
+@   IN SOA ns1.smx.local. admin.smx.local. (
+        1 3600 900 604800 86400 )
+@   IN NS  ns1.smx.local.
+ns1 IN A   192.168.10.1
+web IN A   192.168.10.20
+www IN CNAME web</code></pre>
+      <p>Cada vegada que canviïs la zona, augmenta el número de sèrie (el primer valor del SOA).</p>
+      <h4>4. Validar i provar</h4>
+      <pre><code>sudo named-checkconf
+sudo named-checkzone smx.local /etc/bind/db.smx.local
+sudo systemctl restart bind9
+dig @192.168.10.1 www.smx.local</code></pre>
+      <p>Si <code>dig</code> torna l'adreça de <code>web</code>, la zona funciona. L'error més habitual és oblidar el punt final als noms complets (<code>ns1.smx.local.</code>).</p>
+    </div>
+  </details>
 
-  <div class="status"><span id="statusLeft">0 elements</span><span id="statusRight">PDF · descàrrega directa</span></div>
-</div>
+  <details class="post" data-tag="xarxes seguretat">
+    <summary><h3>FTP segur amb vsftpd: usuaris enjaulats i xifratge</h3><span class="meta">Serveis en xarxes · 6 min</span></summary>
+    <div class="body">
+      <p>vsftpd és un servidor FTP lleuger i segur per defecte. Veurem com limitar cada usuari al seu directori i com activar TLS, ja que FTP clàssic envia les contrasenyes en text pla.</p>
+      <pre><code>sudo apt install vsftpd
+sudo cp /etc/vsftpd.conf /etc/vsftpd.conf.bak</code></pre>
+      <h4>Configuració bàsica</h4>
+      <pre><code>anonymous_enable=NO
+local_enable=YES
+write_enable=YES
+chroot_local_user=YES
+allow_writeable_chroot=YES
+pasv_min_port=40000
+pasv_max_port=40100
+ssl_enable=YES
+rsa_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
+rsa_private_key_file=/etc/ssl/private/ssl-cert-snakeoil.key</code></pre>
+      <p><code>chroot_local_user</code> tanca cada usuari a la seva carpeta. El rang passiu cal obrir-lo també al tallafocs. El certificat snakeoil només serveix per proves; en producció usa un de real.</p>
+      <pre><code>sudo adduser alumne
+sudo systemctl restart vsftpd
+sudo ufw allow 21/tcp
+sudo ufw allow 40000:40100/tcp</code></pre>
+      <p>Prova-ho amb FileZilla triant «FTP sobre TLS explícit». Si necessites res més robust, considera SFTP, que ja ve amb SSH.</p>
+    </div>
+  </details>
 
-<footer class="note">Repositori d'activitats · Sistemes Microinformàtics i Xarxes · Continguts protegits per drets d'autor</footer>
+  <details class="post" data-tag="seguretat">
+    <summary><h3>Tallafocs a Linux amb ufw: regles bàsiques pas a pas</h3><span class="meta">Seguretat · 5 min</span></summary>
+    <div class="body">
+      <p>ufw (Uncomplicated Firewall) simplifica iptables. La idea és denegar tot el trànsit entrant i obrir només els serveis necessaris.</p>
+      <pre><code>sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow 22/tcp
+sudo ufw allow from 192.168.10.0/24 to any port 53
+sudo ufw enable
+sudo ufw status numbered</code></pre>
+      <p><strong>Important:</strong> permet SSH (port 22) abans d'activar ufw si treballes per remot, o et quedaràs fora del servidor.</p>
+      <h4>Esborrar i limitar</h4>
+      <pre><code>sudo ufw delete 3
+sudo ufw limit 22/tcp</code></pre>
+      <p><code>limit</code> bloqueja temporalment IP que facin massa intents de connexió, útil contra atacs de força bruta. Per veure què es bloqueja, mira <code>/var/log/ufw.log</code> després d'activar <code>sudo ufw logging on</code>.</p>
+    </div>
+  </details>
 
-</div><!-- /#app -->
+  <details class="post" data-tag="seguretat xarxes">
+    <summary><h3>Crear una VPN amb WireGuard entre dos equips</h3><span class="meta">Seguretat · 8 min</span></summary>
+    <div class="body">
+      <p>WireGuard és una VPN moderna, ràpida i amb poc codi. Cada equip té una parella de claus i només cal intercanviar les claus públiques.</p>
+      <pre><code>sudo apt install wireguard
+wg genkey | tee privada.key | wg pubkey > publica.key</code></pre>
+      <h4>Servidor: /etc/wireguard/wg0.conf</h4>
+      <pre><code>[Interface]
+Address = 10.8.0.1/24
+ListenPort = 51820
+PrivateKey = (clau privada del servidor)
 
-<!-- =====================================================================
-     JAVASCRIPT
-     ===================================================================== -->
+[Peer]
+PublicKey = (clau pública del client)
+AllowedIPs = 10.8.0.2/32</code></pre>
+      <h4>Client</h4>
+      <pre><code>[Interface]
+Address = 10.8.0.2/24
+PrivateKey = (clau privada del client)
+
+[Peer]
+PublicKey = (clau pública del servidor)
+Endpoint = IP_DEL_SERVIDOR:51820
+AllowedIPs = 10.8.0.0/24
+PersistentKeepalive = 25</code></pre>
+      <pre><code>sudo wg-quick up wg0
+sudo wg show
+ping 10.8.0.1</code></pre>
+      <p>Recorda obrir el port UDP 51820 al tallafocs. Si vols que tot el trànsit del client passi pel túnel, posa <code>AllowedIPs = 0.0.0.0/0</code> i activa l'<em>IP forwarding</em> al servidor.</p>
+    </div>
+  </details>
+
+  <details class="post" data-tag="basics xarxes">
+    <summary><h3>Subxarxes sense por: màscares, CIDR i com calcular-les</h3><span class="meta">Fonaments · 6 min</span></summary>
+    <div class="body">
+      <p>Una adreça IPv4 té 32 bits. La màscara indica quants són de xarxa i quants d'equip. Amb <code>/24</code>, 24 bits són de xarxa i en queden 8 per a equips.</p>
+      <h4>Fórmula clau</h4>
+      <p>Equips útils = 2<sup>bits d'equip</sup> − 2 (es resten l'adreça de xarxa i la de difusió).</p>
+      <ul>
+        <li>/24 → 256 adreces, 254 equips, màscara 255.255.255.0</li>
+        <li>/25 → 128 adreces, 126 equips, màscara 255.255.255.128</li>
+        <li>/26 → 64 adreces, 62 equips, màscara 255.255.255.192</li>
+        <li>/30 → 4 adreces, 2 equips (enllaços punt a punt)</li>
+      </ul>
+      <h4>Exemple</h4>
+      <p>Vols dividir 192.168.1.0/24 en 4 subxarxes. Necessites 2 bits més, així que passes a /26. Les subxarxes seran 192.168.1.0, .64, .128 i .192, cadascuna amb 62 equips. A la primera, el rang útil és 192.168.1.1–192.168.1.62 i la difusió és 192.168.1.63.</p>
+      <p>Truc: el «salt» entre subxarxes és 256 menys el valor de l'últim octet de la màscara (256 − 192 = 64).</p>
+    </div>
+  </details>
+
+  <details class="post" data-tag="basics xarxes">
+    <summary><h3>Ordres imprescindibles per diagnosticar problemes de xarxa</h3><span class="meta">Fonaments · 5 min</span></summary>
+    <div class="body">
+      <p>Quan «no hi ha Internet», segueix sempre el mateix ordre, de dins cap a fora:</p>
+      <ol>
+        <li><strong>Targeta i IP:</strong> <code>ip a</code> (Linux) o <code>ipconfig /all</code> (Windows). Si tens una 169.254.x.x, el DHCP no ha respost.</li>
+        <li><strong>Passarel·la:</strong> <code>ip route</code> i <code>ping 192.168.10.1</code>.</li>
+        <li><strong>Sortida a Internet per IP:</strong> <code>ping 8.8.8.8</code>.</li>
+        <li><strong>Resolució de noms:</strong> <code>nslookup pereizel.com</code> o <code>dig pereizel.com</code>. Si el pas 3 va bé i aquest falla, és un problema de DNS.</li>
+        <li><strong>Camí:</strong> <code>traceroute 8.8.8.8</code> (<code>tracert</code> a Windows) mostra on s'atura el trànsit.</li>
+        <li><strong>Ports i serveis:</strong> <code>ss -tulpn</code> llista què escolta a cada port.</li>
+      </ol>
+      <p>Anotar el que funciona a cada pas és la manera més ràpida de saber on és el problema.</p>
+    </div>
+  </details>
+
+  <details class="post" data-tag="basics">
+    <summary><h3>Model OSI i TCP/IP: les capes explicades fàcil</h3><span class="meta">Fonaments · 5 min</span></summary>
+    <div class="body">
+      <p>Les xarxes es dissenyen per capes: cadascuna fa una feina i confia en la de sota. El model OSI en té 7; TCP/IP, 4.</p>
+      <ul>
+        <li><strong>Física i enllaç (1-2):</strong> cables, Wi-Fi, adreces MAC, commutadors.</li>
+        <li><strong>Xarxa (3):</strong> adreces IP i encaminadors. Eines: <code>ping</code>, <code>traceroute</code>.</li>
+        <li><strong>Transport (4):</strong> TCP (fiable, amb connexió) i UDP (ràpid, sense garanties). Aquí viuen els ports.</li>
+        <li><strong>Aplicació (5-7):</strong> HTTP, DNS, DHCP, FTP, SSH.</li>
+      </ul>
+      <p>Utilitat pràctica: si no fa <code>ping</code>, mira les capes 1-3; si fa ping però no carrega la web, el problema és de la 4 o superior (port tancat, DNS, servei aturat).</p>
+    </div>
+  </details>
+
+  <details class="post" data-tag="basics xarxes">
+    <summary><h3>IP fixa a Ubuntu Server amb Netplan</h3><span class="meta">Fonaments · 4 min</span></summary>
+    <div class="body">
+      <p>Els servidors han de tenir IP estàtica. A Ubuntu es configura amb YAML a <code>/etc/netplan/00-config.yaml</code> (el nom pot variar):</p>
+      <pre><code>network:
+  version: 2
+  ethernets:
+    enp0s3:
+      dhcp4: false
+      addresses: [192.168.10.1/24]
+      routes:
+        - to: default
+          via: 192.168.10.254
+      nameservers:
+        addresses: [8.8.8.8, 1.1.1.1]</code></pre>
+      <pre><code>sudo netplan try
+sudo netplan apply
+ip a show enp0s3</code></pre>
+      <p>YAML és molt sensible als espais: usa només espais, mai tabuladors. <code>netplan try</code> desfà els canvis si no confirmes, així no et quedes sense xarxa.</p>
+    </div>
+  </details>
+
+  <details class="post" data-tag="seguretat">
+    <summary><h3>SSH segur: claus públiques i fail2ban</h3><span class="meta">Seguretat · 6 min</span></summary>
+    <div class="body">
+      <p>SSH és la porta d'entrada a qualsevol servidor Linux i la més atacada. Tres mesures bàsiques:</p>
+      <h4>1. Entrar amb clau en lloc de contrasenya</h4>
+      <pre><code>ssh-keygen -t ed25519
+ssh-copy-id usuari@192.168.10.1</code></pre>
+      <h4>2. Enduriment a /etc/ssh/sshd_config</h4>
+      <pre><code>PermitRootLogin no
+PasswordAuthentication no
+MaxAuthTries 3</code></pre>
+      <pre><code>sudo sshd -t && sudo systemctl restart ssh</code></pre>
+      <p>Prova la clau en una sessió nova <em>abans</em> de tancar l'actual.</p>
+      <h4>3. Bloquejar atacants amb fail2ban</h4>
+      <pre><code>sudo apt install fail2ban
+sudo systemctl enable --now fail2ban
+sudo fail2ban-client status sshd</code></pre>
+      <p>Per defecte bloqueja una IP després de diversos intents fallits. Canviar el port 22 només redueix soroll als registres; no és seguretat real.</p>
+    </div>
+  </details>
+
+  <details class="post" data-tag="basics seguretat">
+    <summary><h3>Còpies de seguretat amb rsync i cron</h3><span class="meta">Fonaments · 5 min</span></summary>
+    <div class="body">
+      <p>Regla 3-2-1: tres còpies, en dos suports diferents, una fora de lloc. <code>rsync</code> copia només el que ha canviat.</p>
+      <pre><code>rsync -avh --delete /srv/dades/ /mnt/backup/dades/
+rsync -avz /srv/dades/ usuari@192.168.10.5:/backup/dades/</code></pre>
+      <p><code>-a</code> conserva permisos i dates, <code>-z</code> comprimeix, <code>--delete</code> esborra al destí el que ja no existeix a l'origen. Prova sempre amb <code>-n</code> (simulació) primer.</p>
+      <h4>Automatitzar cada nit a les 2:30</h4>
+      <pre><code>crontab -e
+30 2 * * * rsync -a --delete /srv/dades/ /mnt/backup/dades/ >> /var/log/backup.log 2>&1</code></pre>
+      <p>Una còpia que no s'ha provat de restaurar no és una còpia: comprova-ho cada cert temps.</p>
+    </div>
+  </details>
+
+  <details class="post" data-tag="xarxes">
+    <summary><h3>Servidor web Apache i hosts virtuals</h3><span class="meta">Serveis en xarxes · 6 min</span></summary>
+    <div class="body">
+      <pre><code>sudo apt install apache2
+sudo mkdir -p /var/www/smx/public
+echo "&lt;h1&gt;Hola SMX&lt;/h1&gt;" | sudo tee /var/www/smx/public/index.html</code></pre>
+      <p>Crea <code>/etc/apache2/sites-available/smx.conf</code>:</p>
+      <pre><code>&lt;VirtualHost *:80&gt;
+  ServerName web.smx.local
+  DocumentRoot /var/www/smx/public
+  ErrorLog ${APACHE_LOG_DIR}/smx-error.log
+&lt;/VirtualHost&gt;</code></pre>
+      <pre><code>sudo a2ensite smx.conf
+sudo apache2ctl configtest
+sudo systemctl reload apache2</code></pre>
+      <p>Amb diversos <code>VirtualHost</code> i noms diferents pots servir moltes webs des d'una sola IP. Si hi ha un DNS propi, afegeix un registre A cap al servidor; si no, usa el fitxer <code>hosts</code> del client. Els errors es veuen a <code>/var/log/apache2/</code>.</p>
+    </div>
+  </details>
+
+  <details class="post" data-tag="xarxes">
+    <summary><h3>Samba: compartir carpetes entre Linux i Windows</h3><span class="meta">Serveis en xarxes · 6 min</span></summary>
+    <div class="body">
+      <pre><code>sudo apt install samba
+sudo mkdir -p /srv/compartit
+sudo chown -R :alumnes /srv/compartit
+sudo chmod 2770 /srv/compartit</code></pre>
+      <p>Afegeix al final de <code>/etc/samba/smb.conf</code>:</p>
+      <pre><code>[compartit]
+  path = /srv/compartit
+  valid users = @alumnes
+  read only = no
+  create mask = 0660</code></pre>
+      <pre><code>sudo smbpasswd -a alumne
+testparm
+sudo systemctl restart smbd</code></pre>
+      <p>Des de Windows, obre <code>\\192.168.10.1\compartit</code>. L'usuari ha d'existir al sistema Linux <em>i</em> tenir contrasenya Samba (<code>smbpasswd</code> és independent de la del sistema). Permisos: sempre mana el més restrictiu entre els de Samba i els del sistema de fitxers.</p>
+    </div>
+  </details>
+
+  <details class="post" data-tag="seguretat basics">
+    <summary><h3>Captura de trànsit amb tcpdump: veure què passa al cable</h3><span class="meta">Seguretat · 5 min</span></summary>
+    <div class="body">
+      <p>tcpdump captura paquets des del terminal i és ideal per veure el DHCP, el DNS o un handshake TCP.</p>
+      <pre><code>sudo tcpdump -i enp0s3 -n
+sudo tcpdump -i enp0s3 port 53
+sudo tcpdump -i enp0s3 host 192.168.10.20 and tcp port 80
+sudo tcpdump -i enp0s3 -w captura.pcap</code></pre>
+      <p>L'últim desa un fitxer que pots obrir amb Wireshark. Per veure DHCP: <code>sudo tcpdump -i enp0s3 -n port 67 or port 68</code>; hi veuràs Discover, Offer, Request i Ack.</p>
+      <p>Al TCP, busca els indicadors <code>[S]</code> (SYN), <code>[S.]</code> (SYN-ACK) i <code>[.]</code> (ACK): és la salutació de tres passos. Un SYN sense resposta indica un tallafocs que descarta, i un <code>[R.]</code> un port tancat. Captura només a xarxes pròpies o amb permís.</p>
+    </div>
+  </details>
+
+  <p id="buit">No s'han trobat tutorials amb aquest filtre.</p>
+</section>
+
+<section id="sobre" aria-labelledby="h-sob">
+  <h2 id="h-sob">Sobre el lloc</h2>
+  <p>pereizel.com és un projecte personal d'un estudiant de SMX per organitzar les seves activitats i explicar de manera clara els serveis de xarxa. Els tutorials s'ampliaran amb nous temes (Samba, servidor web, correu, monitoratge). Si detectes un error o vols suggerir un tema, escriu-me.</p>
+</section>
+
+<section id="contacte" aria-labelledby="h-con">
+  <h2 id="h-con">Contacte</h2>
+  <p>Dubtes, correccions o sol·licituds de drets d'autor: <a href="mailto:EL-TEU-CORREU@EXEMPLE.COM">EL-TEU-CORREU@EXEMPLE.COM</a> <span class="small">(canvia aquesta adreça per la teva)</span>.</p>
+</section>
+
+</main>
+
+<footer><div class="wrap">
+  <h2 id="privadesa">Política de privadesa</h2>
+  <p>Aquest lloc no demana registre ni recull dades personals directament. Només desa al navegador la preferència de mode clar o fosc. Si s'activa la publicitat, Google AdSense i altres proveïdors poden utilitzar cookies per mostrar anuncis segons les visites anteriors de l'usuari. Pots gestionar els anuncis personalitzats a <a href="https://adssettings.google.com" rel="noopener">adssettings.google.com</a> i informar-te a <a href="https://policies.google.com/technologies/ads?hl=ca" rel="noopener">policies.google.com/technologies/ads</a>.</p>
+  <h2 id="cookies">Política de cookies</h2>
+  <p>Utilitzem emmagatzematge local només per recordar el tema visual. Les cookies de tercers (publicitat i mesurament) només s'instal·len si es mostren anuncis, i es poden rebutjar des del navegador o del missatge de consentiment que ofereix Google.</p>
+  <h2 id="avis">Avís legal i drets d'autor</h2>
+  <p>Els continguts són obra de l'autor i estan protegits pel Reial decret legislatiu 1/1996 (Llei de propietat intel·lectual). Les descàrregues es permeten per a ús personal i formatiu; no es permet reproduir-les, distribuir-les ni comercialitzar-les sense autorització escrita. L'ús indegut pot comportar accions civils (art. 138 TRLPI) i penals (art. 270 del Codi Penal). L'usuari és responsable de l'ús que faci dels continguts.</p>
+  <p class="small">© 2026 pereizel.com · Sistemes Microinformàtics i Xarxes</p>
+</div></footer>
+
 <script>
-/* ---------------------------------------------------------------------
-   CONFIGURACIÓ — AQUÍ ÉS ON AFEGEIXES O ELIMINES ACTIVITATS
-   ---------------------------------------------------------------------
-   Cada activitat té:
-     nom    → text que es mostra a la llista
-     fitxer → nom que tindrà el PDF en descarregar-se (p. ex. "DHCP_A1.pdf")
-     url    → (OPCIONAL) adreça completa si el PDF és en un ALTRE domini.
-              Si no la poses, el PDF s'agafa del mateix directori que index.html.
-
-   Per afegir una activitat: copia una línia, enganxa-la dins de la categoria
-   que vulguis (separades per comes; l'última sense coma) i canvia els textos.
-
-   NOTA per a PDF d'un altre domini: aquell servidor ha d'enviar la capçalera
-   "Access-Control-Allow-Origin" (CORS). Si no ho fa, el PDF s'obrirà en una
-   pestanya nova en lloc de descarregar-se directament.
-   --------------------------------------------------------------------- */
-const activitats = {
-  xarxes: [
-    { nom: "DHCP A1", fitxer: "DHCP_A1_IzquierdoPere.pdf" },   // ← EXEMPLE (mateix domini)
-    { nom: "DHCP A2", fitxer: "DHCP_A2_IzquierdoPere.pdf" },   // ← EXEMPLE (mateix domini)
-    { nom: "DNS A1 (No dispo)",  fitxer: "DNS_A1.pdf" },    // ← EXEMPLE (mateix domini)
-    { nom: "FTP A1 (No dispo)",  fitxer: "FTP_A1.pdf",
-      url: "https://altredomini.com/pdf/FTP_A1.pdf" }   // ← EXEMPLE (ALTRE domini)
-  ],
-  seguretat: [
-    { nom: "Firewall A1 (No dispo)", fitxer: "Firewall_A1.pdf" },  // ← EXEMPLE (mateix domini)
-    { nom: "Firewall A2 (No dispo)", fitxer: "Firewall_A2.pdf" },  // ← EXEMPLE (mateix domini)
-    { nom: "VPN A1 (No dispo)",      fitxer: "VPN_A1.pdf",
-      url: "https://altredomini.com/pdf/VPN_A1.pdf" }   // ← EXEMPLE (ALTRE domini)
-  ]
-};
-
-/* Categories (carpetes virtuals): clau de "activitats" → nom visible */
-const categories = [
-  { clau: "xarxes",    nom: "Serveis en xarxes" },
-  { clau: "seguretat", nom: "Seguretat" }
+document.documentElement.classList.add('js');
+/* ACTIVITATS: posa disponible:true només quan el PDF existeixi. Opcional: url (altre domini). */
+const activitats = [
+  { ico:"🌐", cat:"Serveis en xarxes", nom:"DHCP A1", fitxer:"DHCP_A1_IzquierdoPere.pdf", disponible:true, desc:"Instal·lació i configuració d'un servidor DHCP: àmbit, màscara, passarel·la i DNS." },
+  { ico:"📌", cat:"Serveis en xarxes", nom:"DHCP A2", fitxer:"DHCP_A2_IzquierdoPere.pdf", disponible:true, desc:"Reserves per MAC, exclusions i comprovació de concessions." },
+  { ico:"🧭", cat:"Serveis en xarxes", nom:"DNS A1", fitxer:"DNS_A1.pdf", disponible:false, desc:"Servidor DNS i zones." },
+  { ico:"📁", cat:"Serveis en xarxes", nom:"FTP A1", fitxer:"FTP_A1.pdf", disponible:false, desc:"Servidor FTP i usuaris." },
+  { ico:"🔥", cat:"Seguretat", nom:"Firewall A1", fitxer:"Firewall_A1.pdf", disponible:false, desc:"Regles de tallafocs." },
+  { ico:"🔐", cat:"Seguretat", nom:"VPN A1", fitxer:"VPN_A1.pdf", disponible:false, desc:"Túnel VPN." }
 ];
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm = s => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+const dis = activitats.filter(a => a.disponible);
+$('#llista').innerHTML = dis.map((a, i) => `
+  <article class="act rv" style="--d:${i * 90}ms"><div class="ic">${a.ico}</div><span class="meta">${esc(a.cat)}</span>
+  <h3>${esc(a.nom)}</h3><p>${esc(a.desc)}</p>
+  <a class="dl" href="${esc(a.url || a.fitxer)}" download="${esc(a.fitxer)}" aria-label="Descarrega ${esc(a.nom)} en PDF">⬇ Descarregar PDF</a></article>`).join('');
 
-/* Avís legal: quan es torna a demanar l'acceptació
-     "sessio" → cada vegada que s'obre la web en una pestanya nova (per defecte)
-     "sempre" → es recorda al navegador (només es demana una vegada)
-     "cada-cop" → es demana a cada càrrega de pàgina                            */
-const RECORDAR_ACCEPTACIO = "sessio";
-const CLAU_AVIS = "smx-avis-acceptat-v1";   // canvia el "v1" per forçar que tothom l'accepti de nou
-
-/* ---------------------------------------------------------------------
-   LÒGICA (no cal tocar res d'aquí avall)
-   --------------------------------------------------------------------- */
-const $ = (s) => document.querySelector(s);
-const view = $('#view'), crumbEl = $('#breadcrumb'), sideEl = $('#side');
-const qInput = $('#q'), searchBox = $('#searchBox');
-const ico = (id, cls = '') => `<svg class="icon ${cls}" aria-hidden="true"><use href="#i-${id}"/></svg>`;
-const esc = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const norm = (s) => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-const catNom = (k) => (categories.find(c => c.clau === k) || {}).nom || k;
-const plural = (n) => n === 1 ? '1 activitat' : n + ' activitats';
-
-/* Estat i historial de navegació (sense recarregar la pàgina) */
-let hist = [null], idx = 0;      // null = Inici; altrament clau de categoria
-let current = null, query = '';
-
-function navigate(path, push = true) {
-  if (push) { hist = hist.slice(0, idx + 1); hist.push(path); idx = hist.length - 1; }
-  current = path;
-  if (push || query) { query = ''; qInput.value = ''; searchBox.classList.remove('has-text'); }
-  render(true);
+/* Blog: cerca i filtre (el contingut sempre és al HTML) */
+let tag = '';
+const posts = [...document.querySelectorAll('.post')];
+posts.forEach((p, i) => { p.classList.add('rv'); p.style.setProperty('--d', (i % 4) * 70 + 'ms'); });
+function filtra() {
+  const q = norm($('#q').value.trim()); let n = 0;
+  posts.forEach(p => {
+    const ok = (!tag || p.dataset.tag.split(' ').includes(tag)) && (!q || norm(p.textContent).includes(q));
+    p.hidden = !ok; if (ok) n++;
+  });
+  $('#buit').style.display = n ? 'none' : 'block';
 }
-function go(delta) {
-  const n = idx + delta;
-  if (n < 0 || n >= hist.length) return;
-  idx = n; current = hist[idx]; query = ''; qInput.value = ''; searchBox.classList.remove('has-text');
-  render(true);
-}
-
-/* Render principal */
-function render(animate) {
-  renderCrumb(); renderSide();
-  $('#btnBack').disabled = idx === 0;
-  $('#btnFwd').disabled = idx >= hist.length - 1;
-  $('#titlePath').textContent = 'smx://activitats' + (current ? '/' + current : '');
-
-  let html, count;
-  if (query) {
-    const q = norm(query);
-    const res = [];
-    categories.forEach(c => (activitats[c.clau] || []).forEach(a => {
-      if (norm(a.nom).includes(q) || norm(a.fitxer).includes(q) || norm(c.nom).includes(q) || norm(c.clau).includes(q))
-        res.push({ ...a, cat: c.nom });
-    }));
-    count = res.length;
-    html = res.length ? listHTML(res, true) : emptyHTML();
-  } else if (current) {
-    const items = (activitats[current] || []).map(a => ({ ...a, cat: catNom(current) }));
-    count = items.length;
-    html = items.length ? listHTML(items, false) : emptyHTML('Aquesta carpeta és buida.');
-  } else {
-    count = categories.length;
-    html = `<div class="folders">` + categories.map((c, i) => `
-      <button class="folder" style="animation-delay:${i * 70}ms" data-open="${esc(c.clau)}" aria-label="Obre la carpeta ${esc(c.nom)}">
-        ${ico('folder', 'big')}
-        <span><strong>${esc(c.nom)}</strong><small>${plural((activitats[c.clau] || []).length)}</small></span>
-      </button>`).join('') + `</div>`;
-  }
-  view.innerHTML = `<div class="view" ${animate ? '' : 'style="animation:none"'}>${html}</div>`;
-  $('#statusLeft').textContent = count + (count === 1 ? ' element' : ' elements');
-}
-
-/* Llistat: l'enllaç usa "url" (altre domini) si existeix; si no, el fitxer local */
-function listHTML(items, withCat) {
-  return `<div class="list-head" aria-hidden="true"><span>Nom</span><span class="c-cat">Categoria</span><span>Tipus</span><span>Acció</span></div>
-  <ul class="files">` + items.map((a, i) => `
-    <li><a class="row" style="--i:${i}" href="${esc(a.url || a.fitxer)}" download="${esc(a.fitxer)}" aria-label="Descarrega ${esc(a.nom)} en PDF">
-      <span class="name">${ico('pdf')}<span>${esc(a.nom)}</span></span>
-      <span class="cat">${esc(a.cat)}</span>
-      <span class="type">PDF</span>
-      <span class="dl">${ico('down')}<span>Descarregar</span></span>
-    </a></li>`).join('') + `</ul>`;
-}
-function emptyHTML(msg) {
-  return `<div class="empty">${ico('search')}<p>${msg || "No s'han trobat activitats."}</p></div>`;
-}
-
-function renderCrumb() {
-  const parts = [`<button class="crumb" data-home aria-label="Inici">${ico('home')}Inici</button>`];
-  if (query) {
-    parts.push(`<span class="sep">/</span><span class="crumb" aria-current="page">Resultats de la cerca</span>`);
-  } else if (current) {
-    parts.push(`<span class="sep">/</span><span class="crumb" aria-current="page">${ico('folder')}${esc(catNom(current))}</span>`);
-  } else {
-    parts[0] = `<span class="crumb" aria-current="page">${ico('home')}Índex d'activitats</span>`;
-  }
-  crumbEl.innerHTML = parts.join('');
-}
-
-function renderSide() {
-  sideEl.innerHTML = `<h2>Ubicacions</h2>
-    <button class="nav-item ${!current ? 'active' : ''}" data-home>${ico('home')}Inici</button>` +
-    categories.map(c => `<button class="nav-item ${current === c.clau ? 'active' : ''}" data-open="${esc(c.clau)}">
-      ${ico('folder', 'folder-i')}${esc(c.nom)}<span class="n">${(activitats[c.clau] || []).length}</span></button>`).join('');
-}
-
-/* Esdeveniments (delegació) */
-document.addEventListener('click', (e) => {
-  const open = e.target.closest('[data-open]');
-  if (open) return navigate(open.dataset.open);
-  if (e.target.closest('[data-home]')) return navigate(null);
-  const row = e.target.closest('a.row');
-  if (row) { e.preventDefault(); descarregar(row); }
-});
-
-/* Descàrrega directa: funciona també entre dominis si el servidor permet CORS.
-   Si no ho permet, com a alternativa s'obre el PDF en una pestanya nova. */
-async function descarregar(row) {
-  if (row.classList.contains('done')) return;          // evita doble clic
-  const lbl = row.querySelector('.dl span');
-  const url = row.href;
-  const nom = row.getAttribute('download') || 'activitat.pdf';
-  row.classList.add('done'); lbl.textContent = 'Descarregant…';
-  try {
-    const r = await fetch(url, { mode: 'cors' });
-    if (!r.ok) throw new Error(r.status);
-    const blob = new Blob([await r.blob()], { type: 'application/pdf' });
-    const obj = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = obj; a.download = nom;
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(obj), 4000);
-  } catch (err) {
-    window.open(url, '_blank', 'noopener');            // alternativa si el servidor no permet CORS
-  }
-  setTimeout(() => { row.classList.remove('done'); lbl.textContent = 'Descarregar'; }, 1600);
-}
-
-$('#btnBack').addEventListener('click', () => go(-1));
-$('#btnFwd').addEventListener('click', () => go(1));
-$('#btnRefresh').addEventListener('click', (e) => {
-  const b = e.currentTarget; b.classList.remove('spin'); void b.offsetWidth; b.classList.add('spin');
-  render(true);
-});
-qInput.addEventListener('input', () => {
-  query = qInput.value.trim();
-  searchBox.classList.toggle('has-text', qInput.value.length > 0);
-  render(false);
-});
-$('#btnClear').addEventListener('click', () => { qInput.value = ''; query = ''; searchBox.classList.remove('has-text'); render(true); qInput.focus(); });
-document.addEventListener('keydown', (e) => {
-  if (document.body.classList.contains('locked')) return;   // amb l'avís actiu no hi ha dreceres
-  if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
-  else if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); go(1); }
-  else if (e.key === '/' && document.activeElement !== qInput) { e.preventDefault(); qInput.focus(); }
-  else if (e.key === 'Escape' && document.activeElement === qInput) { qInput.blur(); }
-});
-
-/* Mode clar / fosc amb localStorage */
+$('#q').addEventListener('input', filtra);
+document.querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => {
+  tag = b.dataset.tag;
+  document.querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', x === b));
+  filtra();
+}));
 $('#btnTheme').addEventListener('click', () => {
-  const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  try { localStorage.setItem('smx-tema', next); } catch (e) {}
+  const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', n);
+  try { localStorage.setItem('smx-tema', n); } catch (e) {}
 });
 
-/* ---------------------------------------------------------------------
-   AVÍS LEGAL: control d'accés
-   L'aplicació (llistat i enllaços als PDF) no es dibuixa fins que
-   l'usuari accepta. Si no accepta, no hi ha accés.
-   --------------------------------------------------------------------- */
-const gate = $('#gate'), app = $('#app');
-const chk = $('#chkAccept'), btnAccept = $('#btnAccept');
-
-function acceptatPrevi() {
-  try {
-    if (RECORDAR_ACCEPTACIO === 'sempre') return localStorage.getItem(CLAU_AVIS) === '1';
-    if (RECORDAR_ACCEPTACIO === 'sessio') return sessionStorage.getItem(CLAU_AVIS) === '1';
-  } catch (e) {}
-  return false;
-}
-function recordarAcceptacio() {
-  try {
-    if (RECORDAR_ACCEPTACIO === 'sempre') localStorage.setItem(CLAU_AVIS, '1');
-    else if (RECORDAR_ACCEPTACIO === 'sessio') sessionStorage.setItem(CLAU_AVIS, '1');
-  } catch (e) {}
-}
-function entrar() {
-  gate.hidden = true;
-  document.body.classList.remove('locked');
-  app.hidden = false; app.inert = false;
-  render(true);                                   // només ara es genera el llistat
-}
-function mostrarAvis() {
-  gate.hidden = false;
-  document.body.classList.add('locked');
-  chk.focus();
-}
-function denegar() {
-  $('#gateCard').innerHTML = `<div class="gate-denied">
-      ${ico('lock')}
-      <h2>Accés denegat</h2>
-      <p>Per accedir als continguts cal acceptar l'avís legal. Sense l'acceptació no és possible entrar al lloc web.</p>
-      <button class="btn primary" id="btnRetry">Tornar a llegir l'avís</button>
-    </div>`;
-  $('#btnRetry').addEventListener('click', () => location.reload());
-  $('#btnRetry').focus();
-}
-
-chk.addEventListener('change', () => { btnAccept.disabled = !chk.checked; });
-btnAccept.addEventListener('click', () => { if (!chk.checked) return; recordarAcceptacio(); entrar(); });
-$('#btnDeny').addEventListener('click', denegar);
-/* Manté el focus dins del diàleg mentre és visible */
-gate.addEventListener('keydown', (e) => {
-  if (e.key !== 'Tab') return;
-  const f = [...gate.querySelectorAll('button:not(:disabled), input, [tabindex="0"]')];
-  if (!f.length) return;
-  const first = f[0], last = f[f.length - 1];
-  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+/* Efectes */
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .1 });
+document.querySelectorAll('.rv').forEach(el => io.observe(el));
+const bar = $('#bar'), glow = $('#glow');
+addEventListener('scroll', () => { bar.style.width = (scrollY / (document.body.scrollHeight - innerHeight) * 100) + '%'; }, { passive: true });
+addEventListener('pointermove', e => { glow.style.transform = `translate(${e.clientX - 200}px,${e.clientY - 200}px)`; });
+document.querySelectorAll('.act').forEach(c => {
+  c.addEventListener('pointermove', e => { const r = c.getBoundingClientRect();
+    c.style.setProperty('--ry', ((e.clientX - r.left) / r.width - .5) * 14 + 'deg');
+    c.style.setProperty('--rx', (.5 - (e.clientY - r.top) / r.height) * 14 + 'deg'); });
+  c.addEventListener('pointerleave', () => { c.style.setProperty('--rx', '0deg'); c.style.setProperty('--ry', '0deg'); });
 });
-
-if (acceptatPrevi()) entrar(); else mostrarAvis();
+document.addEventListener('click', e => {
+  if (!e.target.closest('.dl')) return;
+  const cols = ['#7c5cff', '#00b8e6', '#ff3fb4', '#ffd23f', '#3ddc97'];
+  for (let i = 0; i < 28; i++) {
+    const s = document.createElement('span'); s.className = 'cf';
+    s.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;background:${cols[i % 5]};--x:${(Math.random() - .5) * 320}px;--y:${(Math.random() - .8) * 260}px`;
+    document.body.appendChild(s); setTimeout(() => s.remove(), 950);
+  }
+});
+function compta(el, fi) {
+  let n = 0; const t = setInterval(() => { n += Math.max(1, Math.ceil(fi / 30)); if (n >= fi) { n = fi; clearInterval(t); } el.textContent = n; }, 40);
+}
+$('#nT').dataset.n = posts.length; $('#nA').dataset.n = dis.length;
+document.querySelectorAll('[data-n]').forEach(el => compta(el, +el.dataset.n));
+const paraules = ['DHCP', 'DNS', 'FTP', 'tallafocs', 'VPN', 'SSH', 'Samba', 'Apache'], rot = $('#rot'); let k = 0;
+setInterval(() => {
+  rot.style.opacity = 0; rot.style.transform = 'translateY(10px)';
+  setTimeout(() => { k = (k + 1) % paraules.length; rot.textContent = paraules[k]; rot.style.opacity = 1; rot.style.transform = 'none'; }, 300);
+}, 2200);
 </script>
 </body>
 </html>
