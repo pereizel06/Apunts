@@ -2,64 +2,111 @@
 <html lang="ca" data-theme="light">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Blog i tutorials de xarxes SMX: DHCP, DNS, FTP, tallafocs i VPN | pereizel.com</title>
-<meta name="description" content="Tutorials pas a pas de Sistemes Microinformàtics i Xarxes: DHCP, DNS, FTP, ufw, WireGuard, subxarxes i diagnòstic. A més, activitats en PDF.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>pereizel.com · Tutorials, eines i activitats: informàtica, xarxes, mecànica, màrqueting i més</title>
+<meta name="description" content="Més de 60 tutorials pas a pas en català: informàtica, xarxes, seguretat, mecànica, electricitat, administració, màrqueting, logística, disseny, sanitat, hostaleria i energia. Eines interactives, reptes infinits i activitats en PDF.">
 <link rel="canonical" href="https://pereizel.com/">
 <!-- ADSENSE: enganxa aquí el teu script quan Google aprovi el lloc:
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
 <script>
 (function(){var t=null;try{t=localStorage.getItem('smx-tema')}catch(e){}
 if(!t)t=matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
-document.documentElement.setAttribute('data-theme',t)})();
+document.documentElement.setAttribute('data-theme',t);
+document.documentElement.classList.add('js')})();
 </script>
 <style>
-:root{--bg:#f4f3ff;--panel:rgba(255,255,255,.72);--text:#17142b;--muted:#5b5877;--border:rgba(124,92,255,.25);--hover:rgba(124,92,255,.1);--a1:#7c5cff;--a2:#00b8e6;--a3:#ff3fb4;--accent:#6a45ff;--code:#14112b}
-[data-theme=dark]{--bg:#0a0816;--panel:rgba(26,22,52,.62);--text:#eeeaff;--muted:#a49fc8;--border:rgba(140,120,255,.3);--hover:rgba(140,120,255,.15);--accent:#9d86ff;--code:#06050e}
+:root{--bg:#f4f3ff;--panel:rgba(255,255,255,.72);--pop:#ffffff;--text:#17142b;--muted:#5b5877;--border:rgba(124,92,255,.25);--hover:rgba(124,92,255,.1);--a1:#7c5cff;--a2:#00b8e6;--a3:#ff3fb4;--accent:#6a45ff;--code:#14112b;--e:cubic-bezier(.16,1,.3,1);--hh:58px;--fc:#7c5cff}
+[data-theme=dark]{--bg:#0a0816;--panel:rgba(26,22,52,.62);--pop:#14112e;--text:#eeeaff;--muted:#a49fc8;--border:rgba(140,120,255,.3);--hover:rgba(140,120,255,.15);--accent:#9d86ff;--code:#06050e}
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--hh) + 12px)}
 body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.65;overflow-x:hidden}
-body:before,body:after{content:"";position:fixed;width:60vmax;height:60vmax;border-radius:50%;filter:blur(90px);opacity:.35;z-index:-1;animation:float 18s ease-in-out infinite alternate}
+body:before,body:after{content:"";position:fixed;width:60vmax;height:60vmax;border-radius:50%;filter:blur(90px);opacity:.33;z-index:-2;animation:float 18s ease-in-out infinite alternate;pointer-events:none}
 body:before{background:var(--a1);top:-25vmax;left:-15vmax}
 body:after{background:var(--a3);bottom:-30vmax;right:-20vmax;animation-delay:-9s}
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
 a{color:var(--accent)}
 :focus-visible{outline:2px solid var(--a2);outline-offset:2px}
-.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
-#bar{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--a1),var(--a2),var(--a3));z-index:20;box-shadow:0 0 12px var(--a2)}
-#glow{position:fixed;top:0;left:0;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(124,92,255,.22),transparent 65%);pointer-events:none;z-index:-1;transition:transform .15s ease-out}
-header.top{background:var(--panel);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
-header.top .wrap{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-top:10px;padding-bottom:10px}
-.logo{font-weight:800;text-decoration:none;color:var(--text)}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+#bar{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--a1),var(--a2),var(--a3));z-index:50;box-shadow:0 0 12px var(--a2)}
+#glow{position:fixed;top:0;left:0;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(124,92,255,.2),transparent 65%);pointer-events:none;z-index:-1;transition:transform .15s ease-out}
+@media (pointer:coarse){#glow{display:none}}
+header.top{background:var(--panel);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:30}
+header.top .wrap{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-top:10px;padding-bottom:10px}
+.logo{font-weight:800;text-decoration:none;color:var(--text);letter-spacing:-.02em}
 nav.menu{display:flex;gap:16px;flex:1;flex-wrap:wrap;font-size:.92rem}
 nav.menu a{text-decoration:none;color:var(--muted);position:relative;transition:color .2s}
 nav.menu a:after{content:"";position:absolute;left:0;bottom:-3px;height:2px;width:0;background:linear-gradient(90deg,var(--a1),var(--a3));transition:width .3s}
-nav.menu a:hover{color:var(--text)}nav.menu a:hover:after{width:100%}
-button{font:inherit;color:inherit;cursor:pointer;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:6px 12px;transition:transform .15s,background .2s}
+nav.menu a:hover,nav.menu a.on{color:var(--text)}nav.menu a:hover:after,nav.menu a.on:after{width:100%}
+button{font:inherit;color:inherit;cursor:pointer;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:6px 12px;transition:transform .15s,background .2s,border-color .2s}
 button:hover{background:var(--hover);transform:translateY(-1px)}
+kbd{font:inherit;font-size:.75rem;border:1px solid var(--border);border-radius:6px;padding:0 6px;color:var(--muted)}
+.xp{display:flex;flex-direction:column;gap:3px;font-size:.72rem;color:var(--muted);min-width:78px}
+.xp i{display:block;height:5px;border-radius:9px;background:var(--hover);overflow:hidden}
+.xp b{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a1),var(--a2),var(--a3));transition:width .6s var(--e)}
 .gt{background:linear-gradient(90deg,var(--a1),var(--a2),var(--a3),var(--a1));background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite}
-.hero{padding:56px 0 24px;text-align:center}
-.badge{display:inline-block;padding:5px 14px;border:1px solid var(--border);border-radius:99px;background:var(--panel);font-size:.82rem;margin-bottom:16px;animation:pulse 2.4s infinite}
-.hero h1{font-size:clamp(2.1rem,6vw,3.8rem);line-height:1.1;margin-bottom:14px;letter-spacing:-.02em}
-#rot{display:inline-block;transition:opacity .3s,transform .3s}
-.hero p{color:var(--muted);max-width:720px;margin:0 auto}
-.cta{display:flex;gap:12px;margin-top:22px;flex-wrap:wrap;justify-content:center}
-.btn{position:relative;overflow:hidden;display:inline-block;text-decoration:none;padding:11px 22px;border-radius:12px;border:1px solid var(--accent);color:var(--accent);font-weight:700;transition:transform .2s,box-shadow .2s}
+
+/* INTRO */
+#intro{position:fixed;inset:0;z-index:1000;background:#07050f;color:#fff;display:grid;place-items:center;clip-path:inset(0 0 0 0);transition:clip-path 1s var(--e),opacity .4s .7s;cursor:pointer}
+#intro.out{clip-path:inset(0 0 100% 0);opacity:0}
+.ib{width:min(420px,80vw);text-align:center}
+.il{font-size:2.2rem;font-weight:800;letter-spacing:-.03em}.il span{color:var(--a2)}
+.it{margin:14px 0 10px;color:#a49fc8;font-size:.9rem;font-family:ui-monospace,Consolas,monospace;min-height:1.4em}
+.ibar{height:3px;background:rgba(255,255,255,.12);border-radius:9px;overflow:hidden}
+.ibar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a1),var(--a2),var(--a3));transition:width .1s}
+.ip{margin-top:8px;font-size:.8rem;color:#a49fc8}
+
+/* HERO */
+.hero{position:relative;text-align:center;padding:60px 0 30px;min-height:calc(100svh - var(--hh));display:flex;flex-direction:column;justify-content:center}
+.hin{position:relative;z-index:1;will-change:transform,opacity}
+.js .rise{opacity:0;translate:0 40px;filter:blur(10px)}
+.js.go .rise{animation:rise 1.1s var(--e) forwards;animation-delay:var(--d,0s)}
+.rise{display:inline-block}
+p.rise{display:block}
+.badge{padding:5px 14px;border:1px solid var(--border);border-radius:99px;background:var(--panel);font-size:.82rem;margin-bottom:16px}
+.hero h1{font-size:clamp(2.4rem,7vw,4.6rem);line-height:1.08;margin-bottom:16px;letter-spacing:-.03em}
+#rot{display:inline-block;transition:opacity .3s,transform .3s,filter .3s}
+.hero p.sub{color:var(--muted);max-width:720px;margin:0 auto}
+.cta{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;justify-content:center}
+.btn{position:relative;overflow:hidden;display:inline-block;text-decoration:none;padding:12px 24px;border-radius:12px;border:1px solid var(--accent);color:var(--accent);font-weight:700;transition:transform .2s,box-shadow .2s,translate .2s;background:transparent}
 .btn.p{background:linear-gradient(135deg,var(--a1),var(--a3));border-color:transparent;color:#fff;box-shadow:0 8px 24px rgba(124,92,255,.4)}
-.btn:hover{transform:translateY(-3px) scale(1.03)}
+.btn:hover{transform:translateY(-3px) scale(1.03);background:var(--hover)}
+.btn.p:hover{background:linear-gradient(135deg,var(--a1),var(--a3))}
+.mag{translate:var(--mx,0px) var(--my,0px)}
 .btn.p:after,.dl:after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);transition:left .6s}
 .btn.p:hover:after,.dl:hover:after{left:130%}
-.stats{display:flex;gap:14px;justify-content:center;margin-top:30px;flex-wrap:wrap}
-.stats div{background:var(--panel);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:16px;padding:12px 24px;min-width:130px}
+.stats{display:flex;gap:14px;justify-content:center;margin-top:34px;flex-wrap:wrap}
+.stats div{background:var(--panel);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:16px;padding:12px 22px;min-width:120px}
 .stats b{display:block;font-size:2rem;line-height:1.1}
 .stats span{font-size:.8rem;color:var(--muted)}
-.mq{overflow:hidden;margin:26px 0;mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
-.mq div{display:flex;gap:12px;width:max-content;animation:mq 28s linear infinite}
+.fl{position:absolute;font-size:2.2rem;opacity:.75;pointer-events:none;translate:calc(var(--px,0)*var(--k)*40px) calc(var(--py,0)*var(--k)*40px);transition:translate .4s ease-out;animation:bob 4s ease-in-out infinite;filter:drop-shadow(0 8px 14px rgba(124,92,255,.35))}
+@media (max-width:760px){.fl{display:none}}
+.cue{margin-top:28px;color:var(--muted);font-size:.85rem;animation:cue 2s ease-in-out infinite}
+
+.mq{overflow:hidden;margin:20px 0 26px;mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.mq div{display:flex;gap:12px;width:max-content;animation:mq 40s linear infinite}
+.mq:hover div{animation-play-state:paused}
 .mq span{padding:6px 16px;border:1px solid var(--border);border-radius:99px;background:var(--panel);font-size:.9rem;white-space:nowrap}
-section{padding:30px 0}
-h2{font-size:clamp(1.6rem,3.5vw,2.2rem);margin-bottom:6px;letter-spacing:-.01em}
+
+section{padding:36px 0;scroll-margin-top:calc(var(--hh) + 10px)}
+h2{font-size:clamp(1.6rem,3.5vw,2.3rem);margin-bottom:6px;letter-spacing:-.02em}
 .lead{color:var(--muted);margin-bottom:18px}
+.meta{font-size:.74rem;color:var(--muted);letter-spacing:.03em}
+
+/* UNIVERS */
+.uni{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.tilt{transform:perspective(800px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .15s,box-shadow .3s,border-color .3s}
+.tilt:after{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(260px circle at var(--gx,50%) var(--gy,50%),rgba(255,255,255,.14),transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none}
+.tilt:hover:after{opacity:1}
+.fam{position:relative;text-align:left;display:block;padding:20px;border-radius:20px;background:var(--panel);backdrop-filter:blur(10px);border:1px solid var(--border);overflow:hidden}
+.fam:hover{border-color:var(--fc);box-shadow:0 16px 44px color-mix(in srgb,var(--fc) 40%,transparent);transform:perspective(800px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
+.fam .fi{display:grid;place-items:center;width:56px;height:56px;font-size:2rem;border-radius:16px;background:color-mix(in srgb,var(--fc) 22%,transparent);margin-bottom:10px;transition:transform .4s var(--e)}
+.fam:hover .fi{transform:scale(1.18) rotate(-8deg)}
+.fam h3{font-size:1.1rem;margin-bottom:2px}
+.fam p{color:var(--muted);font-size:.88rem;margin-bottom:8px;line-height:1.45}
+
+/* ACTIVITATS */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
-.act{position:relative;background:var(--panel);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:20px;padding:22px;transform:perspective(700px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .15s,box-shadow .3s}
+.act{position:relative;background:var(--panel);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:20px;padding:22px}
 .act:hover{box-shadow:0 18px 50px rgba(124,92,255,.35)}
 .act:before{content:"";position:absolute;inset:-1px;border-radius:21px;padding:2px;background:linear-gradient(135deg,var(--a1),var(--a2),var(--a3));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .3s;pointer-events:none}
 .act:hover:before{opacity:1}
@@ -68,94 +115,241 @@ h2{font-size:clamp(1.6rem,3.5vw,2.2rem);margin-bottom:6px;letter-spacing:-.01em}
 .act p{color:var(--muted);margin-bottom:14px;font-size:.93rem}
 .dl{position:relative;overflow:hidden;display:inline-block;background:linear-gradient(135deg,var(--a1),var(--a2));color:#fff;text-decoration:none;padding:9px 16px;border-radius:10px;font-weight:700;font-size:.9rem;transition:transform .2s}
 .dl:hover{transform:scale(1.06)}
-.meta{font-size:.74rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-.tools input{flex:1 1 220px;padding:10px 14px;border:1px solid var(--border);border-radius:10px;background:var(--panel);color:var(--text);font:inherit}
+
+/* LAB */
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
+.chip{white-space:nowrap;flex:0 0 auto;border-radius:99px}
 .chip[aria-pressed=true]{background:linear-gradient(135deg,var(--a1),var(--a3));color:#fff;border-color:transparent}
-.post{background:var(--panel);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:16px;margin-bottom:12px;transition:transform .2s,box-shadow .3s}
-.post:hover{transform:translateX(6px);box-shadow:-6px 0 0 var(--a1),0 10px 30px rgba(124,92,255,.2)}
-.post summary{padding:16px 18px;cursor:pointer;list-style:none;display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap}
-.post summary::-webkit-details-marker{display:none}
-.post summary h3{font-size:1.12rem;flex:1 1 300px}
-.post[open] summary h3{color:var(--accent)}
-.body{padding:0 20px 20px;border-top:1px solid var(--border);animation:drop .35s ease}
-.body h4{margin:16px 0 4px;font-size:1rem;color:var(--accent)}
-.body p,.body li{margin-top:6px}
+.card{position:relative;background:var(--panel);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:20px;padding:20px;transition:transform .25s,box-shadow .3s,border-color .3s}
+.lab{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:14px}
+@media (max-width:760px){.lab{grid-template-columns:1fr}}
+.lab h3{margin-bottom:4px}
+.lab label{display:block;margin-top:12px;font-size:.88rem;color:var(--muted)}
+.lab input,.lab select,.tb input{width:100%;margin-top:4px;padding:10px 14px;border:1px solid var(--border);border-radius:10px;background:var(--pop);color:var(--text);font:inherit}
+.res{align-self:center}
+.res div{display:flex;justify-content:space-between;gap:12px;padding:12px 14px;border-bottom:1px solid var(--border);animation:drop .35s var(--e)}
+.res span{color:var(--muted)}
+.res b{text-align:right;color:var(--accent);word-break:break-word}
+
+/* MANIFEST */
+.scr{font-size:clamp(1.5rem,4vw,2.7rem);font-weight:800;line-height:1.25;letter-spacing:-.02em;margin:10px 0 24px}
+.scr span{opacity:.16;transition:opacity .45s,color .45s}
+.scr span.lit{opacity:1}
+
+/* FEED */
+.tb{position:sticky;top:var(--hh);z-index:20;background:var(--panel);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--border);border-radius:16px;padding:10px;margin-bottom:18px;display:grid;gap:10px}
+.tb .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.tb input{margin:0;flex:1 1 240px}
+#cnt{font-size:.8rem;color:var(--muted)}
+.feed{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+.post{display:flex;flex-direction:column;cursor:pointer}
+.post:hover,.qz:hover{border-color:var(--fc);box-shadow:0 14px 40px color-mix(in srgb,var(--fc) 32%,transparent);transform:translateY(-4px)}
+.ptop{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.fb{font-size:.78rem;padding:3px 10px;border-radius:99px;background:color-mix(in srgb,var(--fc) 20%,transparent);border:1px solid color-mix(in srgb,var(--fc) 50%,transparent)}
+.card h3{font-size:1.1rem;line-height:1.3;margin-bottom:6px}
+.post p{color:var(--muted);font-size:.9rem;margin-bottom:14px;flex:1}
+.pb{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.rd{background:linear-gradient(135deg,var(--a1),var(--a2));color:#fff;border-color:transparent;font-weight:700;font-size:.88rem}
+.ok{color:#2fbf86;font-size:.82rem;font-weight:700}
+.qz{border-style:dashed}
+.opts{display:grid;gap:8px;margin-top:10px}
+.opt{text-align:left}
+.opt.ok{background:rgba(61,220,151,.22);border-color:#3ddc97;color:inherit;font-size:inherit;font-weight:700}
+.opt.ko{background:rgba(255,93,115,.22);border-color:#ff5d73}
+.opt:disabled{cursor:default;transform:none}
+.opt:disabled:not(.ok):not(.ko){opacity:.55}
+.ex{margin-top:12px;font-size:.9rem;color:var(--muted);animation:drop .35s var(--e)}
+.dv{grid-column:1/-1;text-align:center;padding:20px;color:var(--muted);border:1px dashed var(--border);border-radius:16px}
+#buit{color:var(--muted);text-align:center;padding:24px}
+#sent{height:40px;text-align:center;color:var(--muted);font-size:.85rem}
+
+/* DIALOGS */
+dialog{border:1px solid var(--border);border-radius:22px;background:var(--pop);color:var(--text);padding:0;width:100%;max-width:min(860px,94vw);max-height:90vh;overflow:hidden}
+dialog::backdrop{background:rgba(5,3,15,.65);backdrop-filter:blur(8px)}
+dialog[open]{display:flex;flex-direction:column;animation:zoom .45s var(--e)}
+.rh{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid var(--border)}
+.rp{height:3px;background:var(--hover)}.rp i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--fc),var(--a3))}
+.rbody{overflow:auto;padding:6px 24px 24px;flex:1}
+.rbody h2{margin-top:16px;font-size:clamp(1.4rem,3vw,1.9rem);line-height:1.2}
+.rf{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;padding:12px 18px;border-top:1px solid var(--border)}
+.pri{background:linear-gradient(135deg,var(--a1),var(--a3));color:#fff;border-color:transparent;font-weight:700}
+.pri:disabled{opacity:.6;cursor:default}
+.body h4{margin:18px 0 4px;font-size:1rem;color:var(--accent)}
+.body p,.body li{margin-top:8px;max-width:72ch}
 .body ul,.body ol{padding-left:22px}
-pre{background:var(--code);color:#e6edf3;padding:14px;border-radius:12px;overflow-x:auto;font-size:.85rem;margin:8px 0;line-height:1.5;border:1px solid var(--border)}
+.cb{position:relative}
+.cp{position:absolute;top:14px;right:8px;font-size:.72rem;padding:2px 8px;opacity:.8}
+pre{background:var(--code);color:#e6edf3;padding:14px;border-radius:12px;overflow-x:auto;font-size:.85rem;margin:10px 0;line-height:1.5;border:1px solid var(--border)}
 code{font-family:ui-monospace,Consolas,Menlo,monospace}
-#buit{color:var(--muted);display:none}
-footer{border-top:1px solid var(--border);background:var(--panel);backdrop-filter:blur(10px);margin-top:20px;padding:10px 0 30px;font-size:.9rem}
-footer h2{font-size:1.15rem;margin-top:14px}
-footer p{color:var(--muted);margin-bottom:6px}
+.body p code,.body li code{background:var(--hover);padding:1px 6px;border-radius:6px;font-size:.88em}
+#pal{max-width:min(600px,94vw);margin:12vh auto auto}
+#pq{width:100%;border:0;border-bottom:1px solid var(--border);padding:16px 20px;background:transparent;color:var(--text);font:inherit;font-size:1.05rem;outline:none}
+#pl{list-style:none;overflow:auto;padding:8px}
+#pl button{display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;border:0;border-radius:12px;background:transparent}
+#pl button.on,#pl button:hover{background:var(--hover);transform:none}
+#pl span{font-size:.78rem;color:var(--muted)}
+#pl .em{padding:16px;color:var(--muted)}
+#leg .rbody p{margin-top:8px;color:var(--muted)}
+#leg h2{font-size:1.15rem;margin-top:16px}
+
+#toast{position:fixed;left:50%;bottom:24px;translate:-50% 30px;opacity:0;background:var(--pop);border:1px solid var(--border);border-radius:99px;padding:10px 20px;z-index:200;transition:opacity .3s,translate .4s var(--e);pointer-events:none;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+#toast.on{opacity:1;translate:-50% 0}
+#up,#lg{position:fixed;bottom:16px;z-index:40;border-radius:99px}
+#up{right:16px;opacity:0;pointer-events:none;transition:opacity .3s}
+#up.on{opacity:1;pointer-events:auto}
+#lg{left:16px;font-size:.78rem;padding:4px 12px}
 .small{font-size:.8rem}
-.js .rv{opacity:0;transform:translateY(28px);transition:opacity .7s,transform .7s;transition-delay:var(--d,0ms)}
-.js .rv.in{opacity:1;transform:none}
-.cf{position:fixed;width:9px;height:9px;border-radius:2px;pointer-events:none;z-index:99;animation:cf .9s ease-out forwards}
+.js .rv{opacity:0;translate:0 28px;filter:blur(8px);transition:opacity .8s var(--e),translate .8s var(--e),filter .8s var(--e);transition-delay:var(--d,0ms)}
+.js .rv.in{opacity:1;translate:0 0;filter:none}
+.cf{position:fixed;width:9px;height:9px;border-radius:2px;pointer-events:none;z-index:300;animation:cf .9s ease-out forwards}
 @keyframes cf{to{transform:translate(var(--x),var(--y)) rotate(540deg);opacity:0}}
 @keyframes float{to{transform:translate(8vmax,6vmax) scale(1.15)}}
 @keyframes shine{to{background-position:300% 0}}
-@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(124,92,255,.12)}}
 @keyframes mq{to{transform:translateX(-50%)}}
-@keyframes bob{50%{transform:translateY(-6px) rotate(-4deg)}}
+@keyframes bob{50%{transform:translateY(-8px) rotate(-4deg)}}
 @keyframes drop{from{opacity:0;transform:translateY(-8px)}}
-@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}.js .rv{opacity:1;transform:none}}
+@keyframes rise{to{opacity:1;translate:0 0;filter:none}}
+@keyframes zoom{from{opacity:0;transform:scale(.92) translateY(20px)}}
+@keyframes cue{50%{transform:translateY(7px);opacity:.5}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}.js .rv,.js .rise{opacity:1;translate:none;filter:none}}
 </style>
 </head>
 <body>
+<canvas id="bg" aria-hidden="true"></canvas>
 <div id="bar"></div><div id="glow"></div>
 
 <header class="top"><div class="wrap">
-  <a class="logo" href="#">pereizel.com · SMX</a>
+  <a class="logo" href="#top">pereizel<span class="gt">.com</span></a>
   <nav class="menu" aria-label="Menú principal">
-    <a href="#activitats">Activitats</a><a href="#blog">Blog i tutorials</a><a href="#sobre">Sobre el lloc</a><a href="#contacte">Contacte</a><a href="#privadesa">Privadesa</a>
+    <a href="#univers">Univers</a><a href="#activitats">Activitats</a><a href="#lab">Laboratori</a><a href="#sobre">Sobre</a><a href="#contacte">Contacte</a><a href="#blog">Tutorials ∞</a>
   </nav>
-  <button id="btnTheme" aria-label="Canvia entre mode clar i fosc">Mode clar / fosc</button>
+  <button id="bSearch" aria-label="Cerca (Ctrl+K)">🔎 <kbd>Ctrl K</kbd></button>
+  <div class="xp" title="El teu nivell: llegeix tutorials i encerta reptes"><span id="xpT">Nv. 1 · 0 XP</span><i><b id="xpB"></b></i></div>
+  <button id="btnTheme" aria-label="Canvia entre mode clar i fosc">🌓</button>
 </div></header>
 
-<main class="wrap">
+<main class="wrap" id="top">
 
-<div class="hero">
-  <span class="badge">⚡ Tutorials de xarxes · 100% gratuïts · en català</span>
-  <h1>Domina <span id="rot" class="gt">DHCP</span><br>des de zero</h1>
-  <p>Tutorials pràctics amb ordres reals per provar en una màquina virtual: serveis de xarxa, seguretat, Linux i diagnòstic. I, a més, totes les activitats del cicle SMX en PDF, a un clic.</p>
-  <div class="cta"><a class="btn p" href="#activitats">📥 Descarregar activitats</a><a class="btn" href="#blog">🚀 Anar als tutorials</a></div>
-  <div class="stats"><div><b class="gt" id="nT">0</b><span>tutorials</span></div><div><b class="gt" id="nA">0</b><span>activitats PDF</span></div><div><b class="gt" data-n="100">0</b><span>% gratuït</span></div></div>
+<div class="hero" id="hero">
+  <div class="hin" id="hin">
+    <span class="badge rise" style="--d:.05s">⚡ 12 famílies · tutorials, eines i reptes · 100% gratuït · en català</span>
+    <h1><span class="rise" style="--d:.15s">Aprèn</span> <span class="rise" style="--d:.3s"><span id="rot" class="gt">DHCP</span></span><br><span class="rise" style="--d:.45s">sense límits ∞</span></h1>
+    <p class="sub rise" style="--d:.6s">De la xarxa al motor, de l'Excel al màrqueting. Tutorials pràctics amb exemples reals, eines per provar al moment, reptes que no s'acaben mai i totes les activitats del cicle SMX en PDF.</p>
+    <div class="cta rise" style="--d:.75s"><a class="btn p mag" href="#univers">🚀 Explorar l'univers</a><a class="btn mag" href="#activitats">📥 Descarregar activitats</a></div>
+    <div class="stats rise" style="--d:.9s"><div><b class="gt" id="sT">0</b><span>tutorials</span></div><div><b class="gt" id="sQ">0</b><span>preguntes de repte</span></div><div><b class="gt" id="sL">0</b><span>eines</span></div><div><b class="gt" id="sA">0</b><span>activitats PDF</span></div></div>
+    <div class="cue rise" style="--d:1.1s">↓ baixa i descobreix</div>
+  </div>
 </div>
-<div class="mq" aria-hidden="true"><div><span>🌐 DHCP</span><span>🧭 DNS</span><span>📁 FTP</span><span>🔥 Firewall</span><span>🔐 VPN</span><span>🧮 Subxarxes</span><span>🔑 SSH</span><span>💾 Backups</span><span>🕸️ Apache</span><span>🗂️ Samba</span><span>🔍 tcpdump</span><span>🌐 DHCP</span><span>🧭 DNS</span><span>📁 FTP</span><span>🔥 Firewall</span><span>🔐 VPN</span><span>🧮 Subxarxes</span><span>🔑 SSH</span><span>💾 Backups</span><span>🕸️ Apache</span><span>🗂️ Samba</span><span>🔍 tcpdump</span></div></div>
+<div class="mq" aria-hidden="true"><div id="mq"></div></div>
+
+<section id="univers" class="rv" aria-labelledby="h-uni">
+  <h2 id="h-uni">🌌 L'<span class="gt">univers</span> del coneixement</h2>
+  <p class="lead">Tria una família professional i el feed de tutorials es filtrarà. Cada família creix cada setmana.</p>
+  <div class="uni" id="uni"></div>
+</section>
 
 <section id="activitats" class="rv" aria-labelledby="h-act">
   <h2 id="h-act">📥 <span class="gt">Activitats</span> en PDF</h2>
   <p class="lead">Pràctiques resoltes del cicle SMX. Descàrrega directa, per a ús personal i formatiu.</p>
   <div class="grid" id="llista"></div>
-  <noscript><p><a href="DHCP_A1_IzquierdoPere.pdf" download>DHCP A1 (PDF)</a> · <a href="DHCP_A2_IzquierdoPere.pdf" download>DHCP A2 (PDF)</a></p></noscript>
+  <noscript><p><a href="DHCP_A1_IzquierdoPere.pdf" download>DHCP A1 (PDF)</a> · <a href="DHCP_A2_IzquierdoPere.pdf" download>DHCP A2 (PDF)</a></p><p>Els tutorials i les eines necessiten JavaScript activat.</p></noscript>
 </section>
 
-<!-- ===================== BLOG I TUTORIALS ===================== -->
-<section id="blog" aria-labelledby="h-blog">
-  <h2 id="h-blog">📚 Blog i <span class="gt">tutorials</span></h2>
-  <p class="lead">Fes clic en un tutorial per desplegar-lo. Cerca per tema o filtra per categoria.</p>
-  <div class="tools">
-    <input type="search" id="q" placeholder="Cerca (dhcp, ufw, wireguard…)" aria-label="Cerca tutorials">
-    <button class="chip" data-tag="" aria-pressed="true">Tots</button>
-    <button class="chip" data-tag="xarxes" aria-pressed="false">Serveis en xarxes</button>
-    <button class="chip" data-tag="seguretat" aria-pressed="false">Seguretat</button>
-    <button class="chip" data-tag="basics" aria-pressed="false">Fonaments</button>
-  </div>
+<section id="lab" class="rv" aria-labelledby="h-lab">
+  <h2 id="h-lab">🧪 <span class="gt">Laboratori</span> d'eines</h2>
+  <p class="lead">Calculadores que funcionen al moment, al teu navegador. No s'envia res enlloc.</p>
+  <div class="chips" id="tabs" role="group" aria-label="Eines"></div>
+  <div class="lab card"><div id="tin"></div><div id="tout" class="res" aria-live="polite"></div></div>
+</section>
 
-  <details class="post" data-tag="xarxes" open>
-    <summary><h3>Com instal·lar i configurar un servidor DHCP a Ubuntu Server</h3><span class="meta">Serveis en xarxes · 6 min</span></summary>
-    <div class="body">
-      <p>DHCP assigna adreces IP automàticament. Amb el paquet <code>isc-dhcp-server</code> pots muntar-ne un en pocs minuts. Abans cal una IP fixa al servidor, per exemple 192.168.10.1/24.</p>
-      <h4>1. Instal·lació</h4>
-      <pre><code>sudo apt update
-sudo apt install isc-dhcp-server</code></pre>
-      <h4>2. Interfície d'escolta</h4>
-      <p>Edita <code>/etc/default/isc-dhcp-server</code> i indica la targeta de xarxa interna:</p>
-      <pre><code>INTERFACESv4="enp0s8"</code></pre>
-      <h4>3. Àmbit d'adreces</h4>
-      <p>A <code>/etc/dhcp/dhcpd.conf</code> defineix la xarxa, el rang, la passarel·la i el DNS:</p>
-      <pre><code>subnet 192.168.10.0 netmask 255.255.255.0 {
+<section id="sobre" aria-labelledby="h-sob">
+  <h2 id="h-sob">Sobre el lloc</h2>
+  <p class="scr" id="scr">pereizel.com neix d'un estudiant de SMX que volia entendre les xarxes de debò. Ara és un racó per aprendre fent: ordres reals, càlculs que pots tocar i reptes que no s'acaben. Si detectes un error o vols suggerir un tema, escriu-me.</p>
+</section>
+
+<section id="contacte" class="rv" aria-labelledby="h-con">
+  <h2 id="h-con">Contacte</h2>
+  <p>Dubtes, correccions o sol·licituds de drets d'autor: <a href="mailto:pere.izquierdo24@lacetanica.cat">pere.izquierdo24@lacetanica.cat</a>. També pots consultar l'<a href="#" id="legLink">avís legal i la política de privadesa</a>.</p>
+</section>
+
+<!-- ===================== FEED INFINIT ===================== -->
+<section id="blog" aria-labelledby="h-blog">
+  <h2 id="h-blog">📚 Tutorials i <span class="gt">reptes ∞</span></h2>
+  <p class="lead">Clica una targeta per llegir el tutorial. Quan s'acabin, el feed continua amb reptes: mai no arribaràs al final.</p>
+  <div class="tb">
+    <div class="row"><input type="search" id="q" placeholder="Cerca (dhcp, ohm, SEO, rcp, excel…)" aria-label="Cerca tutorials"><span id="cnt"></span></div>
+    <div class="chips" id="chips" role="group" aria-label="Filtra per família"></div>
+  </div>
+  <div class="feed" id="feed"></div>
+  <p id="buit" hidden>No s'han trobat tutorials amb aquest filtre. Prova una altra paraula.</p>
+  <div id="sent">∞ carregant més…</div>
+</section>
+
+</main>
+
+<!-- LECTOR -->
+<dialog id="rdr" aria-label="Lector de tutorial">
+  <div class="rh"><span id="rM" class="meta"></span><button id="rX" aria-label="Tanca">✕</button></div>
+  <div class="rp"><i id="rPb"></i></div>
+  <div class="rbody" id="rS"><h2 id="rT"></h2><div id="rB" class="body"></div></div>
+  <div class="rf"><button id="rPv">← Anterior</button><button id="rDn" class="pri">✓ Marca com a llegit · +20 XP</button><button id="rNx">Següent →</button></div>
+</dialog>
+
+<!-- PALETA -->
+<dialog id="pal" aria-label="Cerca ràpida">
+  <input id="pq" type="search" placeholder="Cerca un tutorial o una família…" aria-label="Cerca ràpida" autocomplete="off">
+  <ul id="pl"></ul>
+</dialog>
+
+<!-- LEGAL -->
+<dialog id="leg" aria-label="Informació legal">
+  <div class="rh"><strong>Informació legal</strong><button id="lX" aria-label="Tanca">✕</button></div>
+  <div class="rbody">
+    <h2 id="privadesa">Política de privadesa</h2>
+    <p>Aquest lloc no demana registre ni recull dades personals directament. Només desa al navegador la preferència de mode clar o fosc i el teu progrés (nivell, XP i tutorials llegits). Si s'activa la publicitat, Google AdSense i altres proveïdors poden utilitzar cookies per mostrar anuncis segons les visites anteriors de l'usuari. Pots gestionar els anuncis personalitzats a <a href="https://adssettings.google.com" rel="noopener">adssettings.google.com</a> i informar-te a <a href="https://policies.google.com/technologies/ads?hl=ca" rel="noopener">policies.google.com/technologies/ads</a>.</p>
+    <h2 id="cookies">Política de cookies</h2>
+    <p>Utilitzem emmagatzematge local només per recordar el tema visual i el progrés. Les cookies de tercers (publicitat i mesurament) només s'instal·len si es mostren anuncis, i es poden rebutjar des del navegador o del missatge de consentiment que ofereix Google.</p>
+    <h2 id="avis">Avís legal i drets d'autor</h2>
+    <p>Els continguts són obra de l'autor i estan protegits pel Reial decret legislatiu 1/1996 (Llei de propietat intel·lectual). Les descàrregues es permeten per a ús personal i formatiu; no es permet reproduir-les, distribuir-les ni comercialitzar-les sense autorització escrita. L'ús indegut pot comportar accions civils (art. 138 TRLPI) i penals (art. 270 del Codi Penal). L'usuari és responsable de l'ús que faci dels continguts.</p>
+    <p>Els tutorials de sanitat, electricitat, mecànica i finances són informatius i no substitueixen un professional qualificat.</p>
+    <p class="small">© 2026 pereizel.com · Sistemes Microinformàtics i Xarxes</p>
+  </div>
+</dialog>
+
+<div id="toast" role="status"></div>
+<button id="up" aria-label="Torna a dalt">↑</button>
+<button id="lg">© 2026 · Legal</button>
+
+<!-- ===================== DADES: TUTORIALS =====================
+Format: una línia "@@ familia|nivell(1-3)|minuts|Títol" i, a sota, el cos.
+Cos: paràgrafs separats per línia en blanc; "## Títol"; llistes amb "- " o "1. ";
+blocs de codi entre tres accents oberts; `codi en línia` i **negreta**.
+Per afegir un tutorial, copia un bloc i canvia'l. Les famílies són: inf xar seg mec ele adm mkt log dis san hos ene -->
+<script type="text/plain" id="dTut">
+@@ xar|1|6|Com instal·lar i configurar un servidor DHCP a Ubuntu Server
+DHCP assigna adreces IP automàticament. Amb el paquet `isc-dhcp-server` pots muntar-ne un en pocs minuts. Abans cal una IP fixa al servidor, per exemple 192.168.10.1/24.
+
+## 1. Instal·lació
+
+```
+sudo apt update
+sudo apt install isc-dhcp-server
+```
+
+## 2. Interfície d'escolta
+
+Edita `/etc/default/isc-dhcp-server` i indica la targeta de xarxa interna:
+
+```
+INTERFACESv4="enp0s8"
+```
+
+## 3. Àmbit d'adreces
+
+A `/etc/dhcp/dhcpd.conf` defineix la xarxa, el rang, la passarel·la i el DNS:
+
+```
+subnet 192.168.10.0 netmask 255.255.255.0 {
   range 192.168.10.100 192.168.10.200;
   option routers 192.168.10.1;
   option domain-name-servers 192.168.10.1, 8.8.8.8;
@@ -165,54 +359,78 @@ sudo apt install isc-dhcp-server</code></pre>
 host impressora {
   hardware ethernet 08:00:27:aa:bb:cc;
   fixed-address 192.168.10.50;
-}</code></pre>
-      <p>El bloc <code>host</code> és una reserva: aquella MAC rebrà sempre la mateixa IP.</p>
-      <h4>4. Reiniciar i comprovar</h4>
-      <pre><code>sudo systemctl restart isc-dhcp-server
-sudo systemctl status isc-dhcp-server
-cat /var/lib/dhcp/dhcpd.leases</code></pre>
-      <p>Al client, executa <code>sudo dhclient -v</code> (Linux) o <code>ipconfig /renew</code> (Windows). Si falla, revisa que el rang pertanyi a la mateixa subxarxa que la interfície del servidor i que no hi hagi un altre DHCP a la xarxa.</p>
-    </div>
-  </details>
+}
+```
 
-  <details class="post" data-tag="xarxes">
-    <summary><h3>Servidor DNS amb BIND9: creem una zona directa</h3><span class="meta">Serveis en xarxes · 7 min</span></summary>
-    <div class="body">
-      <p>Un servidor DNS autoritatiu respon amb les adreces d'un domini que ell mateix gestiona. Farem la zona <code>smx.local</code>.</p>
-      <h4>1. Instal·lació</h4>
-      <pre><code>sudo apt install bind9 bind9utils dnsutils</code></pre>
-      <h4>2. Declarar la zona</h4>
-      <p>A <code>/etc/bind/named.conf.local</code>:</p>
-      <pre><code>zone "smx.local" {
+El bloc `host` és una reserva: aquella MAC rebrà sempre la mateixa IP.
+
+## 4. Reiniciar i comprovar
+
+```
+sudo systemctl restart isc-dhcp-server
+sudo systemctl status isc-dhcp-server
+cat /var/lib/dhcp/dhcpd.leases
+```
+
+Al client, executa `sudo dhclient -v` (Linux) o `ipconfig /renew` (Windows). Si falla, revisa que el rang pertanyi a la mateixa subxarxa que la interfície del servidor i que no hi hagi un altre DHCP a la xarxa.
+
+@@ xar|2|7|Servidor DNS amb BIND9: creem una zona directa
+Un servidor DNS autoritatiu respon amb les adreces d'un domini que ell mateix gestiona. Farem la zona `smx.local`.
+
+## 1. Instal·lació
+
+```
+sudo apt install bind9 bind9utils dnsutils
+```
+
+## 2. Declarar la zona
+
+A `/etc/bind/named.conf.local`:
+
+```
+zone "smx.local" {
   type master;
   file "/etc/bind/db.smx.local";
-};</code></pre>
-      <h4>3. Fitxer de zona</h4>
-      <pre><code>$TTL 86400
+};
+```
+
+## 3. Fitxer de zona
+
+```
+$TTL 86400
 @   IN SOA ns1.smx.local. admin.smx.local. (
         1 3600 900 604800 86400 )
 @   IN NS  ns1.smx.local.
 ns1 IN A   192.168.10.1
 web IN A   192.168.10.20
-www IN CNAME web</code></pre>
-      <p>Cada vegada que canviïs la zona, augmenta el número de sèrie (el primer valor del SOA).</p>
-      <h4>4. Validar i provar</h4>
-      <pre><code>sudo named-checkconf
+www IN CNAME web
+```
+
+Cada vegada que canviïs la zona, augmenta el número de sèrie (el primer valor del SOA).
+
+## 4. Validar i provar
+
+```
+sudo named-checkconf
 sudo named-checkzone smx.local /etc/bind/db.smx.local
 sudo systemctl restart bind9
-dig @192.168.10.1 www.smx.local</code></pre>
-      <p>Si <code>dig</code> torna l'adreça de <code>web</code>, la zona funciona. L'error més habitual és oblidar el punt final als noms complets (<code>ns1.smx.local.</code>).</p>
-    </div>
-  </details>
+dig @192.168.10.1 www.smx.local
+```
 
-  <details class="post" data-tag="xarxes seguretat">
-    <summary><h3>FTP segur amb vsftpd: usuaris enjaulats i xifratge</h3><span class="meta">Serveis en xarxes · 6 min</span></summary>
-    <div class="body">
-      <p>vsftpd és un servidor FTP lleuger i segur per defecte. Veurem com limitar cada usuari al seu directori i com activar TLS, ja que FTP clàssic envia les contrasenyes en text pla.</p>
-      <pre><code>sudo apt install vsftpd
-sudo cp /etc/vsftpd.conf /etc/vsftpd.conf.bak</code></pre>
-      <h4>Configuració bàsica</h4>
-      <pre><code>anonymous_enable=NO
+Si `dig` torna l'adreça de `web`, la zona funciona. L'error més habitual és oblidar el punt final als noms complets (`ns1.smx.local.`).
+
+@@ xar|2|6|FTP segur amb vsftpd: usuaris enjaulats i xifratge
+vsftpd és un servidor FTP lleuger i segur per defecte. Veurem com limitar cada usuari al seu directori i com activar TLS, ja que FTP clàssic envia les contrasenyes en text pla.
+
+```
+sudo apt install vsftpd
+sudo cp /etc/vsftpd.conf /etc/vsftpd.conf.bak
+```
+
+## Configuració bàsica
+
+```
+anonymous_enable=NO
 local_enable=YES
 write_enable=YES
 chroot_local_user=YES
@@ -221,51 +439,68 @@ pasv_min_port=40000
 pasv_max_port=40100
 ssl_enable=YES
 rsa_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
-rsa_private_key_file=/etc/ssl/private/ssl-cert-snakeoil.key</code></pre>
-      <p><code>chroot_local_user</code> tanca cada usuari a la seva carpeta. El rang passiu cal obrir-lo també al tallafocs. El certificat snakeoil només serveix per proves; en producció usa un de real.</p>
-      <pre><code>sudo adduser alumne
+rsa_private_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
+```
+
+`chroot_local_user` tanca cada usuari a la seva carpeta. El rang passiu cal obrir-lo també al tallafocs. El certificat snakeoil només serveix per proves; en producció usa un de real.
+
+```
+sudo adduser alumne
 sudo systemctl restart vsftpd
 sudo ufw allow 21/tcp
-sudo ufw allow 40000:40100/tcp</code></pre>
-      <p>Prova-ho amb FileZilla triant «FTP sobre TLS explícit». Si necessites res més robust, considera SFTP, que ja ve amb SSH.</p>
-    </div>
-  </details>
+sudo ufw allow 40000:40100/tcp
+```
 
-  <details class="post" data-tag="seguretat">
-    <summary><h3>Tallafocs a Linux amb ufw: regles bàsiques pas a pas</h3><span class="meta">Seguretat · 5 min</span></summary>
-    <div class="body">
-      <p>ufw (Uncomplicated Firewall) simplifica iptables. La idea és denegar tot el trànsit entrant i obrir només els serveis necessaris.</p>
-      <pre><code>sudo ufw default deny incoming
+Prova-ho amb FileZilla triant «FTP sobre TLS explícit». Si necessites res més robust, considera SFTP, que ja ve amb SSH.
+
+@@ seg|2|5|Tallafocs a Linux amb ufw: regles bàsiques pas a pas
+ufw (Uncomplicated Firewall) simplifica iptables. La idea és denegar tot el trànsit entrant i obrir només els serveis necessaris.
+
+```
+sudo ufw default deny incoming
 sudo ufw default allow outgoing
 sudo ufw allow 22/tcp
 sudo ufw allow from 192.168.10.0/24 to any port 53
 sudo ufw enable
-sudo ufw status numbered</code></pre>
-      <p><strong>Important:</strong> permet SSH (port 22) abans d'activar ufw si treballes per remot, o et quedaràs fora del servidor.</p>
-      <h4>Esborrar i limitar</h4>
-      <pre><code>sudo ufw delete 3
-sudo ufw limit 22/tcp</code></pre>
-      <p><code>limit</code> bloqueja temporalment IP que facin massa intents de connexió, útil contra atacs de força bruta. Per veure què es bloqueja, mira <code>/var/log/ufw.log</code> després d'activar <code>sudo ufw logging on</code>.</p>
-    </div>
-  </details>
+sudo ufw status numbered
+```
 
-  <details class="post" data-tag="seguretat xarxes">
-    <summary><h3>Crear una VPN amb WireGuard entre dos equips</h3><span class="meta">Seguretat · 8 min</span></summary>
-    <div class="body">
-      <p>WireGuard és una VPN moderna, ràpida i amb poc codi. Cada equip té una parella de claus i només cal intercanviar les claus públiques.</p>
-      <pre><code>sudo apt install wireguard
-wg genkey | tee privada.key | wg pubkey > publica.key</code></pre>
-      <h4>Servidor: /etc/wireguard/wg0.conf</h4>
-      <pre><code>[Interface]
+**Important:** permet SSH (port 22) abans d'activar ufw si treballes per remot, o et quedaràs fora del servidor.
+
+## Esborrar i limitar
+
+```
+sudo ufw delete 3
+sudo ufw limit 22/tcp
+```
+
+`limit` bloqueja temporalment IP que facin massa intents de connexió, útil contra atacs de força bruta. Per veure què es bloqueja, mira `/var/log/ufw.log` després d'activar `sudo ufw logging on`.
+
+@@ seg|3|8|Crear una VPN amb WireGuard entre dos equips
+WireGuard és una VPN moderna, ràpida i amb poc codi. Cada equip té una parella de claus i només cal intercanviar les claus públiques.
+
+```
+sudo apt install wireguard
+wg genkey | tee privada.key | wg pubkey > publica.key
+```
+
+## Servidor: /etc/wireguard/wg0.conf
+
+```
+[Interface]
 Address = 10.8.0.1/24
 ListenPort = 51820
 PrivateKey = (clau privada del servidor)
 
 [Peer]
 PublicKey = (clau pública del client)
-AllowedIPs = 10.8.0.2/32</code></pre>
-      <h4>Client</h4>
-      <pre><code>[Interface]
+AllowedIPs = 10.8.0.2/32
+```
+
+## Client
+
+```
+[Interface]
 Address = 10.8.0.2/24
 PrivateKey = (clau privada del client)
 
@@ -273,67 +508,62 @@ PrivateKey = (clau privada del client)
 PublicKey = (clau pública del servidor)
 Endpoint = IP_DEL_SERVIDOR:51820
 AllowedIPs = 10.8.0.0/24
-PersistentKeepalive = 25</code></pre>
-      <pre><code>sudo wg-quick up wg0
+PersistentKeepalive = 25
+```
+
+```
+sudo wg-quick up wg0
 sudo wg show
-ping 10.8.0.1</code></pre>
-      <p>Recorda obrir el port UDP 51820 al tallafocs. Si vols que tot el trànsit del client passi pel túnel, posa <code>AllowedIPs = 0.0.0.0/0</code> i activa l'<em>IP forwarding</em> al servidor.</p>
-    </div>
-  </details>
+ping 10.8.0.1
+```
 
-  <details class="post" data-tag="basics xarxes">
-    <summary><h3>Subxarxes sense por: màscares, CIDR i com calcular-les</h3><span class="meta">Fonaments · 6 min</span></summary>
-    <div class="body">
-      <p>Una adreça IPv4 té 32 bits. La màscara indica quants són de xarxa i quants d'equip. Amb <code>/24</code>, 24 bits són de xarxa i en queden 8 per a equips.</p>
-      <h4>Fórmula clau</h4>
-      <p>Equips útils = 2<sup>bits d'equip</sup> − 2 (es resten l'adreça de xarxa i la de difusió).</p>
-      <ul>
-        <li>/24 → 256 adreces, 254 equips, màscara 255.255.255.0</li>
-        <li>/25 → 128 adreces, 126 equips, màscara 255.255.255.128</li>
-        <li>/26 → 64 adreces, 62 equips, màscara 255.255.255.192</li>
-        <li>/30 → 4 adreces, 2 equips (enllaços punt a punt)</li>
-      </ul>
-      <h4>Exemple</h4>
-      <p>Vols dividir 192.168.1.0/24 en 4 subxarxes. Necessites 2 bits més, així que passes a /26. Les subxarxes seran 192.168.1.0, .64, .128 i .192, cadascuna amb 62 equips. A la primera, el rang útil és 192.168.1.1–192.168.1.62 i la difusió és 192.168.1.63.</p>
-      <p>Truc: el «salt» entre subxarxes és 256 menys el valor de l'últim octet de la màscara (256 − 192 = 64).</p>
-    </div>
-  </details>
+Recorda obrir el port UDP 51820 al tallafocs. Si vols que tot el trànsit del client passi pel túnel, posa `AllowedIPs = 0.0.0.0/0` i activa l'*IP forwarding* al servidor.
 
-  <details class="post" data-tag="basics xarxes">
-    <summary><h3>Ordres imprescindibles per diagnosticar problemes de xarxa</h3><span class="meta">Fonaments · 5 min</span></summary>
-    <div class="body">
-      <p>Quan «no hi ha Internet», segueix sempre el mateix ordre, de dins cap a fora:</p>
-      <ol>
-        <li><strong>Targeta i IP:</strong> <code>ip a</code> (Linux) o <code>ipconfig /all</code> (Windows). Si tens una 169.254.x.x, el DHCP no ha respost.</li>
-        <li><strong>Passarel·la:</strong> <code>ip route</code> i <code>ping 192.168.10.1</code>.</li>
-        <li><strong>Sortida a Internet per IP:</strong> <code>ping 8.8.8.8</code>.</li>
-        <li><strong>Resolució de noms:</strong> <code>nslookup pereizel.com</code> o <code>dig pereizel.com</code>. Si el pas 3 va bé i aquest falla, és un problema de DNS.</li>
-        <li><strong>Camí:</strong> <code>traceroute 8.8.8.8</code> (<code>tracert</code> a Windows) mostra on s'atura el trànsit.</li>
-        <li><strong>Ports i serveis:</strong> <code>ss -tulpn</code> llista què escolta a cada port.</li>
-      </ol>
-      <p>Anotar el que funciona a cada pas és la manera més ràpida de saber on és el problema.</p>
-    </div>
-  </details>
+@@ xar|1|6|Subxarxes sense por: màscares, CIDR i com calcular-les
+Una adreça IPv4 té 32 bits. La màscara indica quants són de xarxa i quants d'equip. Amb `/24`, 24 bits són de xarxa i en queden 8 per a equips.
 
-  <details class="post" data-tag="basics">
-    <summary><h3>Model OSI i TCP/IP: les capes explicades fàcil</h3><span class="meta">Fonaments · 5 min</span></summary>
-    <div class="body">
-      <p>Les xarxes es dissenyen per capes: cadascuna fa una feina i confia en la de sota. El model OSI en té 7; TCP/IP, 4.</p>
-      <ul>
-        <li><strong>Física i enllaç (1-2):</strong> cables, Wi-Fi, adreces MAC, commutadors.</li>
-        <li><strong>Xarxa (3):</strong> adreces IP i encaminadors. Eines: <code>ping</code>, <code>traceroute</code>.</li>
-        <li><strong>Transport (4):</strong> TCP (fiable, amb connexió) i UDP (ràpid, sense garanties). Aquí viuen els ports.</li>
-        <li><strong>Aplicació (5-7):</strong> HTTP, DNS, DHCP, FTP, SSH.</li>
-      </ul>
-      <p>Utilitat pràctica: si no fa <code>ping</code>, mira les capes 1-3; si fa ping però no carrega la web, el problema és de la 4 o superior (port tancat, DNS, servei aturat).</p>
-    </div>
-  </details>
+## Fórmula clau
 
-  <details class="post" data-tag="basics xarxes">
-    <summary><h3>IP fixa a Ubuntu Server amb Netplan</h3><span class="meta">Fonaments · 4 min</span></summary>
-    <div class="body">
-      <p>Els servidors han de tenir IP estàtica. A Ubuntu es configura amb YAML a <code>/etc/netplan/00-config.yaml</code> (el nom pot variar):</p>
-      <pre><code>network:
+Equips útils = 2^(bits d'equip) − 2 (es resten l'adreça de xarxa i la de difusió).
+
+- /24 → 256 adreces, 254 equips, màscara 255.255.255.0
+- /25 → 128 adreces, 126 equips, màscara 255.255.255.128
+- /26 → 64 adreces, 62 equips, màscara 255.255.255.192
+- /30 → 4 adreces, 2 equips (enllaços punt a punt)
+
+## Exemple
+
+Vols dividir 192.168.1.0/24 en 4 subxarxes. Necessites 2 bits més, així que passes a /26. Les subxarxes seran 192.168.1.0, .64, .128 i .192, cadascuna amb 62 equips. A la primera, el rang útil és 192.168.1.1–192.168.1.62 i la difusió és 192.168.1.63.
+
+Truc: el «salt» entre subxarxes és 256 menys el valor de l'últim octet de la màscara (256 − 192 = 64). Comprova-ho a la calculadora de subxarxes del Laboratori.
+
+@@ xar|1|5|Ordres imprescindibles per diagnosticar problemes de xarxa
+Quan «no hi ha Internet», segueix sempre el mateix ordre, de dins cap a fora:
+
+1. **Targeta i IP:** `ip a` (Linux) o `ipconfig /all` (Windows). Si tens una 169.254.x.x, el DHCP no ha respost.
+2. **Passarel·la:** `ip route` i `ping 192.168.10.1`.
+3. **Sortida a Internet per IP:** `ping 8.8.8.8`.
+4. **Resolució de noms:** `nslookup pereizel.com` o `dig pereizel.com`. Si el pas 3 va bé i aquest falla, és un problema de DNS.
+5. **Camí:** `traceroute 8.8.8.8` (`tracert` a Windows) mostra on s'atura el trànsit.
+6. **Ports i serveis:** `ss -tulpn` llista què escolta a cada port.
+
+Anotar el que funciona a cada pas és la manera més ràpida de saber on és el problema.
+
+@@ xar|1|5|Model OSI i TCP/IP: les capes explicades fàcil
+Les xarxes es dissenyen per capes: cadascuna fa una feina i confia en la de sota. El model OSI en té 7; TCP/IP, 4.
+
+- **Física i enllaç (1-2):** cables, Wi-Fi, adreces MAC, commutadors.
+- **Xarxa (3):** adreces IP i encaminadors. Eines: `ping`, `traceroute`.
+- **Transport (4):** TCP (fiable, amb connexió) i UDP (ràpid, sense garanties). Aquí viuen els ports.
+- **Aplicació (5-7):** HTTP, DNS, DHCP, FTP, SSH.
+
+Utilitat pràctica: si no fa `ping`, mira les capes 1-3; si fa ping però no carrega la web, el problema és de la 4 o superior (port tancat, DNS, servei aturat).
+
+@@ xar|1|4|IP fixa a Ubuntu Server amb Netplan
+Els servidors han de tenir IP estàtica. A Ubuntu es configura amb YAML a `/etc/netplan/00-config.yaml` (el nom pot variar):
+
+```
+network:
   version: 2
   ethernets:
     enp0s3:
@@ -343,201 +573,1072 @@ ping 10.8.0.1</code></pre>
         - to: default
           via: 192.168.10.254
       nameservers:
-        addresses: [8.8.8.8, 1.1.1.1]</code></pre>
-      <pre><code>sudo netplan try
+        addresses: [8.8.8.8, 1.1.1.1]
+```
+
+```
+sudo netplan try
 sudo netplan apply
-ip a show enp0s3</code></pre>
-      <p>YAML és molt sensible als espais: usa només espais, mai tabuladors. <code>netplan try</code> desfà els canvis si no confirmes, així no et quedes sense xarxa.</p>
-    </div>
-  </details>
+ip a show enp0s3
+```
 
-  <details class="post" data-tag="seguretat">
-    <summary><h3>SSH segur: claus públiques i fail2ban</h3><span class="meta">Seguretat · 6 min</span></summary>
-    <div class="body">
-      <p>SSH és la porta d'entrada a qualsevol servidor Linux i la més atacada. Tres mesures bàsiques:</p>
-      <h4>1. Entrar amb clau en lloc de contrasenya</h4>
-      <pre><code>ssh-keygen -t ed25519
-ssh-copy-id usuari@192.168.10.1</code></pre>
-      <h4>2. Enduriment a /etc/ssh/sshd_config</h4>
-      <pre><code>PermitRootLogin no
+YAML és molt sensible als espais: usa només espais, mai tabuladors. `netplan try` desfà els canvis si no confirmes, així no et quedes sense xarxa.
+
+@@ seg|2|6|SSH segur: claus públiques i fail2ban
+SSH és la porta d'entrada a qualsevol servidor Linux i la més atacada. Tres mesures bàsiques:
+
+## 1. Entrar amb clau en lloc de contrasenya
+
+```
+ssh-keygen -t ed25519
+ssh-copy-id usuari@192.168.10.1
+```
+
+## 2. Enduriment a /etc/ssh/sshd_config
+
+```
+PermitRootLogin no
 PasswordAuthentication no
-MaxAuthTries 3</code></pre>
-      <pre><code>sudo sshd -t && sudo systemctl restart ssh</code></pre>
-      <p>Prova la clau en una sessió nova <em>abans</em> de tancar l'actual.</p>
-      <h4>3. Bloquejar atacants amb fail2ban</h4>
-      <pre><code>sudo apt install fail2ban
+MaxAuthTries 3
+```
+
+```
+sudo sshd -t && sudo systemctl restart ssh
+```
+
+Prova la clau en una sessió nova *abans* de tancar l'actual.
+
+## 3. Bloquejar atacants amb fail2ban
+
+```
+sudo apt install fail2ban
 sudo systemctl enable --now fail2ban
-sudo fail2ban-client status sshd</code></pre>
-      <p>Per defecte bloqueja una IP després de diversos intents fallits. Canviar el port 22 només redueix soroll als registres; no és seguretat real.</p>
-    </div>
-  </details>
+sudo fail2ban-client status sshd
+```
 
-  <details class="post" data-tag="basics seguretat">
-    <summary><h3>Còpies de seguretat amb rsync i cron</h3><span class="meta">Fonaments · 5 min</span></summary>
-    <div class="body">
-      <p>Regla 3-2-1: tres còpies, en dos suports diferents, una fora de lloc. <code>rsync</code> copia només el que ha canviat.</p>
-      <pre><code>rsync -avh --delete /srv/dades/ /mnt/backup/dades/
-rsync -avz /srv/dades/ usuari@192.168.10.5:/backup/dades/</code></pre>
-      <p><code>-a</code> conserva permisos i dates, <code>-z</code> comprimeix, <code>--delete</code> esborra al destí el que ja no existeix a l'origen. Prova sempre amb <code>-n</code> (simulació) primer.</p>
-      <h4>Automatitzar cada nit a les 2:30</h4>
-      <pre><code>crontab -e
-30 2 * * * rsync -a --delete /srv/dades/ /mnt/backup/dades/ >> /var/log/backup.log 2>&1</code></pre>
-      <p>Una còpia que no s'ha provat de restaurar no és una còpia: comprova-ho cada cert temps.</p>
-    </div>
-  </details>
+Per defecte bloqueja una IP després de diversos intents fallits. Canviar el port 22 només redueix soroll als registres; no és seguretat real.
 
-  <details class="post" data-tag="xarxes">
-    <summary><h3>Servidor web Apache i hosts virtuals</h3><span class="meta">Serveis en xarxes · 6 min</span></summary>
-    <div class="body">
-      <pre><code>sudo apt install apache2
+@@ inf|2|5|Còpies de seguretat amb rsync i cron
+Regla 3-2-1: tres còpies, en dos suports diferents, una fora de lloc. `rsync` copia només el que ha canviat.
+
+```
+rsync -avh --delete /srv/dades/ /mnt/backup/dades/
+rsync -avz /srv/dades/ usuari@192.168.10.5:/backup/dades/
+```
+
+`-a` conserva permisos i dates, `-z` comprimeix, `--delete` esborra al destí el que ja no existeix a l'origen. Prova sempre amb `-n` (simulació) primer.
+
+## Automatitzar cada nit a les 2:30
+
+```
+crontab -e
+30 2 * * * rsync -a --delete /srv/dades/ /mnt/backup/dades/ >> /var/log/backup.log 2>&1
+```
+
+Una còpia que no s'ha provat de restaurar no és una còpia: comprova-ho cada cert temps.
+
+@@ xar|2|6|Servidor web Apache i hosts virtuals
+```
+sudo apt install apache2
 sudo mkdir -p /var/www/smx/public
-echo "&lt;h1&gt;Hola SMX&lt;/h1&gt;" | sudo tee /var/www/smx/public/index.html</code></pre>
-      <p>Crea <code>/etc/apache2/sites-available/smx.conf</code>:</p>
-      <pre><code>&lt;VirtualHost *:80&gt;
+echo "<h1>Hola SMX</h1>" | sudo tee /var/www/smx/public/index.html
+```
+
+Crea `/etc/apache2/sites-available/smx.conf`:
+
+```
+<VirtualHost *:80>
   ServerName web.smx.local
   DocumentRoot /var/www/smx/public
   ErrorLog ${APACHE_LOG_DIR}/smx-error.log
-&lt;/VirtualHost&gt;</code></pre>
-      <pre><code>sudo a2ensite smx.conf
-sudo apache2ctl configtest
-sudo systemctl reload apache2</code></pre>
-      <p>Amb diversos <code>VirtualHost</code> i noms diferents pots servir moltes webs des d'una sola IP. Si hi ha un DNS propi, afegeix un registre A cap al servidor; si no, usa el fitxer <code>hosts</code> del client. Els errors es veuen a <code>/var/log/apache2/</code>.</p>
-    </div>
-  </details>
+</VirtualHost>
+```
 
-  <details class="post" data-tag="xarxes">
-    <summary><h3>Samba: compartir carpetes entre Linux i Windows</h3><span class="meta">Serveis en xarxes · 6 min</span></summary>
-    <div class="body">
-      <pre><code>sudo apt install samba
+```
+sudo a2ensite smx.conf
+sudo apache2ctl configtest
+sudo systemctl reload apache2
+```
+
+Amb diversos `VirtualHost` i noms diferents pots servir moltes webs des d'una sola IP. Si hi ha un DNS propi, afegeix un registre A cap al servidor; si no, usa el fitxer `hosts` del client. Els errors es veuen a `/var/log/apache2/`.
+
+@@ xar|2|6|Samba: compartir carpetes entre Linux i Windows
+```
+sudo apt install samba
 sudo mkdir -p /srv/compartit
 sudo chown -R :alumnes /srv/compartit
-sudo chmod 2770 /srv/compartit</code></pre>
-      <p>Afegeix al final de <code>/etc/samba/smb.conf</code>:</p>
-      <pre><code>[compartit]
+sudo chmod 2770 /srv/compartit
+```
+
+Afegeix al final de `/etc/samba/smb.conf`:
+
+```
+[compartit]
   path = /srv/compartit
   valid users = @alumnes
   read only = no
-  create mask = 0660</code></pre>
-      <pre><code>sudo smbpasswd -a alumne
-testparm
-sudo systemctl restart smbd</code></pre>
-      <p>Des de Windows, obre <code>\\192.168.10.1\compartit</code>. L'usuari ha d'existir al sistema Linux <em>i</em> tenir contrasenya Samba (<code>smbpasswd</code> és independent de la del sistema). Permisos: sempre mana el més restrictiu entre els de Samba i els del sistema de fitxers.</p>
-    </div>
-  </details>
+  create mask = 0660
+```
 
-  <details class="post" data-tag="seguretat basics">
-    <summary><h3>Captura de trànsit amb tcpdump: veure què passa al cable</h3><span class="meta">Seguretat · 5 min</span></summary>
-    <div class="body">
-      <p>tcpdump captura paquets des del terminal i és ideal per veure el DHCP, el DNS o un handshake TCP.</p>
-      <pre><code>sudo tcpdump -i enp0s3 -n
+```
+sudo smbpasswd -a alumne
+testparm
+sudo systemctl restart smbd
+```
+
+Des de Windows, obre `\\192.168.10.1\compartit`. L'usuari ha d'existir al sistema Linux *i* tenir contrasenya Samba (`smbpasswd` és independent de la del sistema). Permisos: sempre mana el més restrictiu entre els de Samba i els del sistema de fitxers.
+
+@@ seg|3|5|Captura de trànsit amb tcpdump: veure què passa al cable
+tcpdump captura paquets des del terminal i és ideal per veure el DHCP, el DNS o un handshake TCP.
+
+```
+sudo tcpdump -i enp0s3 -n
 sudo tcpdump -i enp0s3 port 53
 sudo tcpdump -i enp0s3 host 192.168.10.20 and tcp port 80
-sudo tcpdump -i enp0s3 -w captura.pcap</code></pre>
-      <p>L'últim desa un fitxer que pots obrir amb Wireshark. Per veure DHCP: <code>sudo tcpdump -i enp0s3 -n port 67 or port 68</code>; hi veuràs Discover, Offer, Request i Ack.</p>
-      <p>Al TCP, busca els indicadors <code>[S]</code> (SYN), <code>[S.]</code> (SYN-ACK) i <code>[.]</code> (ACK): és la salutació de tres passos. Un SYN sense resposta indica un tallafocs que descarta, i un <code>[R.]</code> un port tancat. Captura només a xarxes pròpies o amb permís.</p>
-    </div>
-  </details>
+sudo tcpdump -i enp0s3 -w captura.pcap
+```
 
-  <p id="buit">No s'han trobat tutorials amb aquest filtre.</p>
-</section>
+L'últim desa un fitxer que pots obrir amb Wireshark. Per veure DHCP: `sudo tcpdump -i enp0s3 -n port 67 or port 68`; hi veuràs Discover, Offer, Request i Ack.
 
-<section id="sobre" aria-labelledby="h-sob">
-  <h2 id="h-sob">Sobre el lloc</h2>
-  <p>pereizel.com és un projecte personal d'un estudiant de SMX per organitzar les seves activitats i explicar de manera clara els serveis de xarxa. Els tutorials s'ampliaran amb nous temes (Samba, servidor web, correu, monitoratge). Si detectes un error o vols suggerir un tema, escriu-me.</p>
-</section>
+Al TCP, busca els indicadors `[S]` (SYN), `[S.]` (SYN-ACK) i `[.]` (ACK): és la salutació de tres passos. Un SYN sense resposta indica un tallafocs que descarta, i un `[R.]` un port tancat. Captura només a xarxes pròpies o amb permís.
 
-<section id="contacte" aria-labelledby="h-con">
-  <h2 id="h-con">Contacte</h2>
-  <p>Dubtes, correccions o sol·licituds de drets d'autor: <a href="mailto:EL-TEU-CORREU@EXEMPLE.COM">pere.izquierdo24@lacetanica.cat</a> <span class="small"></span>.</p>
-</section>
+@@ seg|1|5|Contrasenyes fortes i gestors de contrasenyes
+La longitud importa més que la complexitat: una **frase llarga** de 4-5 paraules és més segura i més fàcil de recordar que `P@ssw0rd!`.
 
-</main>
+- Mínim 12-14 caràcters, millor encara 16 o més.
+- Una contrasenya **diferent** per a cada servei.
+- Usa un **gestor de contrasenyes** (Bitwarden, KeePassXC…) per generar-les i guardar-les.
+- Activa la **verificació en dos passos** (app d'autenticació o clau física) on es pugui.
+- No les reutilitzis ni les enviïs per correu.
 
-<footer><div class="wrap">
-  <h2 id="privadesa">Política de privadesa</h2>
-  <p>Aquest lloc no demana registre ni recull dades personals directament. Només desa al navegador la preferència de mode clar o fosc. Si s'activa la publicitat, Google AdSense i altres proveïdors poden utilitzar cookies per mostrar anuncis segons les visites anteriors de l'usuari. Pots gestionar els anuncis personalitzats a <a href="https://adssettings.google.com" rel="noopener">adssettings.google.com</a> i informar-te a <a href="https://policies.google.com/technologies/ads?hl=ca" rel="noopener">policies.google.com/technologies/ads</a>.</p>
-  <h2 id="cookies">Política de cookies</h2>
-  <p>Utilitzem emmagatzematge local només per recordar el tema visual. Les cookies de tercers (publicitat i mesurament) només s'instal·len si es mostren anuncis, i es poden rebutjar des del navegador o del missatge de consentiment que ofereix Google.</p>
-  <h2 id="avis">Avís legal i drets d'autor</h2>
-  <p>Els continguts són obra de l'autor i estan protegits pel Reial decret legislatiu 1/1996 (Llei de propietat intel·lectual). Les descàrregues es permeten per a ús personal i formatiu; no es permet reproduir-les, distribuir-les ni comercialitzar-les sense autorització escrita. L'ús indegut pot comportar accions civils (art. 138 TRLPI) i penals (art. 270 del Codi Penal). L'usuari és responsable de l'ús que faci dels continguts.</p>
-  <p class="small">© 2026 pereizel.com · Sistemes Microinformàtics i Xarxes</p>
-</div></footer>
+Comprova al Laboratori quant trigaria a trencar-se una contrasenya per força bruta, però no hi escriguis mai les teves de veritat.
+
+@@ seg|1|5|Phishing: com detectar un engany abans de fer clic
+- **Remitent estrany:** l'adreça real no coincideix amb l'empresa.
+- **Urgència o amenaça:** «el teu compte serà bloquejat en 24 hores».
+- **Enllaços sospitosos:** passa el ratolí per sobre per veure l'URL real.
+- **Fitxers inesperats:** factures o «currículums» que no has demanat.
+- **Faltes o disseny estrany**, tot i que els atacs bons en poden estar lliures.
+
+Què fer: no facis clic, no obris adjunts, entra a la web escrivint tu mateix l'adreça i avisa el teu responsable. Si ja has donat dades, canvia la contrasenya, activa el doble factor i avisa el banc si eren dades de pagament. A Espanya pots demanar ajuda a l'INCIBE (017).
+
+@@ inf|1|6|Instal·lar Ubuntu en una màquina virtual amb VirtualBox
+Una màquina virtual (VM) et permet practicar sense risc: si trenques res, la restaures.
+
+1. Descarrega VirtualBox i la ISO d'Ubuntu Server o Desktop.
+2. Crea una VM nova: tipus Linux, 2 GB de RAM (o més) i disc de 20 GB.
+3. Munta la ISO com a unitat òptica i arrenca.
+4. Segueix l'instal·lador (idioma, teclat, usuari, contrasenya).
+5. Reinicia i retira la ISO.
+6. Fes una **instantània** (snapshot) en estat net.
+
+Per a pràctiques de xarxa, posa una targeta en mode **xarxa interna** o **adaptador pont** segons l'exercici. Afegeix les *Guest Additions* per tenir portapapers compartit.
+
+@@ inf|1|7|Les ordres bàsiques de Linux que has de dominar
+```
+pwd                 # on sóc
+ls -la              # llista amb permisos i fitxers ocults
+cd /etc             # canviar de carpeta
+mkdir proves        # crear carpeta
+cp a.txt b.txt      # copiar
+mv b.txt c.txt      # moure o canviar de nom
+rm c.txt            # esborrar (sense paperera!)
+cat fitxer.txt      # mostrar contingut
+grep -i "error" /var/log/syslog
+man ls              # manual d'una ordre
+```
+
+Amb `|` encadenes ordres: `ls -l | grep conf`. Amb `>` rediriges la sortida a un fitxer (la sobreescriu) i amb `>>` hi afegeixes al final. Prem **Tab** per autocompletar i la fletxa amunt per recuperar ordres. Usa `rm` i `sudo` amb molta cura.
+
+@@ inf|2|6|Permisos a Linux: chmod, chown i els números
+Cada fitxer té permisos per a **propietari**, **grup** i **altres**: lectura (r=4), escriptura (w=2) i execució (x=1). Se sumen.
+
+```
+ls -l informe.txt
+-rw-r--r-- 1 anna alumnes 120 oct 14 informe.txt
+chmod 640 informe.txt
+chmod u+x script.sh
+sudo chown anna:alumnes informe.txt
+```
+
+`640` = propietari 6 (rw-), grup 4 (r--), altres 0 (---). `755` és típic per a scripts i carpetes (rwxr-xr-x); evita `777`: dona accés total a tothom. A les carpetes, la **x** permet entrar-hi. Per aplicar-ho recursivament, usa `-R`.
+
+@@ inf|2|7|El teu primer script en Bash
+Un script automatitza tasques repetitives. Crea `copia.sh`:
+
+```
+#!/bin/bash
+ORIGEN="/home/$USER/documents"
+DESTI="/mnt/backup"
+DATA=$(date +%F)
+
+if [ ! -d "$ORIGEN" ]; then
+  echo "No existeix $ORIGEN"
+  exit 1
+fi
+
+mkdir -p "$DESTI/$DATA"
+for f in "$ORIGEN"/*.pdf; do
+  cp "$f" "$DESTI/$DATA/"
+  echo "Copiat: $f"
+done
+```
+
+Dona-li permisos amb `chmod +x copia.sh` i executa'l amb `./copia.sh`. La primera línia (*shebang*) indica l'intèrpret. Les variables es declaren sense espais (`X="a"`) i es fan servir amb `$X`. Cita-les sempre amb cometes per evitar problemes amb espais. Per programar-lo, combina'l amb `cron`.
+
+@@ inf|2|6|El PC no arrenca: diagnòstic de maquinari pas a pas
+1. **Alimentació:** cable, regleta, interruptor de la font i LEDs de la placa.
+2. **Senyals:** pitades (beeps) o codis de la placa; consulta el manual.
+3. **Pantalla:** prova un altre cable o monitor i la gràfica integrada.
+4. **RAM:** treu els mòduls, neteja els contactes i prova'ls d'un en un.
+5. **Disc:** comprova si la BIOS/UEFI el detecta i l'ordre d'arrencada.
+6. **Components mínims:** placa, CPU, una RAM i la font. Si arrenca, afegeix peces d'una en una.
+
+Treballa sempre desconnectat de la xarxa elèctrica i amb una polsera antiestàtica o tocant el xassís. Anota què canvies per saber què ha funcionat.
+
+@@ mec|1|5|El motor de quatre temps: admissió, compressió, explosió i escapament
+Un motor de gasolina completa un cicle en quatre moviments del pistó, cosa que equival a dues voltes del cigonyal.
+
+- **Admissió:** el pistó baixa i la vàlvula d'admissió deixa entrar la barreja d'aire i combustible.
+- **Compressió:** el pistó puja amb les vàlvules tancades i comprimeix la barreja.
+- **Explosió:** la bugia fa saltar la guspira, la barreja crema i empeny el pistó cap avall. És l'únic temps que dona energia.
+- **Escapament:** el pistó torna a pujar i expulsa els gasos cremats per la vàlvula d'escapament.
+
+Al motor dièsel no hi ha bugia: l'aire es comprimeix tant que s'escalfa i el combustible injectat s'inflama sol. Per això el dièsel té relacions de compressió molt més altes.
+
+@@ mec|2|6|Engranatges i relació de transmissió: velocitat contra força
+La relació de transmissió és el quocient entre les dents de la roda conduïda i les de la motriu.
+
+```
+i = dents conduïda / dents motriu
+velocitat sortida = velocitat entrada / i
+parell sortida ≈ parell entrada · i   (ideal, sense pèrdues)
+```
+
+Exemple: motriu de 20 dents a 3000 min⁻¹ i conduïda de 40 dents. Relació 2:1: la sortida gira a 1500 min⁻¹ però amb el doble de parell. Una reducció guanya força i perd velocitat; una multiplicació fa el contrari.
+
+A la pràctica hi ha pèrdues per fricció (rendiments del 95-98 % per etapa). A la bicicleta, el plat petit amb el pinyó gran és la relació més «lleugera» per pujar costes. Prova-ho a la calculadora d'engranatges del Laboratori.
+
+@@ mec|1|5|Canvi d'oli pas a pas i què significa «5W-30»
+Treballa amb el motor tebi (no bullent) i el cotxe ben anivellat.
+
+1. Posa un recipient sota el càrter i treu el tap de buidatge.
+2. Deixa escórrer l'oli vell uns 10 minuts.
+3. Substitueix el filtre d'oli i unta la junta del nou amb una mica d'oli net.
+4. Posa el tap amb junta nova i apreta'l al parell del fabricant.
+5. Omple amb l'oli recomanat, espera uns minuts i comprova el nivell amb la vareta.
+6. Arrenca uns segons, para i torna a mirar el nivell i que no hi hagi fuites.
+
+## Com llegir la viscositat
+
+El primer número amb **W** (*winter*) indica com flueix en fred: com més baix, millor a l'arrencada. El segon indica la viscositat a temperatura de treball. Usa sempre el que marca el manual del cotxe i duu l'oli usat a una deixalleria: és un residu perillós.
+
+@@ mec|2|5|Frens de disc: com funcionen i quan canviar les pastilles
+Quan pitges el pedal, el líquid de frens transmet la pressió fins a la pinça, que estreny les pastilles contra el disc i el frena per fricció.
+
+## Senyals d'avís
+
+- Xiulet o xerric agut: els indicadors de desgast toquen el disc.
+- El pedal va més baix o esponjós: pot haver-hi aire o humitat al circuit.
+- El cotxe es desvia en frenar o el volant vibra: discs deformats o pinça enganxada.
+
+Les pastilles es canvien normalment quan en queden uns 3 mm. Es canvien sempre per eixos (les dues rodes) i el líquid de frens se substitueix cada dos anys aproximadament, perquè absorbeix humitat. Si no ets professional, fes aquesta feina en un taller: és un sistema de seguretat.
+
+@@ mec|2|5|Metrologia: llegir un peu de rei (calibre)
+El peu de rei mesura longituds exteriors, interiors i profunditats. La lectura té dues parts:
+
+1. Llegeix a l'escala fixa els mil·límetres sencers just abans del zero del nònius.
+2. Busca quina ratlla del nònius coincideix exactament amb una de l'escala fixa: aquest és el decimal.
+
+Exemple: el zero del nònius passa els 23 mm i la ratlla 6 coincideix: lectura = 23,6 mm (en un calibre de precisió 0,1 mm). Els calibres de 0,05 mm tenen 20 divisions al nònius.
+
+Abans de mesurar, tanca'l i comprova que marca zero. No forcis la peça i mesura sempre perpendicular. Per a precisions de centèsimes de mil·límetre s'usa el micròmetre.
+
+@@ ele|1|5|Llei d'Ohm i potència elèctrica
+Tensió (V), intensitat (I) i resistència (R) estan lligades per la llei d'Ohm:
+
+```
+V = I · R      I = V / R      R = V / I
+P = V · I      (potència en watts)
+```
+
+Exemple: un escalfador de 230 V amb una resistència de 23 Ω consumeix I = 230 / 23 = 10 A i dissipa P = 2300 W. Funcionant una hora gasta 2,3 kWh. Aquest és el càlcul que fas per dimensionar cables i proteccions. Prova-ho a la calculadora del Laboratori.
+
+@@ ele|1|5|Circuits en sèrie i en paral·lel
+**Sèrie:** el corrent és el mateix per tots els components i les resistències se sumen.
+
+```
+R total = R1 + R2 + R3
+```
+
+**Paral·lel:** la tensió és la mateixa a cada branca i el corrent es reparteix.
+
+```
+1 / R total = 1 / R1 + 1 / R2
+Dues resistències: R total = (R1 · R2) / (R1 + R2)
+```
+
+Dues resistències de 100 Ω en sèrie donen 200 Ω; en paral·lel, 50 Ω. A casa tots els endolls i llums van en paral·lel perquè cada aparell rebi els 230 V; els fusibles i els interruptors, en canvi, es posen en sèrie amb allò que protegeixen.
+
+@@ ele|1|5|Multímetre: tensió, continuïtat i intensitat sense accidents
+- **Tensió (V):** connecta les puntes **en paral·lel** amb el component. Tria V~ per a alterna i V⎓ per a contínua.
+- **Continuïtat:** amb el circuit sense tensió, el brunzidor sona si hi ha connexió. Perfecte per revisar cables i fusibles.
+- **Resistència (Ω):** sempre amb el circuit desconnectat i el component aïllat.
+- **Intensitat (A):** el multímetre es posa **en sèrie**, trencant el circuit. No mesuris mai tensió amb les puntes als borns d'intensitat: pot fer saltar el fusible intern o ser perillós.
+
+Comença sempre per l'escala més alta si no saps què hi ha, i no toquis les parts metàl·liques de les puntes. A la xarxa de 230 V treballa només si tens formació.
+
+@@ ele|2|6|Arduino: el teu primer programa, un LED que parpelleja
+Connecta un LED amb una resistència de 220 Ω entre el pin 8 i GND (la pota llarga del LED, l'ànode, cap al pin). Carrega aquest codi a l'IDE d'Arduino:
+
+```
+const int LED = 8;
+
+void setup() {
+  pinMode(LED, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(LED, HIGH);
+  delay(500);
+  digitalWrite(LED, LOW);
+  delay(500);
+}
+```
+
+`setup()` s'executa una vegada i `loop()` es repeteix sempre. La resistència limita el corrent per no cremar el LED. Reptes: canvia els temps, afegeix un segon LED o llegeix un polsador amb `digitalRead`.
+
+@@ ele|2|5|El quadre elèctric de casa: diferencial i magnetotèrmic
+- **Magnetotèrmic (PIA):** protegeix els cables de sobrecàrregues i curtcircuits. Salta quan el corrent supera el seu valor (10 A, 16 A, 25 A…).
+- **Diferencial (ID):** protegeix les persones. Si detecta que part del corrent «es fuga» a terra (normalment 30 mA), talla en mil·lisegons.
+- **Presa de terra:** dona un camí segur a les fuites.
+
+Si salta el diferencial, desconnecta aparells un per un per trobar el culpable abans de tornar-lo a armar. La instal·lació i el canvi de proteccions els ha de fer un instal·lador autoritzat.
+
+@@ adm|1|5|Com és una factura correcta i com funciona l'IVA
+Una factura ha d'incloure, entre altres coses: número (i sèrie), data, dades fiscals i NIF de qui factura i del client, descripció de l'operació, base imposable, tipus d'IVA aplicat, quota resultant i total.
+
+- **General:** 21 % (la majoria de béns i serveis).
+- **Reduït:** 10 % (per exemple, hostaleria i transport de viatgers).
+- **Superreduït:** 4 % (pa, llet, llibres…).
+
+```
+IVA = base · (tipus / 100)
+Total = base + IVA
+Base = total / (1 + tipus / 100)
+```
+
+Exemple: base 200 € al 21 %: IVA 42 €, total 242 €. Comprova sempre els tipus vigents, perquè les normes canvien, i consulta un gestor en casos concrets. Hi ha una calculadora d'IVA al Laboratori.
+
+@@ adm|2|6|Comptabilitat bàsica: partida doble i balanç
+Tot el que té una empresa (**actiu**) es finança amb deutes (**passiu**) o amb diners dels propietaris (**patrimoni net**).
+
+```
+Actiu = Passiu + Patrimoni net
+```
+
+Cada operació s'apunta dues vegades (**partida doble**): una al **deure** i una a l'**haver**, sempre per la mateixa quantitat. Exemple: compres mercaderies a crèdit per 500 €.
+
+```
+Deure   Mercaderies          500
+Haver   Proveïdors                    500
+```
+
+Després, el **llibre major** agrupa els apunts per compte i el **balanç de sumes i saldos** comprova que deure i haver quadren. Els comptes es codifiquen amb el Pla General de Comptabilitat.
+
+@@ adm|1|5|De salari brut a net: com llegir una nòmina
+Una nòmina té tres blocs: **meritacions** (el que guanyes: salari base, plusos, pagues extra), **deduccions** (el que es descompta) i el **líquid a percebre** (el que cobres).
+
+- **Cotització a la Seguretat Social del treballador:** un percentatge d'uns 6,5 % del brut.
+- **Retenció d'IRPF:** és variable segons el salari i la situació personal.
+- **Cost empresa:** l'empresa paga a més la seva part de la Seguretat Social, per sobre del brut.
+
+```
+Net = Brut − Seguretat Social − IRPF
+```
+
+Els percentatges canvien cada any: consulta la nòmina i les dades oficials de l'Agència Tributària i de la Seguretat Social per als valors exactes.
+
+@@ adm|2|6|Excel per a administratius: les fórmules que més s'usen
+```
+=SUMA(B2:B20)
+=SUMA.SI(A2:A20;"Material";B2:B20)
+=SI(B2>=5;"Aprovat";"Suspès")
+=CERCAV(A2;Taula!A:C;3;FALS)
+=CERCAX(A2;Taula!A:A;Taula!C:C)
+=COMPTA.SI(A:A;"Pendent")
+```
+
+La primera suma un rang; `SUMA.SI` suma només el que compleix un criteri; `SI` pren decisions; `CERCAV` i `CERCAX` busquen dades en una altra taula (`CERCAX` és més còmoda perquè la columna de cerca no ha de ser la primera).
+
+Consells: converteix els rangs en **Taules** (Ctrl+T), usa **Taules dinàmiques** per resumir i bloqueja capçaleres amb *Immobilitza files*. Els noms de les funcions varien segons l'idioma d'Excel.
+
+@@ adm|1|4|Pressupost personal amb la regla 50/30/20
+Divideix els ingressos nets mensuals en tres grans cubells:
+
+- **50 % necessitats:** lloguer, subministraments, menjar, transport.
+- **30 % desitjos:** oci, viatges, subscripcions.
+- **20 % estalvi i deute:** fons d'emergència, inversió, amortitzar deutes.
+
+Exemple amb 1.500 € nets: 750 € / 450 € / 300 €. Primer, apunta durant un mes tots els moviments; després ajusta els percentatges a la teva realitat. Un bon objectiu inicial és un fons d'emergència de 3 a 6 mesos de despeses. És una guia, no una norma, i no és assessorament financer.
+
+@@ mkt|1|5|Les 4 P del màrqueting mix
+- **Producte:** què vens i quin problema resol.
+- **Preu:** quant cobres i quina imatge transmet (premium, econòmic…).
+- **Distribució (Place):** on i com arriba al client: botiga, web, majoristes.
+- **Promoció:** com ho dones a conèixer: publicitat, xarxes, relacions públiques, promocions.
+
+Exemple d'una cafeteria de barri: producte (cafè d'especialitat), preu (mitjà-alt), distribució (local i comanda en línia) i promoció (Instagram i targeta de fidelitat). Quan una P canvia, les altres s'han de revisar. Per a serveis s'amplia a 7 P (persones, processos i evidències físiques).
+
+@@ mkt|1|6|Buyer persona: a qui vens realment
+Una **buyer persona** és un perfil representatiu del teu client ideal. Omple una fitxa amb:
+
+1. Dades bàsiques: edat, feina, ingressos, ciutat.
+2. Objectius: què vol aconseguir.
+3. Dolors: què li fa nosa o por.
+4. Canals: on busca informació (Instagram, Google, boca-orella).
+5. Objeccions: per què no et compraria.
+
+Basa-la en entrevistes i dades reals de clients, no en suposicions. Amb dues o tres persones ben definides, els missatges i els canals es trien molt més fàcilment.
+
+@@ mkt|2|6|L'embut de conversió i les mètriques clau
+Un client passa per fases: **coneix** la marca, **s'interessa**, **considera**, **compra** i **repeteix**. A cada pas es perd gent.
+
+```
+CTR        = clics / impressions · 100
+Conversió  = clients / clics · 100
+CPC        = inversió / clics
+CAC        = inversió / clients nous
+ROAS       = ingressos / inversió
+ROI %      = (ingressos − inversió) / inversió · 100
+```
+
+Exemple: inverteixes 500 €, obtens 1.200 clics i 30 clients que generen 2.400 €. CAC = 16,67 €, ROAS = 4,8 i conversió = 2,5 %. Calcula-ho a la calculadora del Laboratori.
+
+Pensa també en el **LTV** (valor de vida del client): si un client compra durant anys, pots permetre't un CAC més alt.
+
+@@ mkt|2|6|SEO bàsic: aparèixer a Google sense pagar
+1. **Paraules clau:** pensa què escriuria el teu client (ex.: «tallafocs ufw tutorial») i comprova la intenció de cerca.
+2. **Títol i descripció:** el `<title>` (uns 50-60 caràcters) i la `meta description` (uns 150) han de ser clars i atractius.
+3. **Estructura:** un sol `<h1>`, subtítols `<h2>` i `<h3>`, URLs curtes i enllaços interns.
+4. **Contingut útil:** respon la pregunta millor que la competència.
+5. **Tècnic:** web ràpida, adaptada a mòbil, HTTPS, imatges amb text `alt`.
+6. **Autoritat:** altres webs fiables que t'enllacin.
+
+El SEO triga setmanes o mesos. Mesura amb Google Search Console.
+
+@@ mkt|1|5|Xarxes socials: un calendari de contingut que funciona
+Una regla pràctica és repartir els continguts en tres tipus: **educar** (consells, tutorials), **entretenir** (històries, bastidors) i **vendre** (ofertes, casos reals). Una proporció de partida habitual és 60/30/10.
+
+- Defineix 3 o 4 **pilars de contingut**.
+- Planifica per setmanes en un full de càlcul: data, xarxa, format, text, estat.
+- Tria 1-2 xarxes on hi ha el teu públic en lloc de ser a totes.
+- Respon els comentaris: l'algoritme valora la conversa.
+- Revisa cada mes l'abast, les interaccions i els clics, i repeteix el que funciona.
+
+@@ mkt|2|5|Copywriting amb la fórmula AIDA
+- **A (Atenció):** un titular que atrapi.
+- **I (Interès):** dades o una història que connecti amb el problema.
+- **D (Desig):** beneficis (no només característiques) i prova social.
+- **A (Acció):** una crida clara: «Reserva ara», «Descarrega la guia».
+
+Exemple per a una acadèmia: «Aprova SMX sense nervis» → «Si els exàmens de xarxes et bloquegen, aquí tens pràctiques resoltes» → una prova social real (opinions o resultats) → «Descarrega la primera activitat gratis». Escriu en to proper, usa frases curtes i fes proves A/B per veure quin text funciona millor.
+
+@@ log|2|6|Gestió d'estoc: stock de seguretat i punt de comanda
+Per no quedar-te sense producte ni immobilitzar massa diners, calcula quan has de demanar.
+
+```
+Punt de comanda = demanda diària · temps d'aprovisionament + stock de seguretat
+```
+
+Exemple: vens 20 unitats al dia, el proveïdor triga 5 dies i vols 40 unitats de seguretat: punt de comanda = 20 · 5 + 40 = 140. Quan l'estoc arriba a 140, fas la comanda.
+
+El **stock de seguretat** cobreix pics de demanda o retards. També es calcula la **rotació** (vendes / estoc mitjà): com més alta, menys diners aturats al magatzem. Una bona gestió combina inventaris periòdics amb un programa de control d'existències.
+
+@@ log|1|5|Magatzem: FIFO, FEFO, LIFO i classificació ABC
+- **FIFO:** el primer que entra és el primer que surt (ideal per a rotació general).
+- **FEFO:** surt primer el que caduca primer (aliments, medicaments).
+- **LIFO:** l'últim que entra surt primer (poc habitual).
+
+**Classificació ABC:** els articles A (uns pocs, al voltant del 20 %) representen la major part del valor (uns 80 %) i es controlen de prop; els B són intermedis; els C són molts però de poc valor.
+
+Col·loca els articles A més a prop dels molls de sortida per fer el picking més ràpid, senyalitza bé les ubicacions i etiqueta amb codis de barres.
+
+@@ log|2|5|Incoterms: qui paga el transport i qui assumeix el risc
+Els Incoterms són regles internacionals de la CCI que reparteixen costos i riscos entre venedor i comprador. Alguns exemples:
+
+- **EXW (Ex Works):** el venedor posa la mercaderia al seu magatzem; la resta ho assumeix el comprador.
+- **FOB:** el venedor la carrega al vaixell al port d'origen (només transport marítim).
+- **CIF:** com FOB, però el venedor paga també el transport i l'assegurança fins al port de destinació.
+- **DAP:** el venedor la porta fins al lloc de destinació, sense descarregar ni pagar l'import.
+- **DDP:** el venedor ho assumeix tot, també les taxes d'importació.
+
+Sempre s'indica la versió (per exemple, Incoterms 2020) i un lloc concret.
+
+@@ log|1|5|Atenció a una queixa: el mètode LAST
+1. **L – Listen (escoltar):** deixa parlar sense interrompre.
+2. **A – Apologize (disculpar-se):** demana disculpes per l'experiència, encara que no sigui culpa teva.
+3. **S – Solve (solucionar):** ofereix una solució concreta i un termini.
+4. **T – Thank (agrair):** agraeix que t'hagi avisat: una queixa és informació valuosa.
+
+Després, fes seguiment i registra la incidència per evitar que es repeteixi. Manté el to tranquil, no ho prenguis com un atac personal i, si no ho pots resoldre, deriva-ho a un responsable.
+
+@@ dis|1|6|Teoria del color i contrast accessible
+- **Models:** pantalla = RGB (llum additiva); impressió = CMYK (tintes substractives).
+- **Harmonies:** complementaris (oposats a la roda), anàlegs (veïns), triada.
+- **Regla 60-30-10:** 60 % color dominant, 30 % secundari, 10 % accent.
+
+Per a accessibilitat, el contrast entre text i fons ha de ser com a mínim **4,5:1** per a text normal i **3:1** per a text gran (WCAG AA). Evita comunicar només amb color (afegeix icones o text) perquè hi ha persones daltòniques. Eines útils: comprovadors de contrast i simuladors de daltonisme.
+
+@@ dis|1|5|Tipografia: jerarquia, llegibilitat i parelles
+Una bona jerarquia diu a l'ull què mirar primer: títol, subtítol, cos i notes, diferenciats per mida, gruix i color.
+
+- Usa **com a màxim dues famílies**: una per a títols i una per al text.
+- Cos de text de 16 px o més a pantalla i interlineat d'1,4-1,6.
+- Línies d'uns 45-75 caràcters.
+- Parella segura: una sans-serif geomètrica per als títols i una serif o sans neutra per llegir.
+- Evita paràgrafs sencers en majúscules.
+
+L'espaiat i l'alineació importen tant com la lletra: alinea a l'esquerra el text llarg.
+
+@@ dis|1|5|Composició: regla dels terços i línies guia
+Imagina una graella de 3×3 sobre la imatge. Col·loca el subjecte principal als punts d'intersecció o sobre les línies, en lloc de al centre exacte.
+
+- **Línies guia:** carrers, vores o miradors que condueixen l'ull al subjecte.
+- **Aire (headroom):** deixa espai davant de la mirada del subjecte.
+- **Pla general, mitjà i primer pla:** alternar-los dona ritme al vídeo.
+- **Horitzó recte** i fons net.
+
+Les regles es poden trencar, però saber-les permet fer-ho amb intenció.
+
+@@ dis|2|6|Flux de treball de muntatge de vídeo
+1. **Organitza** el material en carpetes (vídeo, àudio, gràfics) i fes-ne còpia.
+2. **Visionat** i tria de les millors preses.
+3. **Muntatge en brut** (*assembly*): ordena la història.
+4. **Muntatge fi:** talls, ritme, transicions només si aporten alguna cosa.
+5. **So:** neteja de soroll, nivells i música sense passar-se.
+6. **Color:** corregeix primer, estilitza després.
+7. **Exporta** en el format adequat.
+
+Regla pràctica: talla en el moviment, deixa respirar els plans i ajusta el volum de la música per sota de la veu.
+
+@@ dis|1|5|Exportar bé: formats, resolucions i pes
+- **Vídeo web:** MP4 amb còdec H.264 (compatible amb tot) o H.265/AV1 si cal menys pes.
+- **Resolucions:** 1920×1080 (horitzontal), 1080×1920 (vertical per a Reels/Shorts/TikTok), 3840×2160 (4K).
+- **Imatges web:** WebP o AVIF per a fotos, SVG per a logos i icones, PNG per a transparències.
+- **Àudio:** MP3 o AAC per distribuir; WAV per treballar.
+
+Una imatge d'1 MB per a una web sovint és massa: redimensiona-la a la mida en què es mostrarà i comprimeix-la. Això millora la velocitat i el SEO.
+
+@@ san|1|6|Suport vital bàsic: PAS i RCP
+Davant una persona inconscient: **PAS** = **P**rotegir, **A**visar, **S**ocórrer.
+
+1. Assegura que el lloc és segur.
+2. Comprova si respon i respira (mira el pit durant 10 segons com a màxim).
+3. Si no respira normalment, crida al **112** i demana un desfibril·lador (DEA).
+4. Inicia les compressions al centre del pit: **30 compressions** (5-6 cm de fondària, 100-120 per minut) i **2 ventilacions**, si estàs format per fer-ho.
+5. Quan arribi el DEA, encén-lo i segueix les instruccions de veu.
+
+No paris fins que arribi ajuda o la persona reaccioni. Aquest text és informatiu: fes un curs oficial de primers auxilis (Creu Roja o altres centres acreditats).
+
+@@ san|1|4|Higiene de mans: el gest que més infeccions evita
+La **fricció amb solució hidroalcohòlica** dura uns 20-30 segons; el rentat amb aigua i sabó, uns 40-60 segons.
+
+1. Palmell contra palmell.
+2. Dors de cada mà amb els dits entrellaçats.
+3. Entre els dits.
+4. Dits doblegats contra el palmell oposat.
+5. Polzes amb moviment de rotació.
+6. Puntes dels dits contra el palmell oposat.
+
+Renta amb aigua i sabó quan les mans estiguin visiblement brutes. Retira anells i polseres i asseca bé amb paper d'un sol ús.
+
+@@ san|2|5|Constants vitals d'un adult en repòs
+- **Freqüència cardíaca:** 60-100 batecs per minut.
+- **Freqüència respiratòria:** 12-20 respiracions per minut.
+- **Tensió arterial:** al voltant de 120/80 mmHg (valors persistentment alts requereixen valoració mèdica).
+- **Saturació d'oxigen:** igual o superior al 95 %.
+- **Temperatura:** uns 36-37,2 °C.
+
+Es prenen sempre en les mateixes condicions (repòs, sense haver fet esforç) i s'anoten amb data i hora. Són valors orientatius: una constant fora de rang no és un diagnòstic, l'ha d'interpretar un professional sanitari.
+
+@@ san|1|4|Ergonomia davant l'ordinador: la regla 20-20-20
+- Cada **20 minuts**, mira a **20 peus** (uns 6 metres) durant **20 segons** per descansar la vista.
+- Pantalla a l'alçada dels ulls, a uns 50-70 cm.
+- Esquena recolzada, peus plans a terra i genolls a uns 90°.
+- Colzes pròxims al cos i canells rectes en teclejar.
+- Fes una pausa activa cada hora: aixeca't, estira't, camina.
+
+Una bona il·luminació, sense reflexos a la pantalla, evita la fatiga visual.
+
+@@ hos|1|5|Seguretat alimentària: la zona de perill i l'APPCC
+Els microorganismes es multipliquen ràpidament entre **5 °C i 65 °C**: és la «zona de perill».
+
+- Fred: conserva a 0-5 °C (refrigeració) o a −18 °C o menys (congelació).
+- Calent: manté els plats calents per sobre de 65 °C i cuina el cor del producte a 70 °C o més.
+- No deixis aliments més de 2 hores a temperatura ambient.
+- Evita la **contaminació creuada**: taules i ganivets diferents per al cru i el cuit.
+
+L'**APPCC** (anàlisi de perills i punts de control crític) és el sistema que obliga a identificar riscos, fixar límits, vigilar-los i registrar-los. El rentat de mans i la neteja constant en són la base.
+
+@@ hos|1|4|Mise en place: la clau d'una cuina ordenada
+«Tot al seu lloc» vol dir preparar abans de cuinar tot el que necessitaràs.
+
+1. Llegeix la recepta o la comanda de principi a fi.
+2. Pesa, talla i mesura els ingredients.
+3. Organitza'ls per ordre d'ús en bols o gastronorms.
+4. Prepara estris, olles i safates.
+5. Neteja sobre la marxa: una taula neta és una taula segura.
+
+Resultat: menys errors, serveis més ràpids i menys malbaratament. També s'aplica a la sala: coberts, estovalles i ampolles preparats abans que arribin els clients.
+
+@@ hos|2|6|Escandall: quant costa un plat i a quin preu el venc
+L'escandall és la fitxa que calcula el cost d'una ració.
+
+```
+Cost ració = suma(preu del kg · quantitat neta) / racions
+Preu de venda (sense IVA) = cost ració / food cost objectiu
+```
+
+Exemple: una ració costa 3,00 € i vols un *food cost* del 30 %: preu sense IVA = 3,00 / 0,30 = 10,00 €. Amb un 10 % d'IVA, el client veuria 11,00 €.
+
+Compta sempre el **pes net** (descomptant el que es perd en netejar i cuinar, la «merma») i inclou guarnicions i olis. Revisa els preus dels proveïdors cada mes.
+
+@@ hos|1|4|Els 14 al·lèrgens de declaració obligatòria
+A la UE s'han d'informar: **cereals amb gluten, crustacis, ous, peix, cacauets, soja, llet (lactosa), fruits de closca, api, mostassa, grans de sèsam, diòxid de sofre i sulfits, tramussos i mol·luscs**.
+
+- Indica'ls a la carta o en un document disponible a petició.
+- Evita la contaminació creuada amb estris i zones específiques.
+- Forma el personal: una resposta equivocada pot ser greu.
+- Si tens un dubte, consulta-ho abans de respondre.
+
+Als envasats, els al·lèrgens es ressalten a la llista d'ingredients.
+
+@@ ene|1|5|Plaques solars: potència, kWh i una estimació ràpida
+Una placa es mesura en **watts-pic (Wp)**. Una instal·lació de 3 kWp pot produir a Catalunya aproximadament entre 1.300 i 1.600 kWh per kWp i any.
+
+```
+Producció anual ≈ kWp · hores solars equivalents
+Exemple: 3 kWp · 1.450 h ≈ 4.350 kWh/any
+```
+
+El rendiment real depèn de l'orientació (el sud és l'òptim), la inclinació, les ombres i les pèrdues de l'inversor. L'**autoconsum** és l'energia que consumeixes directament; l'excedent es pot compensar a la factura segons la normativa vigent. Per fer un càlcul fiable usa eines com PVGIS (UE) i demana pressupost a un instal·lador.
+
+@@ ene|1|5|Entendre la factura de la llum
+- **Terme de potència (kW):** el que pagues per tenir contractada una potència, la facis servir o no.
+- **Terme d'energia (kWh):** el que consumeixes realment, amb preus segons la franja horària (punta, plana i vall).
+- **Altres conceptes:** impostos, lloguer del comptador, etc.
+
+```
+Consum (kWh) = potència de l'aparell (kW) · hores d'ús
+Exemple: forn de 2 kW · 1,5 h = 3 kWh
+```
+
+Moure consums (rentadora, forn) a hores de vall estalvia diners. Ajusta la potència contractada al teu ús real. Els imports canvien: compara amb la teva factura.
+
+@@ ene|1|4|Reciclar bé: els contenidors a Catalunya
+- **Groc:** envasos de plàstic, llaunes i brics.
+- **Blau:** paper i cartró.
+- **Verd:** envasos de vidre (ampolles, pots).
+- **Marró:** matèria orgànica.
+- **Gris:** resta (el que no va a cap altre lloc).
+- **Deixalleria:** piles, electrònics, olis, mobles, runa.
+
+Buida i aixafa els envasos, no els renti en excés (estalvia aigua) i no barregis. Evita les bosses de plàstic dins del contenidor orgànic.
+
+@@ ene|1|4|Eficiència energètica: etiquetes i hàbits que estalvien
+L'etiqueta energètica de la UE classifica els aparells de la **A** (més eficient) a la **G**. Per comparar, mira també el consum anual en kWh.
+
+- Canvia les bombetes per **LED**: consumeixen fins a un 80-85 % menys que les incandescents.
+- Desconnecta el *stand-by* amb regletes amb interruptor.
+- Climatització moderada: uns 19-21 °C a l'hivern i 25-26 °C a l'estiu.
+- Aïllament i finestres: la millor inversió a llarg termini.
+- Rentadora i rentaplats ben plens i amb programes eco.
+</script>
+
+<!-- ===================== DADES: REPTES =====================
+Format: familia|pregunta|resposta correcta|incorrecta1|incorrecta2|incorrecta3|explicació (sense el caràcter de barra vertical dins els textos) -->
+<script type="text/plain" id="dQuiz">
+inf|Quina ordre mostra els fitxers amb els permisos detallats a Linux?|ls -l|cd -l|cat -l|pwd -l|La «l» és de long listing: permisos, propietari i mida.
+inf|Quin número de chmod dona lectura i escriptura al propietari i només lectura als altres?|644|755|777|600|6 = rw-, 4 = r--.
+inf|Per a què serveix grep?|Per cercar text dins de fitxers|Per copiar fitxers|Per canviar permisos|Per mostrar processos|Filtra les línies que coincideixen amb un patró.
+inf|Quin símbol afegeix la sortida al final d'un fitxer sense esborrar-lo?|>>|>|<|&&|Un sol > sobreescriu; dos afegeixen.
+xar|Quants equips útils té una xarxa /26?|62|64|60|126|2^6 − 2 = 62.
+xar|Quin port fa servir DNS per defecte?|53|80|67|22|DNS usa el 53 (UDP i TCP).
+xar|Quina capa del model OSI és la de transport?|4|3|2|7|La 4: TCP i UDP.
+xar|Una adreça 169.254.x.x indica que…|el DHCP no ha respost|és una IP pública|és la passarel·la|és una IP de loopback|És una adreça APIPA autoassignada quan no hi ha servidor DHCP.
+seg|Quin port usa SSH per defecte?|22|21|23|443|SSH escolta al 22.
+seg|Quina mesura protegeix millor SSH davant contrasenyes robades?|Autenticació amb clau pública|Canviar el port|Reiniciar sovint|Amagar el bàner|Amb clau i sense contrasenya, no hi ha res a robar per força bruta.
+seg|Què és el phishing?|Suplantar una entitat per enganyar la víctima|Una còpia de seguretat|Un tipus de tallafocs|Un virus de maquinari|Es basa en l'engany, no en un defecte tècnic.
+mec|Quins són els temps d'un motor de quatre temps?|Admissió, compressió, explosió i escapament|Arrencada, marxa, frenada i parada|Injecció, filtrat, bombeig i refredament|Compressió, rotació, fricció i escapament|El pistó fa quatre carreres per cicle.
+mec|Si l'engranatge motriu té 20 dents i el conduït 40, la velocitat de sortida…|es divideix per 2|es duplica|es manté|es multiplica per 4|Relació 2:1: la velocitat baixa a la meitat i el parell puja al doble.
+mec|Què mesura un micròmetre?|Dimensions petites amb precisió de centèsimes de mil·límetre|La pressió de l'oli|La temperatura|El parell de serratge|Té més precisió que un peu de rei.
+ele|Quina és la llei d'Ohm?|V = I · R|P = V / R|I = V · R|R = I / V|La tensió és intensitat per resistència.
+ele|Dues resistències iguals en paral·lel donen…|la meitat d'una|el doble d'una|el mateix valor|zero|Per exemple, 100 Ω i 100 Ω en paral·lel fan 50 Ω.
+ele|Un multímetre per mesurar intensitat es connecta…|en sèrie amb el circuit|en paral·lel|només a terra|a la xarxa sense càrrega|La intensitat es mesura passant pel multímetre.
+adm|Quin és el tipus general d'IVA a Espanya?|21 %|10 %|4 %|18 %|El 10 % és el reduït i el 4 % el superreduït.
+adm|Quina és l'equació comptable bàsica?|Actiu = Passiu + Patrimoni net|Actiu = Passiu − Patrimoni net|Passiu = Actiu + Patrimoni net|Ingressos = Actiu|El que tens es finança amb deutes o amb fons propis.
+adm|A Excel, quina funció suma només les cel·les que compleixen un criteri?|SUMA.SI|SUMA|COMPTA|MITJANA|SUMA.SI afegeix la condició.
+mkt|Què són les 4 P del màrqueting mix?|Producte, preu, distribució i promoció|Persona, pla, premsa i publicitat|Preu, pagament, posició i públic|Producte, procés, personal i política|És el model clàssic de McCarthy.
+mkt|Com es calcula el ROAS?|Ingressos / inversió publicitària|Inversió / ingressos|Clics / impressions|Beneficis / clients|Un ROAS de 4 vol dir 4 € d'ingressos per cada euro invertit.
+mkt|Què mesura el CTR?|El percentatge de clics sobre impressions|El cost per client|El temps a la pàgina|El retorn de la inversió|CTR = clics / impressions · 100.
+log|Què vol dir FIFO?|El primer que entra és el primer que surt|L'últim que entra surt primer|Ordenat per mida|Ordenat per preu|First In, First Out.
+log|En quin Incoterm el venedor només posa la mercaderia a disposició al seu magatzem?|EXW|DDP|CIF|FOB|EXW = Ex Works.
+log|Per a què serveix el stock de seguretat?|Per cobrir variacions de demanda o retards|Per reduir impostos|Per guardar devolucions|Per apujar el preu|És el coixí davant imprevistos.
+dis|Quin contrast mínim demana WCAG AA per a text normal?|4,5:1|2:1|3,5:1|10:1|Per a text gran, 3:1.
+dis|La regla dels terços divideix la imatge en…|una graella de 3×3|3 capes|3 colors|3 plans de profunditat|Els subjectes es col·loquen als punts d'intersecció.
+dis|Quina resolució és típica d'un vídeo vertical per a Reels o Shorts?|1080×1920|1920×1080|1280×720|3840×2160|Vertical 9:16.
+san|Quina és la relació compressions/ventilacions en una RCP d'adult?|30:2|15:1|10:5|5:1|Trenta compressions per cada dues ventilacions.
+san|Quin és el ritme de compressions recomanat?|100-120 per minut|60-80 per minut|140-160 per minut|40-60 per minut|Aproximadament dues per segon.
+san|Quant ha de durar la fricció de mans amb solució hidroalcohòlica?|20-30 segons|5 segons|2 minuts|1 segon|Segons l'OMS, 20-30 segons.
+hos|Quina és la zona de perill de temperatura dels aliments?|5 °C a 65 °C|−18 °C a 0 °C|70 °C a 100 °C|20 °C a 30 °C|Els microorganismes es multipliquen més ràpid en aquest rang.
+hos|Quants al·lèrgens cal declarar a la UE?|14|8|10|20|Inclouen gluten, ous, llet, fruits secs i sulfits, entre d'altres.
+hos|Què és la mise en place?|Tenir tot preparat i ordenat abans de cuinar|Un tipus de salsa|Una tècnica de tall|Un mètode de conservació|Literalment «posat al seu lloc».
+ene|En quina unitat es factura l'energia elèctrica?|kWh|kW|Volt|Ampere|El kW és la potència; el kWh, l'energia consumida.
+ene|Què es tira al contenidor groc a Catalunya?|Envasos de plàstic, llaunes i brics|Vidre|Paper i cartró|Matèria orgànica|El vidre va al verd i el paper al blau.
+ene|Quina etiqueta energètica és la més eficient?|A|G|C|E|L'escala va de A (millor) a G (pitjor).
+</script>
 
 <script>
-document.documentElement.classList.add('js');
-/* ACTIVITATS: posa disponible:true només quan el PDF existeixi. Opcional: url (altre domini). */
-const activitats = [
-  { ico:"🌐", cat:"Serveis en xarxes", nom:"DHCP A1", fitxer:"DHCP_A1_IzquierdoPere.pdf", disponible:true, desc:"Instal·lació i configuració d'un servidor DHCP: àmbit, màscara, passarel·la i DNS." },
-  { ico:"📌", cat:"Serveis en xarxes", nom:"DHCP A2", fitxer:"DHCP_A2_IzquierdoPere.pdf", disponible:true, desc:"Reserves per MAC, exclusions i comprovació de concessions." },
-  { ico:"🧭", cat:"Serveis en xarxes", nom:"DNS A1", fitxer:"DNS_A1.pdf", disponible:false, desc:"Servidor DNS i zones." },
-  { ico:"📁", cat:"Serveis en xarxes", nom:"FTP A1", fitxer:"FTP_A1.pdf", disponible:false, desc:"Servidor FTP i usuaris." },
-  { ico:"🔥", cat:"Seguretat", nom:"Firewall A1", fitxer:"Firewall_A1.pdf", disponible:false, desc:"Regles de tallafocs." },
-  { ico:"🔐", cat:"Seguretat", nom:"VPN A1", fitxer:"VPN_A1.pdf", disponible:false, desc:"Túnel VPN." }
-];
-const $ = s => document.querySelector(s);
-const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const norm = s => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-const dis = activitats.filter(a => a.disponible);
-$('#llista').innerHTML = dis.map((a, i) => `
-  <article class="act rv" style="--d:${i * 90}ms"><div class="ic">${a.ico}</div><span class="meta">${esc(a.cat)}</span>
-  <h3>${esc(a.nom)}</h3><p>${esc(a.desc)}</p>
-  <a class="dl" href="${esc(a.url || a.fitxer)}" download="${esc(a.fitxer)}" aria-label="Descarrega ${esc(a.nom)} en PDF">⬇ Descarregar PDF</a></article>`).join('');
+/* ============ BASE ============ */
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm=s=>String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const root=document.documentElement;
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const f=n=>isFinite(n)?String(+(+n).toPrecision(6)):'—';
+const LV={1:'Bàsic',2:'Mitjà',3:'Avançat'};
+const FAM={
+ inf:{n:'Informàtica',i:'💻',c:'#7c5cff',d:'Sistemes operatius, Linux, scripts i manteniment de maquinari.'},
+ xar:{n:'Xarxes',i:'🌐',c:'#00b8e6',d:'DHCP, DNS, subxarxes, servidors web i compartició de fitxers.'},
+ seg:{n:'Seguretat',i:'🔐',c:'#ff3fb4',d:'Tallafocs, VPN, SSH, contrasenyes i protecció davant engany.'},
+ mec:{n:'Mecànica',i:'⚙️',c:'#ff9f1c',d:'Motors, engranatges, frens, lubricació i metrologia.'},
+ ele:{n:'Electricitat i electrònica',i:'⚡',c:'#ffd23f',d:'Llei d'+"'"+'Ohm, circuits, multímetre, Arduino i proteccions.'},
+ adm:{n:'Administració i finances',i:'📊',c:'#3ddc97',d:'Factures, IVA, comptabilitat, nòmines i Excel.'},
+ mkt:{n:'Màrqueting i vendes',i:'📣',c:'#ff5d73',d:'Estratègia, buyer persona, mètriques, SEO i xarxes socials.'},
+ log:{n:'Comerç i logística',i:'📦',c:'#c77dff',d:'Estoc, magatzem, Incoterms i atenció al client.'},
+ dis:{n:'Disseny i audiovisual',i:'🎬',c:'#4cc9f0',d:'Color, tipografia, composició, vídeo i exportació.'},
+ san:{n:'Sanitat i benestar',i:'🩺',c:'#2ec4b6',d:'Primers auxilis, higiene, constants vitals i ergonomia.'},
+ hos:{n:'Hostaleria i cuina',i:'🍳',c:'#f77f00',d:'Seguretat alimentària, escandalls, al·lèrgens i mise en place.'},
+ ene:{n:'Energia i medi ambient',i:'🌱',c:'#80ed99',d:'Solar, factura de la llum, reciclatge i eficiència.'}
+};
 
-/* Blog: cerca i filtre (el contingut sempre és al HTML) */
-let tag = '';
-const posts = [...document.querySelectorAll('.post')];
-posts.forEach((p, i) => { p.classList.add('rv'); p.style.setProperty('--d', (i % 4) * 70 + 'ms'); });
-function filtra() {
-  const q = norm($('#q').value.trim()); let n = 0;
-  posts.forEach(p => {
-    const ok = (!tag || p.dataset.tag.split(' ').includes(tag)) && (!q || norm(p.textContent).includes(q));
-    p.hidden = !ok; if (ok) n++;
-  });
-  $('#buit').style.display = n ? 'none' : 'block';
+/* ============ MARKDOWN MINIMAL ============ */
+const inl=s=>esc(s).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\*([^*]+)\*/g,'<em>$1</em>');
+function md(src){
+  return src.split(/```\w*\n?/).map((part,i)=>{
+    if(i%2)return '<div class="cb"><button class="cp" type="button">Copia</button><pre><code>'+esc(part.replace(/\n$/,''))+'</code></pre></div>';
+    return part.trim().split(/\n\s*\n/).filter(Boolean).map(b=>{
+      b=b.trim();
+      if(b.startsWith('## '))return '<h4>'+inl(b.slice(3))+'</h4>';
+      const ls=b.split('\n');
+      if(ls.every(l=>/^- /.test(l)))return '<ul>'+ls.map(l=>'<li>'+inl(l.slice(2))+'</li>').join('')+'</ul>';
+      if(ls.every(l=>/^\d+\. /.test(l)))return '<ol>'+ls.map(l=>'<li>'+inl(l.replace(/^\d+\. /,''))+'</li>').join('')+'</ol>';
+      return '<p>'+inl(ls.join(' '))+'</p>';
+    }).join('');
+  }).join('');
 }
-$('#q').addEventListener('input', filtra);
-document.querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => {
-  tag = b.dataset.tag;
-  document.querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', x === b));
-  filtra();
-}));
-$('#btnTheme').addEventListener('click', () => {
-  const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', n);
-  try { localStorage.setItem('smx-tema', n); } catch (e) {}
-});
 
-/* Efectes */
-const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .1 });
-document.querySelectorAll('.rv').forEach(el => io.observe(el));
-const bar = $('#bar'), glow = $('#glow');
-addEventListener('scroll', () => { bar.style.width = (scrollY / (document.body.scrollHeight - innerHeight) * 100) + '%'; }, { passive: true });
-addEventListener('pointermove', e => { glow.style.transform = `translate(${e.clientX - 200}px,${e.clientY - 200}px)`; });
-document.querySelectorAll('.act').forEach(c => {
-  c.addEventListener('pointermove', e => { const r = c.getBoundingClientRect();
-    c.style.setProperty('--ry', ((e.clientX - r.left) / r.width - .5) * 14 + 'deg');
-    c.style.setProperty('--rx', (.5 - (e.clientY - r.top) / r.height) * 14 + 'deg'); });
-  c.addEventListener('pointerleave', () => { c.style.setProperty('--rx', '0deg'); c.style.setProperty('--ry', '0deg'); });
+/* ============ DADES ============ */
+const POSTS=$('#dTut').textContent.split(/^@@ /m).filter(s=>s.trim()).map((s,i)=>{
+  const nl=s.indexOf('\n'),h=s.slice(0,nl).split('|'),b=s.slice(nl+1).trim();
+  const p={id:i,f:h[0].trim(),l:+h[1]||1,m:+h[2]||5,t:h.slice(3).join('|').trim(),b};
+  const t=b.replace(/```[\s\S]*?```/g,'').split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean);
+  let x=(t.find(y=>!/^(## |- |\d+\. )/.test(y))||t.find(y=>!/^## /.test(y))||'').replace(/^(- |\d+\. )/gm,'').replace(/[`*]/g,'').replace(/\s+/g,' ').trim();
+  if(x.length>140)x=x.slice(0,137).replace(/\s+\S*$/,'')+'…';
+  p.x=x;p.n=norm(p.t+' '+b+' '+(FAM[p.f]?FAM[p.f].n:''));
+  return p;
+}).filter(p=>FAM[p.f]);
+POSTS.forEach((p,i)=>p.id=i);
+const QZ=$('#dQuiz').textContent.split('\n').map(l=>l.trim()).filter(l=>l&&!l.startsWith('<!--')).map(l=>{const p=l.split('|');return{f:p[0],q:p[1],a:p[2],w:[p[3],p[4],p[5]].filter(Boolean),e:p[6]||''}}).filter(q=>FAM[q.f]&&q.a);
+
+/* ============ ACTIVITATS (PDF) ============ */
+/* posa disponible:true només quan el PDF existeixi. Opcional: url (altre domini). */
+const activitats=[
+  {ico:"🌐",cat:"Serveis en xarxes",nom:"DHCP A1",fitxer:"DHCP_A1_IzquierdoPere.pdf",disponible:true,desc:"Instal·lació i configuració d'un servidor DHCP: àmbit, màscara, passarel·la i DNS."},
+  {ico:"📌",cat:"Serveis en xarxes",nom:"DHCP A2",fitxer:"DHCP_A2_IzquierdoPere.pdf",disponible:true,desc:"Reserves per MAC, exclusions i comprovació de concessions."},
+  {ico:"🧭",cat:"Serveis en xarxes",nom:"DNS A1",fitxer:"DNS_A1.pdf",disponible:false,desc:"Servidor DNS i zones."},
+  {ico:"📁",cat:"Serveis en xarxes",nom:"FTP A1",fitxer:"FTP_A1.pdf",disponible:false,desc:"Servidor FTP i usuaris."},
+  {ico:"🔥",cat:"Seguretat",nom:"Firewall A1",fitxer:"Firewall_A1.pdf",disponible:false,desc:"Regles de tallafocs."},
+  {ico:"🔐",cat:"Seguretat",nom:"VPN A1",fitxer:"VPN_A1.pdf",disponible:false,desc:"Túnel VPN."}
+];
+const dis=activitats.filter(a=>a.disponible);
+
+/* ============ LABORATORI ============ */
+const tt=s=>s<1?'< 1 segon':s<60?Math.round(s)+' s':s<3600?Math.round(s/60)+' min':s<86400?Math.round(s/3600)+' h':s<3.15e7?Math.round(s/86400)+' dies':s<3.15e9?Math.round(s/3.15e7)+' anys':'> 100 anys (segles o més)';
+const TOOLS=[
+ {n:'🧮 Subxarxes',d:'Dona una IP i un prefix i obtén màscara, xarxa, difusió i equips.',f:[{k:'ip',l:'Adreça IP',v:'192.168.1.10',t:'text'},{k:'p',l:'Prefix (/)',v:24}],
+  c:v=>{const m=v.ip.trim().match(/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/),p=+v.p;
+   if(!m||m.slice(1).some(x=>+x>255)||v.p===''||!(p>=0&&p<=32))return[['Error','IP o prefix no vàlids']];
+   const ip=(((+m[1])<<24)|((+m[2])<<16)|((+m[3])<<8)|(+m[4]))>>>0,mask=p?((0xFFFFFFFF<<(32-p))>>>0):0,net=(ip&mask)>>>0,bc=(net|(~mask>>>0))>>>0;
+   const d=n=>[n>>>24,(n>>>16)&255,(n>>>8)&255,n&255].join('.');
+   const h=p===32?1:p===31?2:Math.pow(2,32-p)-2;
+   return[['Màscara',d(mask)],['Xarxa',d(net)+'/'+p],['Difusió',d(bc)],['Primer equip',p>=31?d(net):d((net+1)>>>0)],['Últim equip',p>=31?d(bc):d((bc-1)>>>0)],['Equips útils',h.toLocaleString('ca')]]}},
+ {n:'⚡ Llei d\'Ohm',d:'Tensió i resistència → intensitat, potència i consum d\'una hora.',f:[{k:'V',l:'Tensió (V)',v:230},{k:'R',l:'Resistència (Ω)',v:23}],
+  c:v=>{const V=+v.V,R=+v.R;if(!(R>0))return[['Error','La resistència ha de ser més gran que 0']];const I=V/R;return[['Intensitat',f(I)+' A'],['Potència',f(V*I)+' W'],['Energia en 1 hora',f(V*I/1000)+' kWh']]}},
+ {n:'🔢 Binari i hexa',d:'Converteix un nombre decimal a binari, hexadecimal i octal.',f:[{k:'n',l:'Nombre decimal (0–4.294.967.295)',v:192}],
+  c:v=>{const n=Math.floor(+v.n);if(v.n===''||!(n>=0&&n<=4294967295))return[['Error','Escriu un enter entre 0 i 4.294.967.295']];return[['Binari',n.toString(2).replace(/\B(?=(\d{4})+$)/g,' ')],['Hexadecimal','0x'+n.toString(16).toUpperCase()],['Octal',n.toString(8)]]}},
+ {n:'⚙️ Engranatges',d:'Relació de transmissió, velocitat i parell de sortida (cas ideal, sense pèrdues).',f:[{k:'a',l:'Dents de la roda motriu',v:20},{k:'b',l:'Dents de la roda conduïda',v:40},{k:'r',l:'Velocitat d\'entrada (min⁻¹)',v:3000},{k:'t',l:'Parell d\'entrada (N·m)',v:10}],
+  c:v=>{const a=+v.a,b=+v.b;if(!(a>0&&b>0))return[['Error','Les dents han de ser més grans que 0']];const i=b/a;return[['Relació i',f(i)+' : 1'],['Tipus',i>1?'Reducció (més força, menys velocitat)':i<1?'Multiplicació (més velocitat, menys força)':'Directa'],['Velocitat de sortida',f(+v.r/i)+' min⁻¹'],['Parell de sortida',f(+v.t*i)+' N·m']]}},
+ {n:'📣 Màrqueting',d:'ROAS, ROI, CAC, CPC, CTR i taxa de conversió d\'una campanya.',f:[{k:'s',l:'Inversió (€)',v:500},{k:'r',l:'Ingressos (€)',v:2400},{k:'c',l:'Clients nous',v:30},{k:'k',l:'Clics',v:1200},{k:'i',l:'Impressions',v:60000}],
+  c:v=>{const s=+v.s,r=+v.r,c=+v.c,k=+v.k,i=+v.i;return[['ROAS',f(r/s)],['ROI',f((r-s)/s*100)+' %'],['CAC',f(s/c)+' €'],['CPC',f(s/k)+' €'],['CTR',f(k/i*100)+' %'],['Conversió',f(c/k*100)+' %']]}},
+ {n:'🧾 IVA',d:'Calcula l\'IVA des de la base o la base des d\'un total amb IVA inclòs.',f:[{k:'x',l:'Import (€)',v:200},{k:'t',l:'Tipus d\'IVA (%)',t:'select',o:[21,10,4]}],
+  c:v=>{const x=+v.x,t=+v.t/100;return[['Si l\'import és la base: IVA',f(x*t)+' €'],['Si l\'import és la base: total',f(x*(1+t))+' €'],['Si l\'import ja inclou IVA: base',f(x/(1+t))+' €'],['Si l\'import ja inclou IVA: quota',f(x-x/(1+t))+' €']]}},
+ {n:'🔑 Contrasenya',d:'Estima la força d\'una contrasenya. És teòric: no té en compte paraules de diccionari. No hi escriguis contrasenyes reals.',f:[{k:'s',l:'Contrasenya de prova',v:'Cafe-Lluna-Tren-47!',t:'text'}],
+  c:v=>{const s=v.s||'';if(!s)return[['Estat','Escriu una contrasenya de prova']];let pool=0;if(/[a-z]/.test(s))pool+=26;if(/[A-Z]/.test(s))pool+=26;if(/\d/.test(s))pool+=10;if(/[^a-zA-Z0-9]/.test(s))pool+=33;const H=s.length*Math.log2(pool),g=H<40?'Molt feble 🔴':H<60?'Feble 🟠':H<80?'Acceptable 🟡':H<100?'Forta 🟢':'Molt forta 💪';return[['Longitud',s.length+' caràcters'],['Entropia',f(H)+' bits'],['Temps per força bruta (10.000 M/s)',tt(Math.pow(2,H-1)/1e10)],['Valoració',g]]}}
+];
+let tCur=0;
+function showTool(i){
+  tCur=i;$$('#tabs .chip').forEach((b,j)=>b.setAttribute('aria-pressed',j===i));
+  const t=TOOLS[i];
+  $('#tin').innerHTML='<h3>'+esc(t.n)+'</h3><p class="lead">'+esc(t.d)+'</p>'+t.f.map(x=>'<label>'+esc(x.l)+(x.t==='select'?'<select data-k="'+x.k+'">'+x.o.map(o=>'<option>'+o+'</option>').join('')+'</select>':'<input data-k="'+x.k+'" type="'+(x.t||'number')+'" value="'+esc(x.v)+'" step="any" autocomplete="off">')+'</label>').join('');
+  calc();
+}
+function calc(){
+  const v={};$$('#tin [data-k]').forEach(e=>v[e.dataset.k]=e.value);
+  let rows;try{rows=TOOLS[tCur].c(v)}catch(e){rows=[['Error','Dades no vàlides']]}
+  $('#tout').innerHTML=rows.map(r=>'<div><span>'+esc(r[0])+'</span><b>'+esc(r[1])+'</b></div>').join('');
+}
+$('#tabs').innerHTML=TOOLS.map((t,i)=>'<button class="chip" data-t="'+i+'" aria-pressed="'+(i===0)+'">'+esc(t.n)+'</button>').join('');
+$('#tabs').addEventListener('click',e=>{const b=e.target.closest('.chip');if(b)showTool(+b.dataset.t)});
+$('#tin').addEventListener('input',calc);
+showTool(0);
+
+/* ============ ESTAT, XP, TOAST, CONFETI ============ */
+let S=store.get('smx-state',null);if(!S||!Array.isArray(S.read)||typeof S.xp!=='number')S={read:[],xp:0};
+const lvl=()=>Math.floor(S.xp/100)+1;
+function hud(){$('#xpT').textContent='Nv. '+lvl()+' · '+S.xp+' XP';$('#xpB').style.width=(S.xp%100)+'%'}
+let tmr;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tmr);tmr=setTimeout(()=>t.classList.remove('on'),2400)}
+function boom(x,y,n){if(RM)return;n=n||28;const cols=['#7c5cff','#00b8e6','#ff3fb4','#ffd23f','#3ddc97'];
+  for(let i=0;i<n;i++){const s=document.createElement('span');s.className='cf';
+    s.style.cssText='left:'+x+'px;top:'+y+'px;background:'+cols[i%5]+';--x:'+((Math.random()-.5)*320)+'px;--y:'+((Math.random()-.8)*260)+'px';
+    document.body.appendChild(s);setTimeout(()=>s.remove(),950)}}
+function addXP(n){const l0=lvl();S.xp+=n;store.set('smx-state',S);hud();if(lvl()>l0){toast('🎉 Has pujat al nivell '+lvl()+'!');boom(innerWidth/2,innerHeight/2,60)}}
+hud();
+
+/* ============ INTRO CINEMATOGRÀFICA ============ */
+function go(){if(root.classList.contains('go'))return;root.classList.add('go');counters()}
+function counters(){
+  const T={sT:POSTS.length,sQ:QZ.length,sL:TOOLS.length,sA:dis.length};
+  Object.keys(T).forEach(id=>{const el=$('#'+id);let n=0;const fi=T[id];const t=setInterval(()=>{n+=Math.max(1,Math.ceil(fi/30));if(n>=fi){n=fi;clearInterval(t)}el.textContent=n},40)});
+}
+(function(){
+  let seen=false;try{seen=sessionStorage.getItem('smx-intro')}catch(e){}
+  setTimeout(go,5000);
+  if(RM||seen){go();return}
+  const o=document.createElement('div');o.id='intro';
+  o.innerHTML='<div class="ib"><div class="il">pereizel<span>.com</span></div><div class="it" id="it">Iniciant sistemes…</div><div class="ibar"><i id="ibi"></i></div><div class="ip" id="ip">0%</div></div>';
+  document.body.appendChild(o);
+  const msgs=['Iniciant sistemes…','Carregant l\'univers…','Calibrant motors…','Obrint el coneixement…','Llest.'];let n=0,ended=false;
+  const t=setInterval(()=>{n+=Math.random()*5+2.5;if(n>=100){n=100;end()}
+    $('#ibi').style.width=n+'%';$('#ip').textContent=Math.floor(n)+'%';$('#it').textContent=msgs[Math.min(4,Math.floor(n/25))]},70);
+  function end(){if(ended)return;ended=true;clearInterval(t);o.classList.add('out');go();try{sessionStorage.setItem('smx-intro','1')}catch(e){}setTimeout(()=>o.remove(),1200)}
+  o.addEventListener('click',end);
+})();
+
+/* ============ FONS DE PARTÍCULES ============ */
+(function(){
+  const cv=$('#bg'),cx=cv.getContext('2d');let W,H,P=[],mx=-999,my=-999;
+  function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight;const n=Math.min(90,Math.floor(W*H/17000));
+    P=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4}))}
+  function draw(){
+    if(!document.hidden){
+      cx.clearRect(0,0,W,H);
+      const col=root.getAttribute('data-theme')==='dark'?'160,140,255':'106,69,255';
+      for(const p of P){
+        if(!RM){p.x+=p.vx;p.y+=p.vy;
+          const dx=p.x-mx,dy=p.y-my,d=dx*dx+dy*dy;if(d<14000){const k=.6/Math.max(1,Math.sqrt(d));p.x+=dx*k;p.y+=dy*k}
+          if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0}
+        cx.fillStyle='rgba('+col+',.7)';cx.beginPath();cx.arc(p.x,p.y,1.6,0,6.283);cx.fill();
+      }
+      for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){
+        const dx=P[i].x-P[j].x,dy=P[i].y-P[j].y,d=dx*dx+dy*dy;
+        if(d<16000){cx.strokeStyle='rgba('+col+','+(.35*(1-d/16000))+')';cx.lineWidth=1;cx.beginPath();cx.moveTo(P[i].x,P[i].y);cx.lineTo(P[j].x,P[j].y);cx.stroke()}}
+    }
+    if(!RM)requestAnimationFrame(draw);
+  }
+  addEventListener('resize',()=>{rs();if(RM)draw()});
+  addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY},{passive:true});
+  rs();draw();
+})();
+
+/* ============ HERO, MARQUEE, UNIVERS, ACTIVITATS ============ */
+(function(){
+  const hero=$('#hero'),ks=Object.keys(FAM);
+  const pos=[[6,14],[90,16],[14,62],[82,66],[3,40],[93,42],[24,86],[72,10],[10,84],[86,86],[30,8],[62,88]];
+  hero.insertAdjacentHTML('afterbegin',ks.map((k,i)=>'<span class="fl" aria-hidden="true" style="left:'+pos[i][0]+'%;top:'+pos[i][1]+'%;--k:'+((i%4)+1)*.5+';animation-delay:-'+(i*.7)+'s">'+FAM[k].i+'</span>').join(''));
+  hero.addEventListener('pointermove',e=>{const r=hero.getBoundingClientRect();hero.style.setProperty('--px',((e.clientX-r.left)/r.width-.5)*2);hero.style.setProperty('--py',((e.clientY-r.top)/r.height-.5)*2)});
+  const items=ks.map(k=>'<span>'+FAM[k].i+' '+FAM[k].n+'</span>').join('');
+  $('#mq').innerHTML=items+items;
+  $('#uni').innerHTML=ks.map((k,i)=>'<button class="fam tilt rv" style="--fc:'+FAM[k].c+';--d:'+(i%6*60)+'ms" data-f="'+k+'"><span class="fi">'+FAM[k].i+'</span><h3>'+FAM[k].n+'</h3><p>'+esc(FAM[k].d)+'</p><span class="meta">'+POSTS.filter(p=>p.f===k).length+' tutorials · clica per filtrar</span></button>').join('');
+  $('#llista').innerHTML=dis.map((a,i)=>'<article class="act tilt rv" style="--d:'+(i*90)+'ms"><div class="ic">'+a.ico+'</div><span class="meta">'+esc(a.cat)+'</span><h3>'+esc(a.nom)+'</h3><p>'+esc(a.desc)+'</p><a class="dl" href="'+esc(a.url||a.fitxer)+'" download="'+esc(a.fitxer)+'" aria-label="Descarrega '+esc(a.nom)+' en PDF">⬇ Descarregar PDF</a></article>').join('');
+  const paraules=['DHCP','mecànica','Excel','SEO','Arduino','cuina','RCP','VPN','Bash','logística','color','solar'],rot=$('#rot');let k=0;
+  if(!RM)setInterval(()=>{rot.style.opacity=0;rot.style.transform='translateY(14px)';rot.style.filter='blur(6px)';
+    setTimeout(()=>{k=(k+1)%paraules.length;rot.textContent=paraules[k];rot.style.opacity=1;rot.style.transform='none';rot.style.filter='none'},320)},2400);
+  $('#uni').addEventListener('click',e=>{const b=e.target.closest('.fam');if(b){setFam(b.dataset.f);$('#blog').scrollIntoView({behavior:RM?'auto':'smooth'})}});
+})();
+
+/* ============ INTERACCIONS (inclinació, magnètic, brillantor) ============ */
+document.addEventListener('pointermove',e=>{
+  if(e.pointerType==='touch'||!e.target.closest)return;
+  const c=e.target.closest('.tilt');
+  if(c){const r=c.getBoundingClientRect();
+    c.style.setProperty('--ry',((e.clientX-r.left)/r.width-.5)*12+'deg');c.style.setProperty('--rx',(.5-(e.clientY-r.top)/r.height)*12+'deg');
+    c.style.setProperty('--gx',(e.clientX-r.left)+'px');c.style.setProperty('--gy',(e.clientY-r.top)+'px')}
+  const m=e.target.closest('.mag');
+  if(m){const r=m.getBoundingClientRect();m.style.setProperty('--mx',((e.clientX-r.left-r.width/2)*.2)+'px');m.style.setProperty('--my',((e.clientY-r.top-r.height/2)*.3)+'px')}
 });
-document.addEventListener('click', e => {
-  if (!e.target.closest('.dl')) return;
-  const cols = ['#7c5cff', '#00b8e6', '#ff3fb4', '#ffd23f', '#3ddc97'];
-  for (let i = 0; i < 28; i++) {
-    const s = document.createElement('span'); s.className = 'cf';
-    s.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;background:${cols[i % 5]};--x:${(Math.random() - .5) * 320}px;--y:${(Math.random() - .8) * 260}px`;
-    document.body.appendChild(s); setTimeout(() => s.remove(), 950);
+document.addEventListener('pointerout',e=>{
+  if(!e.target.closest)return;
+  const c=e.target.closest('.tilt');if(c&&!c.contains(e.relatedTarget)){c.style.setProperty('--rx','0deg');c.style.setProperty('--ry','0deg')}
+  const m=e.target.closest('.mag');if(m&&!m.contains(e.relatedTarget)){m.style.setProperty('--mx','0px');m.style.setProperty('--my','0px')}
+});
+addEventListener('pointermove',e=>{$('#glow').style.transform='translate('+(e.clientX-200)+'px,'+(e.clientY-200)+'px)'},{passive:true});
+document.addEventListener('click',e=>{if(e.target.closest('.dl')){boom(e.clientX,e.clientY);toast('📥 Descàrrega iniciada')}});
+$('#btnTheme').addEventListener('click',()=>{
+  const n=root.getAttribute('data-theme')==='dark'?'light':'dark';root.setAttribute('data-theme',n);
+  try{localStorage.setItem('smx-tema',n)}catch(e){}});
+
+/* ============ REVELAR AL FER SCROLL ============ */
+const rvIO=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const t=e.target;t.classList.add('in');rvIO.unobserve(t);setTimeout(()=>t.classList.remove('rv','in'),1400)}}),{threshold:.08});
+const reveal=r=>(r||document).querySelectorAll('.rv:not(.in)').forEach(el=>rvIO.observe(el));
+reveal();
+
+/* ============ SCROLL: barra, hero, paraules, botons ============ */
+const words=$('#scr').textContent.trim().split(/\s+/);$('#scr').innerHTML=words.map(w=>'<span>'+esc(w)+'</span>').join(' ');
+const sw=$$('#scr span'),hin=$('#hin'),up=$('#up');let tick=false;
+function onScroll(){
+  if(tick)return;tick=true;
+  requestAnimationFrame(()=>{tick=false;
+    const y=scrollY,lim=Math.max(1,$('#blog').offsetTop);
+    $('#bar').style.width=Math.min(100,y/lim*100)+'%';
+    up.classList.toggle('on',y>900);
+    if(!RM&&y<innerHeight*1.2){hin.style.transform='translateY('+(y*.28)+'px)';hin.style.opacity=Math.max(0,1-y/(innerHeight*.8))}
+    const r=$('#scr').getBoundingClientRect(),p=Math.min(1,Math.max(0,(innerHeight*.85-r.top)/(r.height+innerHeight*.3)));
+    const n=Math.floor(p*sw.length*1.15);sw.forEach((s,i)=>s.classList.toggle('lit',i<n));
+  });
+}
+addEventListener('scroll',onScroll,{passive:true});onScroll();
+up.addEventListener('click',()=>scrollTo({top:0,behavior:RM?'auto':'smooth'}));
+function setHH(){root.style.setProperty('--hh',$('header.top').offsetHeight+'px')}
+addEventListener('resize',setHH);setHH();
+const navIO=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)$$('nav.menu a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-45% 0px -50% 0px'});
+$$('main section').forEach(s=>navIO.observe(s));
+
+/* ============ FEED INFINIT ============ */
+let fam='',qry='',list=[],cursor=0,ended=false,divDone=false,shown=0,bag=[],streak=0,curP=0;
+const sent=$('#sent'),feed=$('#feed');
+function cardPost(p){
+  const F=FAM[p.f];
+  return '<article class="card post rv" data-id="'+p.id+'" style="--fc:'+F.c+'" tabindex="0"><div class="ptop"><span class="fb">'+F.i+' '+F.n+'</span><span class="meta">'+LV[p.l]+' · '+p.m+' min</span></div><h3>'+esc(p.t)+'</h3><p>'+esc(p.x)+'</p><div class="pb"><button class="rd" type="button">Llegir tutorial</button>'+(S.read.includes(p.id)?'<span class="ok">✓ llegit</span>':'')+'</div></article>';
+}
+function randQ(){if(!bag.length){bag=QZ.filter(q=>!fam||q.f===fam);if(!bag.length)bag=QZ.slice();bag=shuffle(bag)}return bag.pop()}
+function cardQuiz(){
+  const q=randQ(),F=FAM[q.f],o=shuffle([q.a].concat(q.w));
+  return '<article class="card qz rv" style="--fc:'+F.c+'" data-a="'+esc(q.a)+'" data-e="'+esc(q.e)+'"><div class="ptop"><span class="fb">🎯 Repte · '+F.i+' '+F.n+'</span><span class="st meta">Ratxa: '+streak+'</span></div><h3>'+esc(q.q)+'</h3><div class="opts">'+o.map(x=>'<button class="opt" type="button" data-v="'+esc(x)+'">'+esc(x)+'</button>').join('')+'</div><p class="ex" hidden></p></article>';
+}
+function more(n){
+  if(ended)return;let h='';
+  for(let i=0;i<n;i++){
+    if(cursor<list.length){h+=cardPost(list[cursor++]);shown++}
+    else if(!qry&&QZ.length){
+      if(!divDone){divDone=true;h+='<div class="dv">🚀 Has vist tots els tutorials d\'aquesta selecció. Ara el feed continua amb reptes… i no s\'acaba mai ∞</div>'}
+      h+=cardQuiz();shown++}
+    else{ended=true;break}
+  }
+  feed.insertAdjacentHTML('beforeend',h);reveal(feed);
+  $('#cnt').textContent=ended?list.length+' resultats':'∞ '+shown+' targetes carregades';
+  sent.style.display=ended?'none':'';
+  io.unobserve(sent);if(!ended)io.observe(sent);
+}
+function build(){
+  list=POSTS.filter(p=>(!fam||p.f===fam)&&(!qry||p.n.includes(qry)));
+  cursor=0;ended=false;divDone=false;shown=0;bag=[];feed.innerHTML='';
+  $('#buit').hidden=list.length>0;more(9);
+}
+const io=new IntersectionObserver(es=>{if(es[0].isIntersecting)more(6)},{rootMargin:'700px'});
+function setFam(k){fam=k;$$('#chips .chip').forEach(c=>c.setAttribute('aria-pressed',c.dataset.f===k));build()}
+$('#chips').innerHTML='<button class="chip" data-f="" aria-pressed="true">∞ Tots</button>'+Object.keys(FAM).map(k=>'<button class="chip" data-f="'+k+'" aria-pressed="false">'+FAM[k].i+' '+FAM[k].n+'</button>').join('');
+$('#chips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(b)setFam(b.dataset.f)});
+let qt;$('#q').addEventListener('input',()=>{clearTimeout(qt);qt=setTimeout(()=>{qry=norm($('#q').value.trim());build()},150)});
+function answer(o){
+  const card=o.closest('.qz');if(card.dataset.done)return;card.dataset.done='1';
+  const a=card.dataset.a,ok=o.dataset.v===a;
+  card.querySelectorAll('.opt').forEach(b=>{b.disabled=true;if(b.dataset.v===a)b.classList.add('ok')});
+  if(!ok)o.classList.add('ko');
+  const ex=card.querySelector('.ex');ex.hidden=false;
+  ex.innerHTML=(ok?'✅ <b>Correcte!</b> +10 XP. ':'❌ <b>La resposta era:</b> '+esc(a)+'. ')+esc(card.dataset.e);
+  if(ok){streak++;const r=o.getBoundingClientRect();boom(r.left+r.width/2,r.top,18);addXP(10)}else streak=0;
+  card.querySelector('.st').textContent='Ratxa: '+streak;
+}
+feed.addEventListener('click',e=>{
+  const o=e.target.closest('.opt');if(o){answer(o);return}
+  const c=e.target.closest('.post');if(c)openPost(+c.dataset.id);
+});
+feed.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.classList.contains('post'))openPost(+e.target.dataset.id)});
+
+/* ============ LECTOR ============ */
+const rdr=$('#rdr');
+function updDn(){const d=S.read.includes(curP),b=$('#rDn');b.disabled=d;b.textContent=d?'✓ Ja llegit':'✓ Marca com a llegit · +20 XP'}
+function openPost(id){
+  const p=POSTS[id];if(!p)return;curP=id;const F=FAM[p.f];
+  $('#rM').textContent=F.i+' '+F.n+' · '+LV[p.l]+' · '+p.m+' min de lectura';
+  $('#rT').textContent=p.t;$('#rB').innerHTML=md(p.b);
+  rdr.style.setProperty('--fc',F.c);$('#rS').scrollTop=0;$('#rPb').style.width='0';updDn();
+  if(!rdr.open)rdr.showModal();
+}
+function navPost(d){
+  const a=list.some(p=>p.id===curP)?list:POSTS,i=a.findIndex(p=>p.id===curP),n=a[i+d];
+  if(n)openPost(n.id);else toast(d>0?'Has arribat al final de la llista':'Ets al primer tutorial');
+}
+$('#rPv').addEventListener('click',()=>navPost(-1));
+$('#rNx').addEventListener('click',()=>navPost(1));
+$('#rX').addEventListener('click',()=>rdr.close());
+$('#rDn').addEventListener('click',()=>{
+  if(S.read.includes(curP))return;
+  S.read.push(curP);store.set('smx-state',S);
+  $$('.post[data-id="'+curP+'"] .pb').forEach(pb=>{if(!pb.querySelector('.ok'))pb.insertAdjacentHTML('beforeend','<span class="ok">✓ llegit</span>')});
+  const r=$('#rDn').getBoundingClientRect();boom(r.left+r.width/2,r.top,24);addXP(20);updDn();
+});
+$('#rS').addEventListener('scroll',()=>{const s=$('#rS');$('#rPb').style.width=(s.scrollTop/Math.max(1,s.scrollHeight-s.clientHeight)*100)+'%'});
+rdr.addEventListener('click',e=>{
+  const cp=e.target.closest('.cp');
+  if(cp){const t=cp.parentElement.querySelector('code').textContent;
+    (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{cp.textContent='Copiat ✓';setTimeout(()=>cp.textContent='Copia',1500)}).catch(()=>{cp.textContent='Selecciona i copia';setTimeout(()=>cp.textContent='Copia',2000)});
   }
 });
-function compta(el, fi) {
-  let n = 0; const t = setInterval(() => { n += Math.max(1, Math.ceil(fi / 30)); if (n >= fi) { n = fi; clearInterval(t); } el.textContent = n; }, 40);
+
+/* ============ PALETA DE CERCA (Ctrl+K) ============ */
+const pal=$('#pal'),pq=$('#pq'),pl=$('#pl');let pi=0,pr=[];
+function palRender(){
+  const q=norm(pq.value.trim());
+  pr=q?POSTS.filter(p=>p.n.includes(q)).slice(0,8).map(p=>({k:'p',id:p.id,t:p.t,s:FAM[p.f].i+' '+FAM[p.f].n})):Object.keys(FAM).map(k=>({k:'f',id:k,t:FAM[k].i+' '+FAM[k].n,s:'Filtra els tutorials per aquesta família'}));
+  pi=0;pl.innerHTML=pr.length?pr.map((r,i)=>'<li><button type="button" data-i="'+i+'" class="'+(i?'':'on')+'"><b>'+esc(r.t)+'</b><span>'+esc(r.s)+'</span></button></li>').join(''):'<li class="em">Cap resultat. Prova una altra paraula.</li>';
 }
-$('#nT').dataset.n = posts.length; $('#nA').dataset.n = dis.length;
-document.querySelectorAll('[data-n]').forEach(el => compta(el, +el.dataset.n));
-const paraules = ['DHCP', 'DNS', 'FTP', 'tallafocs', 'VPN', 'SSH', 'Samba', 'Apache'], rot = $('#rot'); let k = 0;
-setInterval(() => {
-  rot.style.opacity = 0; rot.style.transform = 'translateY(10px)';
-  setTimeout(() => { k = (k + 1) % paraules.length; rot.textContent = paraules[k]; rot.style.opacity = 1; rot.style.transform = 'none'; }, 300);
-}, 2200);
+function palMove(d){const b=$$('#pl button');if(!b.length)return;b[pi].classList.remove('on');pi=(pi+d+b.length)%b.length;b[pi].classList.add('on');b[pi].scrollIntoView({block:'nearest'})}
+function palGo(i){const r=pr[i];if(!r)return;pal.close();if(r.k==='p')openPost(r.id);else{setFam(r.id);$('#blog').scrollIntoView({behavior:RM?'auto':'smooth'})}}
+function openPal(){if(pal.open)return;pq.value='';palRender();pal.showModal();pq.focus()}
+pq.addEventListener('input',palRender);
+pq.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){e.preventDefault();palMove(1)}else if(e.key==='ArrowUp'){e.preventDefault();palMove(-1)}else if(e.key==='Enter'){e.preventDefault();palGo(pi)}});
+pl.addEventListener('click',e=>{const b=e.target.closest('button');if(b)palGo(+b.dataset.i)});
+$('#bSearch').addEventListener('click',openPal);
+addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openPal();return}
+  if(e.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)&&!document.querySelector('dialog[open]')){e.preventDefault();openPal()}
+});
+
+/* ============ LEGAL I DIÀLEGS ============ */
+const leg=$('#leg');
+const openLeg=()=>{if(!leg.open)leg.showModal()};
+$('#lg').addEventListener('click',openLeg);
+$('#legLink').addEventListener('click',e=>{e.preventDefault();openLeg()});
+$('#lX').addEventListener('click',()=>leg.close());
+$$('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target===d)d.close()}));
+
+/* ============ ARRENCADA ============ */
+build();
 </script>
 </body>
 </html>
